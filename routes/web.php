@@ -4,6 +4,14 @@ use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\SiswaMiManagement;
+use App\Livewire\SiswaSmpManagement;
+use App\Livewire\GuruMiManagement;
+use App\Livewire\GuruSmpManagement;
+use App\Livewire\MapelMiManagement;
+use App\Livewire\MapelSmpManagement;
+use App\Livewire\MutasiSiswaManagement;
+use App\Http\Controllers\MutasiSiswaController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -15,6 +23,46 @@ Route::view('dashboard', 'dashboard')
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
+
+// Siswa MI & SMP Routes
+Route::get('siswa-mi', SiswaMiManagement::class)
+    ->middleware(['auth'])
+    ->name('siswa-mi.index');
+
+Route::get('siswa-smp', SiswaSmpManagement::class)
+    ->middleware(['auth'])
+    ->name('siswa-smp.index');
+
+// Guru MI & SMP Routes
+Route::get('guru-mi', GuruMiManagement::class)
+    ->middleware(['auth'])
+    ->name('guru-mi.index');
+
+Route::get('guru-smp', GuruSmpManagement::class)
+    ->middleware(['auth'])
+    ->name('guru-smp.index');
+
+// Mapel MI & SMP Routes
+Route::get('mapel-mi', MapelMiManagement::class)
+    ->middleware(['auth'])
+    ->name('mapel-mi.index');
+
+Route::get('mapel-smp', MapelSmpManagement::class)
+    ->middleware(['auth'])
+    ->name('mapel-smp.index');
+
+Route::get('mutasi', MutasiSiswaManagement::class)
+    ->middleware(['auth'])
+    ->name('mutasi.index');
+
+Route::get('mutasi/{id}/print', [MutasiSiswaController::class, 'printPdf'])
+    ->middleware(['auth'])
+    ->name('mutasi.print');
+
+Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
+    ->middleware(['auth'])
+    ->name('settings.index');
+
 
 // Auth Routes
 Route::middleware('guest')->group(function () {
