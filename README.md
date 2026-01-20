@@ -1,199 +1,223 @@
-# 🚀 Starter Kit Laravel 12 + Livewire 4 Admin Panel
+# 📚 Data Induk Sekolah
 
-![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![Livewire](https://img.shields.io/badge/Livewire-4.x-4E56A6?style=for-the-badge&logo=livewire&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)
+Aplikasi manajemen data induk sekolah berbasis web untuk mengelola data **Siswa**, **Guru**, dan **Mata Pelajaran** dengan pemisahan jenjang **MI (Madrasah Ibtidaiyah)** dan **SMP (Sekolah Menengah Pertama)**.
 
-## 📋 Deskripsi
+## ✨ Fitur Utama
 
-**Starter Kit Livewire 4 Admin Panel** adalah template boilerplate untuk membangun aplikasi web dengan Laravel 12 dan Livewire 4. Starter kit ini menyediakan fondasi yang solid untuk pengembangan aplikasi dengan fitur-fitur autentikasi yang sudah siap pakai.
+### 📋 Manajemen Data Siswa
 
-### ✨ Fitur Utama
+- **Data Siswa MI** - Kelola data siswa MI lengkap (NISN, NIK, nama, TTL, alamat, dll)
+- **Data Siswa SMP** - Kelola data siswa SMP dengan field yang sama
+- Import/Export data via Excel
+- Cetak surat mutasi siswa (PDF)
+- Sinkronisasi data dari API eksternal
 
-- 🔐 **Sistem Autentikasi Lengkap**
-    - Login
-    - Register
-    - Forgot Password
-    - Reset Password
-- 📊 **Dashboard Admin** dengan UI modern
-- 👤 **Halaman Profil User**
-- 🎨 **UI Kit** dengan desain Apple-inspired Shadcn
-- ⚡ **Full Livewire 4** - Reactive components tanpa JavaScript
-- 🌙 **Modern Design** dengan TailwindCSS
+### 👨‍🏫 Manajemen Data Guru
 
-## 🤖 Dibuat dengan Bantuan AI Assistance
+- **Data Guru MI** - Kelola data guru MI (NIP, NUPTK, NPK, gelar, status pegawai, dll)
+- **Data Guru SMP** - Kelola data guru SMP
+- Upload dokumen SK (SK Awal & SK Akhir)
+- Import/Export data via Excel
 
-Proyek ini dikembangkan dengan bantuan **AI Coding Assistant (Gemini/Antigravity)**. AI membantu dalam:
+### 📖 Manajemen Mata Pelajaran
 
-- Migrasi dari Laravel Breeze ke pure Livewire 4
-- Pembuatan komponen autentikasi Livewire
-- Integrasi UI Kit dengan admin panel
-- Debugging dan optimisasi kode
+- **Mapel MI** - Daftar mata pelajaran MI (PAI & Umum)
+- **Mapel SMP** - Daftar mata pelajaran SMP
+- **Drag & Drop Reorder** - Atur urutan mapel dengan drag & drop
+- Import/Export data via Excel
 
-## 📦 Tech Stack
+### ⚙️ Fitur Lainnya
 
-| Technology  | Version | Description          |
-| ----------- | ------- | -------------------- |
-| Laravel     | 12.x    | PHP Framework        |
-| Livewire    | 4.x     | Full-stack framework |
-| TailwindCSS | 3.x     | Utility-first CSS    |
-| Vite        | Latest  | Frontend build tool  |
-| PHP         | 8.2+    | Backend language     |
+- Pengaturan profil sekolah
+- Dashboard admin responsif
+- Authentication dengan Laravel
 
-## 🛠️ Cara Instalasi
+---
 
-### Persyaratan Sistem
+## 🛠️ Teknologi
 
-- PHP >= 8.2
-- Composer
-- Node.js >= 18.x
-- NPM atau Yarn
+| Teknologi         | Versi |
+| ----------------- | ----- |
+| PHP               | 8.2+  |
+| Laravel           | 11.x  |
+| Livewire          | 4.x   |
+| MySQL/SQLite      | -     |
+| TailwindCSS       | 3.x   |
+| Maatwebsite Excel | 3.x   |
+| Barryvdh DomPDF   | 3.x   |
 
-### Langkah-langkah Instalasi
+---
 
-1. **Clone repository**
+## 📦 Instalasi
 
-    ```bash
-    git clone https://github.com/eldorray/starter-kit-livewire4-adminpanel.git
-    cd starter-kit-livewire4-adminpanel
-    ```
-
-2. **Install dependencies PHP**
-
-    ```bash
-    composer install
-    ```
-
-3. **Copy file environment**
-
-    ```bash
-    cp .env.example .env
-    ```
-
-4. **Generate application key**
-
-    ```bash
-    php artisan key:generate
-    ```
-
-5. **Konfigurasi database**
-
-    Edit file `.env` dan sesuaikan konfigurasi database:
-
-    ```env
-    DB_CONNECTION=sqlite
-    # atau gunakan MySQL:
-    # DB_CONNECTION=mysql
-    # DB_HOST=127.0.0.1
-    # DB_PORT=3306
-    # DB_DATABASE=starter_kit
-    # DB_USERNAME=root
-    # DB_PASSWORD=
-    ```
-
-6. **Jalankan migrasi database**
-
-    ```bash
-    php artisan migrate
-    ```
-
-7. **Install dependencies Node.js**
-
-    ```bash
-    npm install
-    ```
-
-8. **Build assets**
-    ```bash
-    npm run build
-    ```
-
-### 🚀 Menjalankan Aplikasi
-
-**Development Mode (Recommended)**
+### 1. Clone Repository
 
 ```bash
-composer dev
+git clone https://github.com/eldorray/data-induk-sekolah.git
+cd data-induk-sekolah
 ```
 
-Perintah ini akan menjalankan:
+### 2. Install Dependencies
 
-- Laravel development server
-- Queue listener
-- Pail (log viewer)
-- Vite development server
+```bash
+composer install
+npm install
+```
 
-**Atau jalankan secara terpisah:**
+### 3. Konfigurasi Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### 4. Konfigurasi Database
+
+Edit file `.env` sesuai database Anda:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=data_induk_sekolah
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 5. Migrasi Database
+
+```bash
+php artisan migrate
+```
+
+### 6. Jalankan Aplikasi
 
 ```bash
 # Terminal 1 - Laravel Server
 php artisan serve
 
-# Terminal 2 - Vite (untuk hot reload)
+# Terminal 2 - Vite (untuk asset)
 npm run dev
+
+# Atau gunakan shortcut
+composer dev
 ```
 
-Akses aplikasi di: `http://localhost:8000`
+Akses aplikasi di: **http://127.0.0.1:8000**
+
+---
+
+## 📖 Cara Penggunaan
+
+### 🔐 Login
+
+1. Buka aplikasi di browser
+2. Login menggunakan akun yang sudah terdaftar
+3. Setelah login, Anda akan diarahkan ke dashboard admin
+
+### 👨‍🎓 Mengelola Data Siswa
+
+#### Tambah Siswa Baru
+
+1. Pilih menu **Data Siswa MI** atau **Data Siswa SMP**
+2. Klik tombol **Tambah Siswa**
+3. Isi form data siswa (NISN, NIK, Nama, TTL, dll)
+4. Klik **Simpan**
+
+#### Import Data dari Excel
+
+1. Klik tombol **Template** untuk download template Excel
+2. Isi data sesuai format template
+3. Klik **Import** dan pilih file Excel
+4. Data akan otomatis diimport
+
+#### Export Data ke Excel
+
+1. Klik tombol **Export**
+2. File Excel akan otomatis terdownload
+
+#### Sinkronisasi dari API
+
+1. Pilih sumber API (MI/SMP)
+2. Klik tombol **Sync dari API**
+3. Data akan disinkronkan dari server eksternal
+
+### 👨‍🏫 Mengelola Data Guru
+
+#### Tambah Guru Baru
+
+1. Pilih menu **Data Guru MI** atau **Data Guru SMP**
+2. Klik tombol **Tambah Guru**
+3. Isi form data guru lengkap
+4. Upload file SK jika diperlukan
+5. Klik **Simpan**
+
+### 📖 Mengelola Mata Pelajaran
+
+#### Tambah Mata Pelajaran
+
+1. Pilih menu **Mapel MI** atau **Mapel SMP**
+2. Klik tombol **Tambah Mapel**
+3. Isi kode, nama, kelompok (PAI/Umum), dan jam per minggu
+4. Klik **Simpan**
+
+#### Mengatur Urutan (Drag & Drop)
+
+1. Arahkan kursor ke icon ☰ di kolom pertama
+2. Klik dan tahan, lalu drag ke posisi yang diinginkan
+3. Lepaskan untuk menyimpan urutan baru
+
+### ⚙️ Pengaturan Sekolah
+
+1. Pilih menu **Pengaturan**
+2. Isi informasi sekolah (nama, NPSN, alamat, dll)
+3. Klik **Simpan Pengaturan**
+
+---
+
+## 🔌 API Endpoints
+
+Aplikasi menyediakan REST API untuk integrasi:
+
+| Method | Endpoint         | Deskripsi        |
+| ------ | ---------------- | ---------------- |
+| GET    | `/api/siswa-mi`  | Daftar siswa MI  |
+| GET    | `/api/siswa-smp` | Daftar siswa SMP |
+| GET    | `/api/guru-mi`   | Daftar guru MI   |
+| GET    | `/api/guru-smp`  | Daftar guru SMP  |
+| GET    | `/api/mapel-mi`  | Daftar mapel MI  |
+| GET    | `/api/mapel-smp` | Daftar mapel SMP |
+
+---
 
 ## 📁 Struktur Direktori
 
 ```
-├── app/
-│   ├── Livewire/
-│   │   └── Auth/           # Komponen autentikasi Livewire
-│   │       ├── Login.php
-│   │       ├── Register.php
-│   │       ├── ForgotPassword.php
-│   │       └── ResetPassword.php
-│   └── View/
-│       └── Components/     # View components
-├── resources/
-│   ├── views/
-│   │   ├── components/     # UI components
-│   │   ├── layouts/        # Layout templates
-│   │   ├── livewire/       # Livewire views
-│   │   ├── dashboard.blade.php
-│   │   └── profile.blade.php
-│   └── css/               # Stylesheets
-├── routes/
-│   └── web.php            # Web routes
-└── ui-kit/                # Referensi UI Kit
+app/
+├── Exports/          # Export Excel classes
+├── Imports/          # Import Excel classes
+├── Livewire/         # Livewire components
+├── Models/           # Eloquent models
+└── Http/Controllers/ # API Controllers
+
+resources/views/
+├── livewire/         # Livewire blade views
+├── layouts/          # Layout templates
+└── pdf/              # PDF templates
 ```
-
-## 🔗 Routes
-
-| Route                     | Method | Description                  |
-| ------------------------- | ------ | ---------------------------- |
-| `/`                       | GET    | Welcome page                 |
-| `/login`                  | GET    | Login page                   |
-| `/register`               | GET    | Register page                |
-| `/forgot-password`        | GET    | Forgot password page         |
-| `/reset-password/{token}` | GET    | Reset password page          |
-| `/dashboard`              | GET    | Dashboard (auth required)    |
-| `/profile`                | GET    | User profile (auth required) |
-| `/logout`                 | POST   | Logout                       |
-
-## 📝 Quick Commands
-
-```bash
-# Setup lengkap (fresh install)
-composer setup
-
-# Development mode
-composer dev
-
-# Run tests
-composer test
-
-# Build untuk production
-npm run build
-```
-
-## 📄 License
-
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ---
 
-⭐ **Jangan lupa beri star jika project ini bermanfaat!**
+## 🤝 Kontribusi
+
+Kontribusi sangat diterima! Silakan buat pull request atau buka issue jika menemukan bug.
+
+---
+
+## 📄 Lisensi
+
+Aplikasi ini dibuat untuk keperluan internal sekolah.
+
+---
+
+**Dibuat dengan ❤️ menggunakan Laravel & Livewire**
