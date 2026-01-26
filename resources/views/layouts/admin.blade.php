@@ -342,6 +342,26 @@
                             class="whitespace-nowrap">Mutasi</span>
                     </a>
 
+                    <a href="{{ route('surat-aktif.index') }}"
+                        class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('surat-aktif.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
+                        :class="{ 'justify-center px-0': sidebarCollapsed }" wire:navigate
+                        title="Surat Keterangan Aktif">
+                        <div
+                            class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 {{ request()->routeIs('surat-aktif.*') ? 'bg-white/20' : 'bg-gray-100' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <span x-show="!sidebarCollapsed"
+                            x-transition:enter="transition-all duration-300 ease-out delay-160"
+                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition-all duration-150 ease-in"
+                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            class="whitespace-nowrap">Surat Aktif</span>
+                    </a>
+
                     <a href="{{ route('settings.index') }}"
                         class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('settings.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
                         :class="{ 'justify-center px-0': sidebarCollapsed }" wire:navigate title="Pengaturan">

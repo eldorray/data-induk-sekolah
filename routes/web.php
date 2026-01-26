@@ -10,7 +10,9 @@ use App\Livewire\GuruSmpManagement;
 use App\Livewire\MapelMiManagement;
 use App\Livewire\MapelSmpManagement;
 use App\Livewire\MutasiSiswaManagement;
+use App\Livewire\SuratKeteranganAktifManagement;
 use App\Http\Controllers\MutasiSiswaController;
+use App\Http\Controllers\SuratKeteranganAktifController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -57,6 +59,14 @@ Route::get('mutasi', MutasiSiswaManagement::class)
 Route::get('mutasi/{id}/print', [MutasiSiswaController::class, 'printPdf'])
     ->middleware(['auth'])
     ->name('mutasi.print');
+
+Route::get('surat-aktif', SuratKeteranganAktifManagement::class)
+    ->middleware(['auth'])
+    ->name('surat-aktif.index');
+
+Route::get('surat-aktif/{id}/print', [SuratKeteranganAktifController::class, 'printPdf'])
+    ->middleware(['auth'])
+    ->name('surat-aktif.print');
 
 Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
     ->middleware(['auth'])
