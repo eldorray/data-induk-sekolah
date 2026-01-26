@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SuratKeteranganAktif extends Model
 {
     protected $fillable = [
         'siswa_id',
+        'siswa_type',
         'nomor_surat',
         'tanggal_surat',
         'keperluan',
@@ -22,11 +22,11 @@ class SuratKeteranganAktif extends Model
     ];
 
     /**
-     * Relasi ke Siswa
+     * Relasi polymorphic ke Siswa (MI atau SMP)
      */
-    public function siswa(): BelongsTo
+    public function siswa(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
-        return $this->belongsTo(Siswa::class);
+        return $this->morphTo();
     }
 
     /**

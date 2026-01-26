@@ -164,6 +164,8 @@
                                             class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-200">
                                             <div>
                                                 <div class="font-medium text-gray-900">{{ $selectedSiswa['nama'] }}
+                                                    <span
+                                                        class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">{{ $selectedSiswa['jenjang'] ?? 'MI' }}</span>
                                                 </div>
                                                 <div class="text-sm text-gray-500">NISN:
                                                     {{ $selectedSiswa['nisn'] ?? '-' }} |
@@ -179,26 +181,47 @@
                                             </button>
                                         </div>
                                     @else
-                                        <div class="relative">
-                                            <input type="text" wire:model.live.debounce.300ms="searchSiswa"
-                                                placeholder="Cari nama, NISN, atau NIK siswa..."
-                                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
-                                            @if (count($siswaResults) > 0)
-                                                <div
-                                                    class="absolute z-10 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-lg max-h-60 overflow-y-auto">
-                                                    @foreach ($siswaResults as $result)
-                                                        <button type="button"
-                                                            wire:click="selectSiswa({{ $result['id'] }})"
-                                                            class="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0">
-                                                            <div class="font-medium text-gray-900">
-                                                                {{ $result['nama'] }}</div>
-                                                            <div class="text-xs text-gray-500">NISN:
-                                                                {{ $result['nisn'] ?? '-' }} |
-                                                                {{ $result['kelas'] ?? '-' }}</div>
-                                                        </button>
-                                                    @endforeach
-                                                </div>
-                                            @endif
+                                        <div class="space-y-2">
+                                            {{-- Pilih Jenjang --}}
+                                            <div class="flex gap-4">
+                                                <label class="flex items-center">
+                                                    <input type="radio" wire:model.live="filterJenjang"
+                                                        value="mi"
+                                                        class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-900">
+                                                    <span class="ml-2 text-sm text-gray-700">Siswa MI</span>
+                                                </label>
+                                                <label class="flex items-center">
+                                                    <input type="radio" wire:model.live="filterJenjang"
+                                                        value="smp"
+                                                        class="w-4 h-4 text-gray-900 border-gray-300 focus:ring-gray-900">
+                                                    <span class="ml-2 text-sm text-gray-700">Siswa SMP</span>
+                                                </label>
+                                            </div>
+                                            {{-- Search Input --}}
+                                            <div class="relative">
+                                                <input type="text" wire:model.live.debounce.300ms="searchSiswa"
+                                                    placeholder="Cari nama, NISN, atau NIK siswa..."
+                                                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                                @if (count($siswaResults) > 0)
+                                                    <div
+                                                        class="absolute z-10 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-lg max-h-60 overflow-y-auto">
+                                                        @foreach ($siswaResults as $result)
+                                                            <button type="button"
+                                                                wire:click="selectSiswa({{ $result['id'] }})"
+                                                                class="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                                                                <div class="font-medium text-gray-900">
+                                                                    {{ $result['nama'] }}
+                                                                    <span
+                                                                        class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">{{ strtoupper($result['jenjang']) }}</span>
+                                                                </div>
+                                                                <div class="text-xs text-gray-500">NISN:
+                                                                    {{ $result['nisn'] ?? '-' }} |
+                                                                    {{ $result['kelas'] ?? '-' }}</div>
+                                                            </button>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </div>
                                     @endif
                                     @error('siswa_id')

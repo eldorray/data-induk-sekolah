@@ -3,7 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\SuratKeteranganAktif;
-use App\Models\Siswa;
+use App\Models\SiswaMi;
+use App\Models\SiswaSmp;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -24,6 +25,7 @@ class SuratKeteranganAktifManagement extends Component
     // Form data
     public ?int $suratId = null;
     public ?int $siswa_id = null;
+    public string $siswa_type = 'App\\Models\\SiswaMi';
     public string $nomor_surat = '';
     public ?string $tanggal_surat = null;
     public string $keperluan = '';
@@ -33,13 +35,17 @@ class SuratKeteranganAktifManagement extends Component
 
     // Siswa search
     public string $searchSiswa = '';
+    public string $filterJenjang = 'mi'; // mi atau smp
     public array $siswaResults = [];
     public ?array $selectedSiswa = null;
 
     protected function rules(): array
     {
+        $siswaTable = $this->siswa_type === 'App\\Models\\SiswaMi' ? 'siswa_mis' : 'siswa_smps';
+
         return [
-            'siswa_id' => 'required|exists:siswas,id',
+            'siswa_id' => 'required|exists:' . $siswaTable . ',id',
+            'siswa_type' => 'required|in:App\\Models\\SiswaMi,App\\Models\\SiswaSmp',
             'nomor_surat' => 'required|string|max:100',
             'tanggal_surat' => 'required|date',
             'keperluan' => 'nullable|string|max:255',
@@ -60,10 +66,18 @@ class SuratKeteranganAktifManagement extends Component
         $this->resetPage();
     }
 
+    public function updatedFilterJenjang(): void
+    {
+        $this->siswaResults = [];
+        $this->searchSiswa = '';
+    }
+
     public function updatedSearchSiswa(): void
     {
         if (strlen($this->searchSiswa) >= 2) {
-            $this->siswaResults = Siswa::where('status', 'Aktif')
+            $model = $this->filterJenjang === 'mi' ? SiswaMi::class : SiswaSmp::class;
+
+            $this->siswaResults = $model::where('status', 'Aktif')
                 ->where(function ($query) {
                     $query->where('nama_lengkap', 'like', '%' . $this->searchSiswa . '%')
                         ->orWhere('nisn', 'like', '%' . $this->searchSiswa . '%')
@@ -76,6 +90,7 @@ class SuratKeteranganAktifManagement extends Component
                     'nama' => $s->nama_lengkap,
                     'nisn' => $s->nisn,
                     'kelas' => $s->tingkat_rombel,
+                    'jenjang' => $this->filterJenjang,
                 ])
                 ->toArray();
         } else {
@@ -85,14 +100,18 @@ class SuratKeteranganAktifManagement extends Component
 
     public function selectSiswa(int $id): void
     {
-        $siswa = Siswa::find($id);
+        $model = $this->filterJenjang === 'mi' ? SiswaMi::class : SiswaSmp::class;
+        $siswa = $model::find($id);
+
         if ($siswa) {
             $this->siswa_id = $siswa->id;
+            $this->siswa_type = $this->filterJenjang === 'mi' ? 'App\\Models\\SiswaMi' : 'App\\Models\\SiswaSmp';
             $this->selectedSiswa = [
                 'id' => $siswa->id,
                 'nama' => $siswa->nama_lengkap,
                 'nisn' => $siswa->nisn,
                 'kelas' => $siswa->tingkat_rombel,
+                'jenjang' => strtoupper($this->filterJenjang),
             ];
             $this->searchSiswa = '';
             $this->siswaResults = [];
@@ -102,6 +121,7 @@ class SuratKeteranganAktifManagement extends Component
     public function clearSiswa(): void
     {
         $this->siswa_id = null;
+        $this->siswa_type = 'App\\Models\\SiswaMi';
         $this->selectedSiswa = null;
         $this->searchSiswa = '';
     }
@@ -122,11 +142,14 @@ class SuratKeteranganAktifManagement extends Component
         $surat = SuratKeteranganAktif::with('siswa')->findOrFail($id);
         $this->suratId = $surat->id;
         $this->siswa_id = $surat->siswa_id;
+        $this->siswa_type = $surat->siswa_type;
+        $this->filterJenjang = $surat->siswa_type === 'App\\Models\\SiswaMi' ? 'mi' : 'smp';
         $this->selectedSiswa = [
             'id' => $surat->siswa->id,
             'nama' => $surat->siswa->nama_lengkap,
             'nisn' => $surat->siswa->nisn,
             'kelas' => $surat->siswa->tingkat_rombel,
+            'jenjang' => strtoupper($this->filterJenjang),
         ];
         $this->nomor_surat = $surat->nomor_surat;
         $this->tanggal_surat = $surat->tanggal_surat->format('Y-m-d');
@@ -179,6 +202,7 @@ class SuratKeteranganAktifManagement extends Component
     {
         $this->suratId = null;
         $this->siswa_id = null;
+        $this->siswa_type = 'App\\Models\\SiswaMi';
         $this->selectedSiswa = null;
         $this->nomor_surat = '';
         $this->tanggal_surat = null;
@@ -187,6 +211,7 @@ class SuratKeteranganAktifManagement extends Component
         $this->semester = 'ganjil';
         $this->status = 'draft';
         $this->searchSiswa = '';
+        $this->filterJenjang = 'mi';
         $this->siswaResults = [];
         $this->resetErrorBag();
     }
