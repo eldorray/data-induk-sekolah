@@ -11,8 +11,12 @@ use App\Livewire\MapelMiManagement;
 use App\Livewire\MapelSmpManagement;
 use App\Livewire\MutasiSiswaManagement;
 use App\Livewire\SuratKeteranganAktifManagement;
+use App\Livewire\SkGtyMiManagement;
+use App\Livewire\SkTugasTambahanMiManagement;
+use App\Livewire\SkPembagianTugasMiManagement;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\SuratKeteranganAktifController;
+use App\Http\Controllers\SkGuruMiController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -71,6 +75,31 @@ Route::get('surat-aktif/{id}/print', [SuratKeteranganAktifController::class, 'pr
 Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
     ->middleware(['auth'])
     ->name('settings.index');
+
+// SK Guru MI Routes
+Route::get('sk-gty-mi', SkGtyMiManagement::class)
+    ->middleware(['auth'])
+    ->name('sk-gty-mi.index');
+
+Route::get('sk-gty-mi/{id}/print', [SkGuruMiController::class, 'printSkGty'])
+    ->middleware(['auth'])
+    ->name('sk-gty-mi.print');
+
+Route::get('sk-tugas-tambahan-mi', SkTugasTambahanMiManagement::class)
+    ->middleware(['auth'])
+    ->name('sk-tugas-tambahan-mi.index');
+
+Route::get('sk-tugas-tambahan-mi/{id}/print', [SkGuruMiController::class, 'printSkTugasTambahan'])
+    ->middleware(['auth'])
+    ->name('sk-tugas-tambahan-mi.print');
+
+Route::get('sk-pembagian-tugas-mi', SkPembagianTugasMiManagement::class)
+    ->middleware(['auth'])
+    ->name('sk-pembagian-tugas-mi.index');
+
+Route::get('sk-pembagian-tugas-mi/{id}/print', [SkGuruMiController::class, 'printSkPembagianTugas'])
+    ->middleware(['auth'])
+    ->name('sk-pembagian-tugas-mi.print');
 
 
 // Auth Routes (Register disabled)

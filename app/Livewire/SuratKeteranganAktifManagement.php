@@ -25,7 +25,7 @@ class SuratKeteranganAktifManagement extends Component
     // Form data
     public ?int $suratId = null;
     public ?int $siswa_id = null;
-    public string $siswa_type = 'App\\Models\\SiswaMi';
+    public string $siswa_type = 'siswa_mi';
     public string $nomor_surat = '';
     public ?string $tanggal_surat = null;
     public string $keperluan = '';
@@ -41,11 +41,11 @@ class SuratKeteranganAktifManagement extends Component
 
     protected function rules(): array
     {
-        $siswaTable = $this->siswa_type === 'App\\Models\\SiswaMi' ? 'siswa_mis' : 'siswa_smps';
+        $siswaTable = $this->siswa_type === 'siswa_mi' ? 'siswa_mis' : 'siswa_smps';
 
         return [
             'siswa_id' => 'required|exists:' . $siswaTable . ',id',
-            'siswa_type' => 'required|in:App\\Models\\SiswaMi,App\\Models\\SiswaSmp',
+            'siswa_type' => 'required|in:siswa_mi,siswa_smp',
             'nomor_surat' => 'required|string|max:100',
             'tanggal_surat' => 'required|date',
             'keperluan' => 'nullable|string|max:255',
@@ -105,7 +105,7 @@ class SuratKeteranganAktifManagement extends Component
 
         if ($siswa) {
             $this->siswa_id = $siswa->id;
-            $this->siswa_type = $this->filterJenjang === 'mi' ? 'App\\Models\\SiswaMi' : 'App\\Models\\SiswaSmp';
+            $this->siswa_type = $this->filterJenjang === 'mi' ? 'siswa_mi' : 'siswa_smp';
             $this->selectedSiswa = [
                 'id' => $siswa->id,
                 'nama' => $siswa->nama_lengkap,
@@ -121,7 +121,7 @@ class SuratKeteranganAktifManagement extends Component
     public function clearSiswa(): void
     {
         $this->siswa_id = null;
-        $this->siswa_type = 'App\\Models\\SiswaMi';
+        $this->siswa_type = 'siswa_mi';
         $this->selectedSiswa = null;
         $this->searchSiswa = '';
     }
@@ -143,7 +143,7 @@ class SuratKeteranganAktifManagement extends Component
         $this->suratId = $surat->id;
         $this->siswa_id = $surat->siswa_id;
         $this->siswa_type = $surat->siswa_type;
-        $this->filterJenjang = $surat->siswa_type === 'App\\Models\\SiswaMi' ? 'mi' : 'smp';
+        $this->filterJenjang = in_array($surat->siswa_type, ['siswa_mi', 'App\\Models\\SiswaMi', 'AppModelsSiswaMi']) ? 'mi' : 'smp';
         $this->selectedSiswa = [
             'id' => $surat->siswa->id,
             'nama' => $surat->siswa->nama_lengkap,
@@ -202,7 +202,7 @@ class SuratKeteranganAktifManagement extends Component
     {
         $this->suratId = null;
         $this->siswa_id = null;
-        $this->siswa_type = 'App\\Models\\SiswaMi';
+        $this->siswa_type = 'siswa_mi';
         $this->selectedSiswa = null;
         $this->nomor_surat = '';
         $this->tanggal_surat = null;
