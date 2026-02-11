@@ -37,6 +37,7 @@ class SuratPernyataanInsentifManagement extends Component
 
     // Delete
     public bool $showDeleteModal = false;
+    public bool $showDeleteAllModal = false;
     public ?int $deleteId = null;
 
     public function mount(): void
@@ -134,9 +135,23 @@ class SuratPernyataanInsentifManagement extends Component
         session()->flash('success', 'Surat pernyataan insentif berhasil dihapus.');
     }
 
+    public function openDeleteAllModal(): void
+    {
+        $this->showDeleteAllModal = true;
+    }
+
+    public function deleteAll(): void
+    {
+        $count = SuratPernyataanInsentif::count();
+        SuratPernyataanInsentif::truncate();
+        $this->showDeleteAllModal = false;
+        session()->flash('success', "Berhasil menghapus {$count} surat pernyataan insentif.");
+    }
+
     public function closeModal(): void
     {
         $this->showDeleteModal = false;
+        $this->showDeleteAllModal = false;
         $this->deleteId = null;
     }
 

@@ -112,6 +112,10 @@ Route::get('surat-pernyataan-insentif/{id}/print', [SuratPernyataanInsentifContr
     ->middleware(['auth'])
     ->name('surat-pernyataan-insentif.print');
 
+Route::get('surat-pernyataan-insentif-export-all', [SuratPernyataanInsentifController::class, 'exportAllPdf'])
+    ->middleware(['auth'])
+    ->name('surat-pernyataan-insentif.export-all');
+
 
 // Auth Routes (Register disabled)
 Route::middleware('guest')->group(function () {

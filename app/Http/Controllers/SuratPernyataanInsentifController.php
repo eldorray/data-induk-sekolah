@@ -35,4 +35,34 @@ class SuratPernyataanInsentifController extends Controller
 
         return $pdf->stream($filename);
     }
+
+    /**
+     * Export all surat pernyataan insentif as a single merged PDF
+     */
+    public function exportAllPdf()
+    {
+        $surats = SuratPernyataanInsentif::orderBy('created_at', 'desc')->get();
+
+        if ($surats->isEmpty()) {
+            return back()->with('error', 'Tidak ada surat untuk diekspor.');
+        }
+
+        $settings = SchoolSetting::getAll();
+
+        $items = $surats->map(function ($surat) {
+            return [
+                'surat' => $surat,
+                'guru' => $surat->guru_model,
+            ];
+        })->filter(fn($item) => $item['guru'] !== null);
+
+        $pdf = Pdf::loadView('pdf.surat-pernyataan-insentif-all', [
+            'items' => $items,
+            'settings' => $settings,
+        ]);
+
+        $pdf->setPaper([0, 0, 612, 936], 'portrait');
+
+        return $pdf->stream('surat-pernyataan-insentif-all.pdf');
+    }
 }
