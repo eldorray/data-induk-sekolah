@@ -14,9 +14,11 @@ use App\Livewire\SuratKeteranganAktifManagement;
 use App\Livewire\SkGtyMiManagement;
 use App\Livewire\SkTugasTambahanMiManagement;
 use App\Livewire\SkPembagianTugasMiManagement;
+use App\Livewire\SuratPernyataanInsentifManagement;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SkGuruMiController;
+use App\Http\Controllers\SuratPernyataanInsentifController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -100,6 +102,15 @@ Route::get('sk-pembagian-tugas-mi', SkPembagianTugasMiManagement::class)
 Route::get('sk-pembagian-tugas-mi/{id}/print', [SkGuruMiController::class, 'printSkPembagianTugas'])
     ->middleware(['auth'])
     ->name('sk-pembagian-tugas-mi.print');
+
+// Surat Pernyataan Insentif
+Route::get('surat-pernyataan-insentif', SuratPernyataanInsentifManagement::class)
+    ->middleware(['auth'])
+    ->name('surat-pernyataan-insentif.index');
+
+Route::get('surat-pernyataan-insentif/{id}/print', [SuratPernyataanInsentifController::class, 'printPdf'])
+    ->middleware(['auth'])
+    ->name('surat-pernyataan-insentif.print');
 
 
 // Auth Routes (Register disabled)
