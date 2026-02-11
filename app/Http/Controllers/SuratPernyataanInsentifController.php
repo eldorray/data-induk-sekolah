@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SuratPernyataanInsentif;
 use App\Models\SchoolSetting;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
 class SuratPernyataanInsentifController extends Controller
 {
@@ -39,9 +40,12 @@ class SuratPernyataanInsentifController extends Controller
     /**
      * Export all surat pernyataan insentif as a single merged PDF
      */
-    public function exportAllPdf()
+    public function exportAllPdf(Request $request)
     {
-        $surats = SuratPernyataanInsentif::orderBy('created_at', 'desc')->get();
+        $surats = SuratPernyataanInsentif::query()
+            ->when($request->bulan_tahun, fn($q) => $q->where('bulan_tahun', $request->bulan_tahun))
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         if ($surats->isEmpty()) {
             return back()->with('error', 'Tidak ada surat untuk diekspor.');

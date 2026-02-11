@@ -179,10 +179,18 @@
                 class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <h3 class="text-sm font-semibold text-gray-900">Riwayat Surat Pernyataan Insentif</h3>
                 <div class="flex items-center gap-3">
+                    {{-- Filter Bulan/Tahun --}}
+                    <select wire:model.live="filterBulanTahun"
+                        class="px-3 py-1.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                        <option value="">Semua Periode</option>
+                        @foreach ($bulanTahunOptions as $option)
+                            <option value="{{ $option }}">{{ $option }}</option>
+                        @endforeach
+                    </select>
+                    {{-- Search --}}
                     <div class="relative">
-                        <input type="text" wire:model.live.debounce.300ms="searchRiwayat"
-                            placeholder="Cari bulan/tahun..."
-                            class="pl-8 pr-4 py-1.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48 text-sm">
+                        <input type="text" wire:model.live.debounce.300ms="searchRiwayat" placeholder="Cari..."
+                            class="pl-8 pr-4 py-1.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-40 text-sm">
                         <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -190,7 +198,8 @@
                         </svg>
                     </div>
                     @if ($riwayat->isNotEmpty())
-                        <a href="{{ route('surat-pernyataan-insentif.export-all') }}" target="_blank"
+                        <a href="{{ route('surat-pernyataan-insentif.export-all', ['bulan_tahun' => $filterBulanTahun]) }}"
+                            target="_blank"
                             class="px-3 py-1.5 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium flex items-center gap-1.5 transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

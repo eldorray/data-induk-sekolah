@@ -32,8 +32,9 @@ class SuratPernyataanInsentifManagement extends Component
     public array $selectedGuruIds = [];
     public bool $selectAll = false;
 
-    // Riwayat search
+    // Riwayat search & filter
     public string $searchRiwayat = '';
+    public string $filterBulanTahun = '';
 
     // Delete
     public bool $showDeleteModal = false;
@@ -142,8 +143,10 @@ class SuratPernyataanInsentifManagement extends Component
 
     public function deleteAll(): void
     {
-        $count = SuratPernyataanInsentif::count();
-        SuratPernyataanInsentif::truncate();
+        $query = SuratPernyataanInsentif::query()
+            ->when($this->filterBulanTahun, fn($q) => $q->where('bulan_tahun', $this->filterBulanTahun));
+        $count = $query->count();
+        $query->delete();
         $this->showDeleteAllModal = false;
         session()->flash('success', "Berhasil menghapus {$count} surat pernyataan insentif.");
     }
@@ -172,6 +175,7 @@ class SuratPernyataanInsentifManagement extends Component
 
         // Riwayat for "riwayat" tab
         $riwayat = SuratPernyataanInsentif::query()
+            ->when($this->filterBulanTahun, fn($q) => $q->where('bulan_tahun', $this->filterBulanTahun))
             ->when($this->searchRiwayat, function ($query) {
                 $query->where('unit_kerja', 'like', '%' . $this->searchRiwayat . '%')
                     ->orWhere('bulan_tahun', 'like', '%' . $this->searchRiwayat . '%');
@@ -185,9 +189,13 @@ class SuratPernyataanInsentifManagement extends Component
             return $surat;
         });
 
+        // Get distinct bulan_tahun values for filter dropdown
+        $bulanTahunOptions = SuratPernyataanInsentif::distinct()->pluck('bulan_tahun')->sort()->values();
+
         return view('livewire.surat-pernyataan-insentif-management', [
             'gurus' => $gurus,
             'riwayat' => $riwayat,
+            'bulanTahunOptions' => $bulanTahunOptions,
         ])->layout('layouts.admin', ['header' => 'Surat Pernyataan Insentif']);
     }
 }
