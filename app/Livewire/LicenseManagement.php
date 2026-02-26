@@ -84,6 +84,13 @@ class LicenseManagement extends Component
         session()->flash('success', "License {$license->license_key} berhasil diaktifkan kembali.");
     }
 
+    public function resetDomain(int $id): void
+    {
+        $license = License::findOrFail($id);
+        $license->update(['domain' => null]);
+        session()->flash('success', "Domain untuk license {$license->license_key} berhasil direset.");
+    }
+
     public function openDeleteModal(int $id): void
     {
         $this->deleteId = $id;
