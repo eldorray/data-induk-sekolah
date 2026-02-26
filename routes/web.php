@@ -15,6 +15,7 @@ use App\Livewire\SkGtyMiManagement;
 use App\Livewire\SkTugasTambahanMiManagement;
 use App\Livewire\SkPembagianTugasMiManagement;
 use App\Livewire\SuratPernyataanInsentifManagement;
+use App\Livewire\LicenseManagement;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SkGuruMiController;
@@ -115,6 +116,11 @@ Route::get('surat-pernyataan-insentif/{id}/print', [SuratPernyataanInsentifContr
 Route::get('surat-pernyataan-insentif-export-all', [SuratPernyataanInsentifController::class, 'exportAllPdf'])
     ->middleware(['auth'])
     ->name('surat-pernyataan-insentif.export-all');
+
+// License Management
+Route::get('licenses', LicenseManagement::class)
+    ->middleware(['auth'])
+    ->name('licenses.index');
 
 
 // Auth Routes (Register disabled)

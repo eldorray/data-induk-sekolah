@@ -1,0 +1,167 @@
+# License Activation System for E-Raport SaaS
+
+Menambahkan sistem aktivasi lisensi pada halaman login. Jika aplikasi belum diaktivasi, tombol login di-disable dan muncul tombol **"Aktivasi Aplikasi"** yang membuka modal input license key. License key divalidasi ke **server lisensi milik Anda** (API endpoint), dan jika valid, data lisensi disimpan di database lokal.
+
+## Arsitektur Sistem
+
+```mermaid
+sequenceDiagram
+    participant S as Sekolah (Client)
+    participant L as Server Lisensi Anda
+    
+    S->>S: Buka halaman login
+    S->>S: Cek tabel app_licenses
+    alt Belum aktivasi
+        S->>S: Tampilkan tombol "Aktivasi"
+        S->>S: Admin input license key
+        S->>L: POST /api/license/verify {key, domain}
+        L->>L: Validasi key + domain
+        L-->>S: {valid: true, expires_at, school_name}
+        S->>S: Simpan ke app_licenses
+        S->>S: Login form aktif
+    else Sudah aktivasi
+        S->>S: Login form langsung aktif
+    end
+```
+
+## Proposed Changes
+
+### Database & Model
+
+#### [NEW] [create_app_licenses_table.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/database/migrations/2026_02_26_000000_create_app_licenses_table.php)
+
+Migration untuk tabel `app_licenses`:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | bigint | Primary key |
+| `license_key` | string | Key lisensi yang diinput |
+| `licensed_to` | string(nullable) | Nama sekolah dari server |
+| `domain` | string | Domain tempat aktivasi |
+| `status` | enum | `active`, `expired`, `revoked` |
+| `activated_at` | timestamp | Waktu aktivasi |
+| `expires_at` | timestamp(nullable) | Masa berlaku |
+| `last_checked_at` | timestamp(nullable) | Terakhir cek ke server |
+| `server_response` | json(nullable) | Raw response dari server |
+
+#### [NEW] [AppLicense.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/app/Models/AppLicense.php)
+
+Model Eloquent dengan helper methods:
+- `isActive(): bool` — cek apakah lisensi aktif dan belum expired
+- `scopeActive($query)` — scope untuk query lisensi aktif
+- `static isAppActivated(): bool` — cek cepat status aktivasi (di-cache)
+
+---
+
+### Configuration
+
+#### [MODIFY] [.env.example](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/.env.example)
+
+Tambah variable:
+```diff
++# License Server
++LICENSE_SERVER_URL=https://license.yourdomain.com/api
++LICENSE_SERVER_KEY=
+```
+
+#### [NEW] [license.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/config/license.php)
+
+Config file berisi:
+- `server_url` — URL API server lisensi
+- `server_key` — API key untuk otentikasi ke server
+- `check_interval` — interval re-check (default 24 jam)
+
+---
+
+### Controller & Middleware
+
+#### [NEW] [LicenseController.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/app/Http/Controllers/LicenseController.php)
+
+Dua methods:
+- `showActivationForm()` — return status aktivasi (JSON)
+- `activate(Request $request)` — terima license key, validasi ke server lisensi, simpan ke DB
+
+**Logika aktivasi:**
+1. Terima `license_key` dari form
+2. POST ke server lisensi dengan `{key, domain}`
+3. Jika valid → simpan ke `app_licenses`, return success
+4. Jika gagal → return error message
+
+> [!NOTE]
+> Untuk tahap awal (sebelum server lisensi siap), bisa pakai mode **offline** — validasi license key menggunakan format hash yang Anda tentukan (misal: `HMAC-SHA256` dari domain + secret).
+
+#### [NEW] [EnsureAppActivated.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/app/Http/Middleware/EnsureAppActivated.php)
+
+Middleware yang mengecek lisensi aktif. Diterapkan **hanya pada route login `POST`** — jika belum aktif, kembalikan error validation agar user tidak bisa login.
+
+---
+
+### UI Changes
+
+#### [MODIFY] [LoginController.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/app/Http/Controllers/Auth/LoginController.php)
+
+Di method [create()](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/app/Http/Controllers/Auth/LoginController.php#20-28), tambahkan `$isActivated = AppLicense::isAppActivated()` dan pass ke view.
+
+#### [MODIFY] [login.blade.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/resources/views/auth/login.blade.php)
+
+Perubahan pada halaman login:
+
+1. **Jika belum aktivasi:**
+   - Tombol login di-disable (grayed out)
+   - Muncul banner peringatan: *"Aplikasi belum diaktivasi"*
+   - Tombol **"🔑 Aktivasi Aplikasi"** yang membuka modal
+   
+2. **Modal aktivasi** (Alpine.js):
+   - Input field untuk license key
+   - Tombol submit yang mengirim AJAX request ke `LicenseController@activate`
+   - Feedback success/error
+   - Setelah sukses → reload halaman, login form aktif
+
+3. **Jika sudah aktivasi:**
+   - Login form normal (tidak ada perubahan)
+   - Badge kecil di footer: *"✓ Lisensi aktif s/d DD-MM-YYYY"*
+
+---
+
+### Routes
+
+#### [MODIFY] [web.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/routes/web.php)
+
+Tambah route (tanpa auth middleware):
+```php
+Route::post('license/activate', [LicenseController::class, 'activate'])->name('license.activate');
+Route::get('license/status', [LicenseController::class, 'status'])->name('license.status');
+```
+
+---
+
+### Bootstrap
+
+#### [MODIFY] [app.php](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/bootstrap/app.php)
+
+Tidak perlu register middleware global — cukup diterapkan di [LoginController](file:///Users/elfahmie/Documents/Coding/Antigravity/e-raport-saas/app/Http/Controllers/Auth/LoginController.php#18-138) saja.
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Server Lisensi**: Untuk sistem ini berfungsi penuh, Anda perlu menyiapkan server lisensi terpisah (bisa Laravel sederhana) yang menyimpan daftar license key dan validasi domain. Untuk sementara, saya akan implementasikan mode **offline** (validasi lokal) agar bisa langsung digunakan tanpa server lisensi.
+
+> [!IMPORTANT]
+> **Mode Offline vs Online**: 
+> - **Offline** — License key divalidasi menggunakan algoritma hash lokal. Lebih mudah tapi kurang aman (jika seseorang tahu algoritmanya, bisa generate key sendiri).
+> - **Online** — License key divalidasi ke server Anda via HTTP. Lebih aman tapi butuh internet saat aktivasi.
+> 
+> Saya akan implementasikan **keduanya** — default offline, bisa switch ke online ketika server lisensi sudah siap.
+
+## Verification Plan
+
+### Manual Verification
+1. Jalankan `php artisan migrate` untuk membuat tabel `app_licenses`
+2. Buka halaman login — pastikan muncul tombol "Aktivasi Aplikasi" dan login form di-disable
+3. Klik tombol "Aktivasi" — pastikan modal muncul
+4. Input license key yang salah — pastikan muncul error
+5. Input license key yang valid — pastikan muncul success dan halaman reload
+6. Setelah aktivasi — pastikan login form aktif dan bisa login normal
+7. Cek tabel `app_licenses` — pastikan data tersimpan

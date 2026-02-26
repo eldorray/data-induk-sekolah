@@ -107,3 +107,6 @@ Route::prefix('mapel-smp')->group(function () {
     Route::post('/sync', [\App\Http\Controllers\Api\MapelSmpController::class, 'sync'])->name('api.mapel-smp.sync');
 });
 
+// License Verification API (for e-raport clients)
+Route::post('/license/verify', [\App\Http\Controllers\Api\LicenseVerifyController::class, 'verify'])->name('api.license.verify');
+
