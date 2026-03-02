@@ -41,6 +41,16 @@ class SuratPernyataanTangcerManagement extends Component
     public bool $showDeleteAllModal = false;
     public ?int $deleteId = null;
 
+    // Edit
+    public bool $showEditModal = false;
+    public ?int $editId = null;
+    public string $edit_nomor_surat = '';
+    public string $edit_tahun_anggaran = '';
+    public string $edit_semester = '';
+    public string $edit_isi_surat = '';
+    public string $edit_isi_tujuan = '';
+    public ?string $edit_tanggal_surat = null;
+
     public function mount(): void
     {
         $settings = SchoolSetting::getAll();
@@ -156,7 +166,48 @@ class SuratPernyataanTangcerManagement extends Component
     {
         $this->showDeleteModal = false;
         $this->showDeleteAllModal = false;
+        $this->showEditModal = false;
         $this->deleteId = null;
+        $this->editId = null;
+    }
+
+    public function openEditModal(int $id): void
+    {
+        $surat = SuratPernyataanTangcer::findOrFail($id);
+        $this->editId = $id;
+        $this->edit_nomor_surat = $surat->nomor_surat;
+        $this->edit_tahun_anggaran = $surat->tahun_anggaran;
+        $this->edit_semester = $surat->semester;
+        $this->edit_isi_surat = $surat->isi_surat ?? '';
+        $this->edit_isi_tujuan = $surat->isi_tujuan ?? '';
+        $this->edit_tanggal_surat = $surat->tanggal_surat?->format('Y-m-d');
+        $this->showEditModal = true;
+    }
+
+    public function updateSurat(): void
+    {
+        $this->validate([
+            'edit_nomor_surat' => 'required|string|max:100',
+            'edit_tahun_anggaran' => 'required|string|max:50',
+            'edit_semester' => 'required|string|max:50',
+            'edit_isi_surat' => 'required|string',
+            'edit_isi_tujuan' => 'required|string',
+            'edit_tanggal_surat' => 'required|date',
+        ]);
+
+        $surat = SuratPernyataanTangcer::findOrFail($this->editId);
+        $surat->update([
+            'nomor_surat' => $this->edit_nomor_surat,
+            'tahun_anggaran' => $this->edit_tahun_anggaran,
+            'semester' => $this->edit_semester,
+            'isi_surat' => $this->edit_isi_surat,
+            'isi_tujuan' => $this->edit_isi_tujuan,
+            'tanggal_surat' => $this->edit_tanggal_surat,
+        ]);
+
+        $this->showEditModal = false;
+        $this->editId = null;
+        session()->flash('success', 'Surat pernyataan TANGCER berhasil diperbarui.');
     }
 
     public function render()
