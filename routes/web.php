@@ -15,11 +15,13 @@ use App\Livewire\SkGtyMiManagement;
 use App\Livewire\SkTugasTambahanMiManagement;
 use App\Livewire\SkPembagianTugasMiManagement;
 use App\Livewire\SuratPernyataanInsentifManagement;
+use App\Livewire\SuratPernyataanTangcerManagement;
 use App\Livewire\LicenseManagement;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SkGuruMiController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
+use App\Http\Controllers\SuratPernyataanTangcerController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -116,6 +118,19 @@ Route::get('surat-pernyataan-insentif/{id}/print', [SuratPernyataanInsentifContr
 Route::get('surat-pernyataan-insentif-export-all', [SuratPernyataanInsentifController::class, 'exportAllPdf'])
     ->middleware(['auth'])
     ->name('surat-pernyataan-insentif.export-all');
+
+// Surat Pernyataan Tangcer
+Route::get('surat-pernyataan-tangcer', SuratPernyataanTangcerManagement::class)
+    ->middleware(['auth'])
+    ->name('surat-pernyataan-tangcer.index');
+
+Route::get('surat-pernyataan-tangcer/{id}/print', [SuratPernyataanTangcerController::class, 'printPdf'])
+    ->middleware(['auth'])
+    ->name('surat-pernyataan-tangcer.print');
+
+Route::get('surat-pernyataan-tangcer-export-all', [SuratPernyataanTangcerController::class, 'exportAllPdf'])
+    ->middleware(['auth'])
+    ->name('surat-pernyataan-tangcer.export-all');
 
 // License Management
 Route::get('licenses', LicenseManagement::class)
