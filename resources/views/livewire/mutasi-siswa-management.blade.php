@@ -331,9 +331,8 @@
                     </div>
                 </div>
             </div>
-</div>
-</template>
-@endif
+        </template>
+    @endif
 
 {{-- Delete Confirmation Modal --}}
 @if ($showDeleteModal)
