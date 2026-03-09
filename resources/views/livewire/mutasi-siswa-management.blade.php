@@ -151,186 +151,192 @@
     {{-- Create/Edit Modal --}}
     @if ($showModal)
         <template x-teleport="#modal-portal">
-        <div class="fixed inset-0 z-[9999] overflow-y-auto">
-            <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
-            <div class="fixed inset-0 flex items-center justify-center p-4">
-                <div
-                    class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
-                    <form wire:submit="save">
-                        <div class="border-b border-gray-200 px-6 py-4 sticky top-0 bg-white z-10">
-                            <h3 class="text-lg font-semibold text-gray-900">
-                                {{ $isEditing ? 'Edit Surat Mutasi' : 'Buat Surat Mutasi' }}
-                            </h3>
-                        </div>
-                        <div class="px-6 py-4 space-y-4">
-                            {{-- Pilih Siswa --}}
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Siswa <span
-                                        class="text-red-500">*</span></label>
-                                @if ($selectedSiswa)
-                                    <div
-                                        class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-200">
-                                        <div>
-                                            <div class="font-medium text-gray-900">{{ $selectedSiswa['nama'] }}
+            <div class="fixed inset-0 z-[9999] overflow-y-auto">
+                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
+                <div class="fixed inset-0 flex items-center justify-center p-4">
+                    <div
+                        class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+                        <form wire:submit="save">
+                            <div class="border-b border-gray-200 px-6 py-4 sticky top-0 bg-white z-10">
+                                <h3 class="text-lg font-semibold text-gray-900">
+                                    {{ $isEditing ? 'Edit Surat Mutasi' : 'Buat Surat Mutasi' }}
+                                </h3>
+                            </div>
+                            <div class="px-6 py-4 space-y-4">
+                                {{-- Pilih Siswa --}}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Siswa <span
+                                            class="text-red-500">*</span></label>
+                                    @if ($selectedSiswa)
+                                        <div
+                                            class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-200">
+                                            <div>
+                                                <div class="font-medium text-gray-900">{{ $selectedSiswa['nama'] }}
+                                                </div>
+                                                <div class="text-sm text-gray-500">NISN:
+                                                    {{ $selectedSiswa['nisn'] ?? '-' }} |
+                                                    {{ $selectedSiswa['kelas'] ?? '-' }}</div>
                                             </div>
-                                            <div class="text-sm text-gray-500">NISN:
-                                                {{ $selectedSiswa['nisn'] ?? '-' }} |
-                                                {{ $selectedSiswa['kelas'] ?? '-' }}</div>
+                                            <button type="button" wire:click="clearSiswa"
+                                                class="text-gray-400 hover:text-gray-600">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
                                         </div>
-                                        <button type="button" wire:click="clearSiswa"
-                                            class="text-red-500 hover:text-red-700">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
+                                    @else
+                                        <div class="relative">
+                                            <input type="text" wire:model.live.debounce.300ms="searchSiswa"
+                                                placeholder="Cari nama/NISN siswa..."
+                                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            @if (count($siswaResults) > 0)
+                                                <div
+                                                    class="absolute z-10 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-lg max-h-60 overflow-y-auto">
+                                                    @foreach ($siswaResults as $siswa)
+                                                        <button type="button"
+                                                            wire:click="selectSiswa({{ $siswa['id'] }})"
+                                                            class="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                                                            <div class="font-medium text-gray-900">
+                                                                {{ $siswa['nama'] }}
+                                                            </div>
+                                                            <div class="text-xs text-gray-500">NISN:
+                                                                {{ $siswa['nisn'] ?? '-' }} |
+                                                                {{ $siswa['kelas'] ?? '-' }}
+                                                            </div>
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
+                                    @error('siswa_id')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    {{-- Nomor Surat --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat <span
+                                                class="text-red-500">*</span></label>
+                                        <input type="text" wire:model="nomor_surat"
+                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        @error('nomor_surat')
+                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                        @enderror
                                     </div>
-                                @else
-                                    <div class="relative">
-                                        <input type="text" wire:model.live.debounce.300ms="searchSiswa"
-                                            placeholder="Cari nama/NISN siswa..."
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                                        @if (count($siswaResults) > 0)
-                                            <div
-                                                class="absolute z-20 w-full mt-1 bg-white rounded-xl border border-gray-200 shadow-lg max-h-60 overflow-y-auto">
-                                                @foreach ($siswaResults as $siswa)
-                                                    <button type="button"
-                                                        wire:click="selectSiswa({{ $siswa['id'] }})"
-                                                        class="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
-                                                        <div class="font-medium text-gray-900">
-                                                            {{ $siswa['nama'] }}
-                                                        </div>
-                                                        <div class="text-sm text-gray-500">NISN:
-                                                            {{ $siswa['nisn'] ?? '-' }} |
-                                                            {{ $siswa['kelas'] ?? '-' }}
-                                                        </div>
-                                                    </button>
-                                                @endforeach
-                                            </div>
-                                        @endif
+
+                                    {{-- Jenis Mutasi --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Mutasi <span
+                                                class="text-red-500">*</span></label>
+                                        <select wire:model="jenis_mutasi"
+                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            <option value="pindah">Pindah Sekolah</option>
+                                            <option value="keluar">Keluar/Berhenti</option>
+                                        </select>
                                     </div>
-                                @endif
-                                @error('siswa_id')
-                                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                                @enderror
-                            </div>
+                                </div>
 
-                            <div class="grid grid-cols-2 gap-4">
-                                {{-- Nomor Surat --}}
+                                <div class="grid grid-cols-2 gap-4">
+                                    {{-- Tanggal Surat --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Surat
+                                            <span class="text-red-500">*</span></label>
+                                        <input type="date" wire:model="tanggal_surat"
+                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        @error('tanggal_surat')
+                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Tanggal Mutasi --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mutasi
+                                            <span class="text-red-500">*</span></label>
+                                        <input type="date" wire:model="tanggal_mutasi"
+                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        @error('tanggal_mutasi')
+                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Alasan Mutasi --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat <span
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Alasan Mutasi <span
                                             class="text-red-500">*</span></label>
-                                    <input type="text" wire:model="nomor_surat"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                                    @error('nomor_surat')
-                                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    <textarea wire:model="alasan_mutasi" rows="2"
+                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"
+                                        placeholder="Contoh: Ikut pindah orang tua"></textarea>
+                                    @error('alasan_mutasi')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                     @enderror
                                 </div>
 
-                                {{-- Jenis Mutasi --}}
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Mutasi <span
-                                            class="text-red-500">*</span></label>
-                                    <select wire:model="jenis_mutasi"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                                        <option value="pindah">Pindah Sekolah</option>
-                                        <option value="keluar">Keluar/Berhenti</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                {{-- Tanggal Surat --}}
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Surat <span
-                                            class="text-red-500">*</span></label>
-                                    <input type="date" wire:model="tanggal_surat"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                                    @error('tanggal_surat')
-                                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                                    @enderror
+                                <div class="border-t border-gray-200 pt-4">
+                                    <h4 class="text-sm font-semibold text-gray-700 mb-3">Data Sekolah Tujuan (Opsional)
+                                    </h4>
                                 </div>
 
-                                {{-- Tanggal Mutasi --}}
+                                {{-- Sekolah Tujuan --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mutasi
-                                        <span class="text-red-500">*</span></label>
-                                    <input type="date" wire:model="tanggal_mutasi"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                                    @error('tanggal_mutasi')
-                                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            {{-- Alasan Mutasi --}}
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Alasan Mutasi <span
-                                        class="text-red-500">*</span></label>
-                                <textarea wire:model="alasan_mutasi" rows="2"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                                    placeholder="Contoh: Ikut pindah orang tua"></textarea>
-                                @error('alasan_mutasi')
-                                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="border-t border-gray-200 pt-4">
-                                <h4 class="text-sm font-semibold text-gray-700 mb-3">Data Sekolah Tujuan (Opsional)
-                                </h4>
-                            </div>
-
-                            {{-- Sekolah Tujuan --}}
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Sekolah
-                                    Tujuan</label>
-                                <input type="text" wire:model="sekolah_tujuan"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                {{-- NPSN Tujuan --}}
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">NPSN Sekolah
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Sekolah
                                         Tujuan</label>
-                                    <input type="text" wire:model="npsn_tujuan"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                                    <input type="text" wire:model="sekolah_tujuan"
+                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                 </div>
 
-                                {{-- Status --}}
+                                <div class="grid grid-cols-2 gap-4">
+                                    {{-- NPSN Tujuan --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">NPSN Sekolah
+                                            Tujuan</label>
+                                        <input type="text" wire:model="npsn_tujuan"
+                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                    </div>
+
+                                    {{-- Status --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Status <span
+                                                class="text-red-500">*</span></label>
+                                        <select wire:model="status"
+                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            <option value="draft">Draft</option>
+                                            <option value="disetujui">Disetujui</option>
+                                            <option value="dibatalkan">Dibatalkan</option>
+                                        </select>
+                                        @error('status')
+                                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                {{-- Alamat Tujuan --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    <select wire:model="status"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
-                                        <option value="draft">Draft</option>
-                                        <option value="disetujui">Disetujui</option>
-                                        <option value="dibatalkan">Dibatalkan</option>
-                                    </select>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Sekolah
+                                        Tujuan</label>
+                                    <textarea wire:model="alamat_tujuan" rows="2"
+                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
                                 </div>
                             </div>
-
-                            {{-- Alamat Tujuan --}}
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Sekolah
-                                    Tujuan</label>
-                                <textarea wire:model="alamat_tujuan" rows="2"
-                                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent"></textarea>
+                            <div
+                                class="border-t border-gray-200 px-6 py-4 flex justify-end gap-3 sticky bottom-0 bg-white">
+                                <button type="button" wire:click="closeModal"
+                                    class="px-4 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">
+                                    Batal
+                                </button>
+                                <button type="submit"
+                                    class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
+                                    {{ $isEditing ? 'Simpan Perubahan' : 'Buat Surat' }}
+                                </button>
                             </div>
-                        </div>
-                        <div
-                            class="border-t border-gray-200 bg-gray-50 px-6 py-4 flex justify-end gap-3 sticky bottom-0">
-                            <button type="button" wire:click="closeModal"
-                                class="px-4 py-2.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">Batal</button>
-                            <button type="submit"
-                                class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
-                                {{ $isEditing ? 'Simpan Perubahan' : 'Buat Surat' }}
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
         </template>
     @endif
 
