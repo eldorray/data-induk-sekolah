@@ -3,7 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\MutasiSiswa;
-use App\Models\Siswa;
+use App\Models\SiswaMi;
+use App\Models\SiswaSmp;
 use App\Models\SchoolSetting;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -25,6 +26,7 @@ class MutasiSiswaManagement extends Component
     // Form data
     public ?int $mutasiId = null;
     public ?int $siswa_id = null;
+    public string $siswa_type = 'siswa_mi';
     public string $nomor_surat = '';
     public ?string $tanggal_surat = null;
     public ?string $tanggal_mutasi = null;
@@ -37,13 +39,17 @@ class MutasiSiswaManagement extends Component
 
     // Siswa search
     public string $searchSiswa = '';
+    public string $filterJenjang = 'mi';
     public array $siswaResults = [];
     public ?array $selectedSiswa = null;
 
     protected function rules(): array
     {
+        $siswaTable = $this->siswa_type === 'siswa_mi' ? 'siswa_mis' : 'siswa_smps';
+
         return [
-            'siswa_id' => 'required|exists:siswas,id',
+            'siswa_id' => 'required|exists:' . $siswaTable . ',id',
+            'siswa_type' => 'required|in:siswa_mi,siswa_smp',
             'nomor_surat' => 'required|string|max:100',
             'tanggal_surat' => 'required|date',
             'tanggal_mutasi' => 'required|date',
@@ -69,10 +75,18 @@ class MutasiSiswaManagement extends Component
         $this->resetPage();
     }
 
+    public function updatedFilterJenjang(): void
+    {
+        $this->siswaResults = [];
+        $this->searchSiswa = '';
+    }
+
     public function updatedSearchSiswa(): void
     {
         if (strlen($this->searchSiswa) >= 2) {
-            $this->siswaResults = Siswa::where('status', 'Aktif')
+            $model = $this->filterJenjang === 'mi' ? SiswaMi::class : SiswaSmp::class;
+
+            $this->siswaResults = $model::where('status', 'Aktif')
                 ->where(function ($query) {
                     $query->where('nama_lengkap', 'like', '%' . $this->searchSiswa . '%')
                         ->orWhere('nisn', 'like', '%' . $this->searchSiswa . '%')
@@ -85,6 +99,7 @@ class MutasiSiswaManagement extends Component
                     'nama' => $s->nama_lengkap,
                     'nisn' => $s->nisn,
                     'kelas' => $s->tingkat_rombel,
+                    'jenjang' => $this->filterJenjang,
                 ])
                 ->toArray();
         } else {
@@ -94,14 +109,18 @@ class MutasiSiswaManagement extends Component
 
     public function selectSiswa(int $id): void
     {
-        $siswa = Siswa::find($id);
+        $model = $this->filterJenjang === 'mi' ? SiswaMi::class : SiswaSmp::class;
+        $siswa = $model::find($id);
+
         if ($siswa) {
             $this->siswa_id = $siswa->id;
+            $this->siswa_type = $this->filterJenjang === 'mi' ? 'siswa_mi' : 'siswa_smp';
             $this->selectedSiswa = [
                 'id' => $siswa->id,
                 'nama' => $siswa->nama_lengkap,
                 'nisn' => $siswa->nisn,
                 'kelas' => $siswa->tingkat_rombel,
+                'jenjang' => strtoupper($this->filterJenjang),
             ];
             $this->searchSiswa = '';
             $this->siswaResults = [];
@@ -111,6 +130,7 @@ class MutasiSiswaManagement extends Component
     public function clearSiswa(): void
     {
         $this->siswa_id = null;
+        $this->siswa_type = 'siswa_mi';
         $this->selectedSiswa = null;
         $this->searchSiswa = '';
     }
@@ -130,11 +150,14 @@ class MutasiSiswaManagement extends Component
         $mutasi = MutasiSiswa::with('siswa')->findOrFail($id);
         $this->mutasiId = $mutasi->id;
         $this->siswa_id = $mutasi->siswa_id;
+        $this->siswa_type = $mutasi->siswa_type ?? 'siswa_mi';
+        $this->filterJenjang = in_array($mutasi->siswa_type, ['siswa_mi', 'App\\Models\\SiswaMi']) ? 'mi' : 'smp';
         $this->selectedSiswa = [
             'id' => $mutasi->siswa->id,
             'nama' => $mutasi->siswa->nama_lengkap,
             'nisn' => $mutasi->siswa->nisn,
             'kelas' => $mutasi->siswa->tingkat_rombel,
+            'jenjang' => strtoupper($this->filterJenjang),
         ];
         $this->nomor_surat = $mutasi->nomor_surat;
         $this->tanggal_surat = $mutasi->tanggal_surat->format('Y-m-d');
@@ -156,31 +179,33 @@ class MutasiSiswaManagement extends Component
         if ($this->isEditing) {
             $mutasi = MutasiSiswa::findOrFail($this->mutasiId);
             $mutasi->update($validated);
-            
+
             // Update status siswa jika disetujui
             if ($validated['status'] === 'disetujui') {
-                $siswa = Siswa::find($validated['siswa_id']);
+                $model = $validated['siswa_type'] === 'siswa_mi' ? SiswaMi::class : SiswaSmp::class;
+                $siswa = $model::find($validated['siswa_id']);
                 if ($siswa) {
                     $siswa->update([
                         'status' => $validated['jenis_mutasi'] === 'pindah' ? 'Pindah' : 'Keluar'
                     ]);
                 }
             }
-            
+
             session()->flash('success', 'Data mutasi berhasil diperbarui.');
         } else {
             $mutasi = MutasiSiswa::create($validated);
-            
+
             // Update status siswa jika langsung disetujui
             if ($validated['status'] === 'disetujui') {
-                $siswa = Siswa::find($validated['siswa_id']);
+                $model = $validated['siswa_type'] === 'siswa_mi' ? SiswaMi::class : SiswaSmp::class;
+                $siswa = $model::find($validated['siswa_id']);
                 if ($siswa) {
                     $siswa->update([
                         'status' => $validated['jenis_mutasi'] === 'pindah' ? 'Pindah' : 'Keluar'
                     ]);
                 }
             }
-            
+
             session()->flash('success', 'Data mutasi berhasil ditambahkan.');
         }
 
@@ -209,10 +234,11 @@ class MutasiSiswaManagement extends Component
         $this->resetForm();
     }
 
-    public function resetForm(): void
+    private function resetForm(): void
     {
         $this->mutasiId = null;
         $this->siswa_id = null;
+        $this->siswa_type = 'siswa_mi';
         $this->selectedSiswa = null;
         $this->nomor_surat = '';
         $this->tanggal_surat = null;
@@ -224,8 +250,9 @@ class MutasiSiswaManagement extends Component
         $this->alamat_tujuan = '';
         $this->status = 'draft';
         $this->searchSiswa = '';
+        $this->filterJenjang = 'mi';
         $this->siswaResults = [];
-        $this->resetValidation();
+        $this->resetErrorBag();
     }
 
     public function render()

@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
 class MutasiSiswa extends Model
 {
     protected $fillable = [
         'siswa_id',
+        'siswa_type',
         'nomor_surat',
         'tanggal_surat',
         'tanggal_mutasi',
@@ -27,11 +28,11 @@ class MutasiSiswa extends Model
     ];
 
     /**
-     * Relasi ke Siswa
+     * Relasi polymorphic ke Siswa (MI atau SMP)
      */
-    public function siswa(): BelongsTo
+    public function siswa(): MorphTo
     {
-        return $this->belongsTo(Siswa::class);
+        return $this->morphTo();
     }
 
     /**
