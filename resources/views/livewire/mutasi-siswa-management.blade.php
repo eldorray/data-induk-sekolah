@@ -150,7 +150,7 @@
 
     {{-- Create/Edit Modal --}}
     @if ($showModal)
-        @teleport('#modal-portal')
+        <template x-teleport="#modal-portal">
         <div class="fixed inset-0 z-[9999] overflow-y-auto">
             <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
             <div class="fixed inset-0 flex items-center justify-center p-4">
@@ -331,12 +331,12 @@
                 </div>
             </div>
         </div>
-        @endteleport
+        </template>
     @endif
 
 {{-- Delete Confirmation Modal --}}
 @if ($showDeleteModal)
-    @teleport('#modal-portal')
+    <template x-teleport="#modal-portal">
         <div class="fixed inset-0 z-[9999] overflow-y-auto">
             <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
             <div class="fixed inset-0 flex items-center justify-center p-4">
@@ -359,6 +359,6 @@
                 </div>
             </div>
         </div>
-    @endteleport
+    </template>
 @endif
 </div>
