@@ -24,6 +24,7 @@ class SuratRekapPkh extends Model
 
     protected $casts = [
         'tanggal_surat' => 'date',
+        'format_surat' => 'array',
         'bulan_rekap' => 'array',
         'data_absensi' => 'array',
     ];
