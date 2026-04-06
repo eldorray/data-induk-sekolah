@@ -16,12 +16,14 @@ use App\Livewire\SkTugasTambahanMiManagement;
 use App\Livewire\SkPembagianTugasMiManagement;
 use App\Livewire\SuratPernyataanInsentifManagement;
 use App\Livewire\SuratPernyataanTangcerManagement;
+use App\Livewire\SuratRekapPkhManagement;
 use App\Livewire\LicenseManagement;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SkGuruMiController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
 use App\Http\Controllers\SuratPernyataanTangcerController;
+use App\Http\Controllers\SuratRekapPkhController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -76,6 +78,15 @@ Route::get('surat-aktif', SuratKeteranganAktifManagement::class)
 Route::get('surat-aktif/{id}/print', [SuratKeteranganAktifController::class, 'printPdf'])
     ->middleware(['auth'])
     ->name('surat-aktif.print');
+
+// Surat Rekap PKH
+Route::get('surat-rekap-pkh', SuratRekapPkhManagement::class)
+    ->middleware(['auth'])
+    ->name('surat-rekap-pkh.index');
+
+Route::get('surat-rekap-pkh/{id}/print', [SuratRekapPkhController::class, 'printPdf'])
+    ->middleware(['auth'])
+    ->name('surat-rekap-pkh.print');
 
 Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
     ->middleware(['auth'])
