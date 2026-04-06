@@ -14,6 +14,7 @@ class SuratRekapPkh extends Model
         'tanggal_surat',
         'tahun_ajaran',
         'semester',
+        'format_surat',
         'bulan_rekap',
         'data_absensi',
         'nama_wali_kelas',

@@ -263,7 +263,7 @@
                                     </div>
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-3 gap-4">
                                     {{-- Tahun Ajaran --}}
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Tahun
@@ -280,6 +280,17 @@
                                             class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                             <option value="ganjil">Ganjil</option>
                                             <option value="genap">Genap</option>
+                                        </select>
+                                    </div>
+
+                                    {{-- Format Surat --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Format Surat <span
+                                                class="text-red-500">*</span></label>
+                                        <select wire:model.live="format_surat"
+                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            <option value="rekap_absensi">Rekap Absensi</option>
+                                            <option value="surat_keterangan">Surat Keterangan</option>
                                         </select>
                                     </div>
                                 </div>
@@ -314,7 +325,16 @@
                                                 <div class="p-3 bg-gray-50 rounded-xl border border-gray-200">
                                                     <p class="text-sm font-medium text-gray-800 mb-2">
                                                         {{ $bulan }}</p>
-                                                    <div class="grid grid-cols-3 gap-3">
+                                                    <div class="grid {{ $format_surat === 'surat_keterangan' ? 'grid-cols-4' : 'grid-cols-3' }} gap-3">
+                                                        @if ($format_surat === 'surat_keterangan')
+                                                            <div>
+                                                                <label
+                                                                    class="block text-xs text-gray-500 mb-1">Hari Efektif</label>
+                                                                <input type="number" min="0"
+                                                                    wire:model="data_absensi.{{ $bulan }}.hari_efektif"
+                                                                    class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm text-center">
+                                                            </div>
+                                                        @endif
                                                         <div>
                                                             <label
                                                                 class="block text-xs text-gray-500 mb-1">Sakit</label>

@@ -30,6 +30,7 @@ class SuratRekapPkhManagement extends Component
     public ?string $tanggal_surat = null;
     public string $tahun_ajaran = '';
     public string $semester = 'genap';
+    public string $format_surat = 'rekap_absensi';
     public array $bulan_rekap = [];
     public array $data_absensi = [];
     public string $nama_wali_kelas = '';
@@ -59,6 +60,7 @@ class SuratRekapPkhManagement extends Component
             'tanggal_surat' => 'required|date',
             'tahun_ajaran' => 'nullable|string|max:20',
             'semester' => 'required|in:ganjil,genap',
+            'format_surat' => 'required|in:rekap_absensi,surat_keterangan',
             'bulan_rekap' => 'required|array|min:1',
             'data_absensi' => 'required|array',
             'nama_wali_kelas' => 'nullable|string|max:255',
@@ -152,7 +154,35 @@ class SuratRekapPkhManagement extends Component
         } else {
             // Add the month
             $this->bulan_rekap[] = $bulan;
-            $this->data_absensi[$bulan] = ['sakit' => 0, 'izin' => 0, 'alfa' => 0];
+            if ($this->format_surat === 'surat_keterangan') {
+                $this->data_absensi[$bulan] = ['hari_efektif' => 0, 'sakit' => 0, 'izin' => 0, 'alfa' => 0];
+            } else {
+                $this->data_absensi[$bulan] = ['sakit' => 0, 'izin' => 0, 'alfa' => 0];
+            }
+        }
+    }
+
+    /**
+     * When format changes, rebuild data_absensi structure
+     */
+    public function updatedFormatSurat(): void
+    {
+        foreach ($this->bulan_rekap as $bulan) {
+            $existing = $this->data_absensi[$bulan] ?? [];
+            if ($this->format_surat === 'surat_keterangan') {
+                $this->data_absensi[$bulan] = [
+                    'hari_efektif' => $existing['hari_efektif'] ?? 0,
+                    'sakit' => $existing['sakit'] ?? 0,
+                    'izin' => $existing['izin'] ?? 0,
+                    'alfa' => $existing['alfa'] ?? 0,
+                ];
+            } else {
+                $this->data_absensi[$bulan] = [
+                    'sakit' => $existing['sakit'] ?? 0,
+                    'izin' => $existing['izin'] ?? 0,
+                    'alfa' => $existing['alfa'] ?? 0,
+                ];
+            }
         }
     }
 
@@ -185,6 +215,7 @@ class SuratRekapPkhManagement extends Component
         $this->tanggal_surat = $surat->tanggal_surat->format('Y-m-d');
         $this->tahun_ajaran = $surat->tahun_ajaran ?? '';
         $this->semester = $surat->semester ?? 'genap';
+        $this->format_surat = $surat->format_surat ?? 'rekap_absensi';
         $this->bulan_rekap = $surat->bulan_rekap ?? [];
         $this->data_absensi = $surat->data_absensi ?? [];
         $this->nama_wali_kelas = $surat->nama_wali_kelas ?? '';
@@ -242,6 +273,7 @@ class SuratRekapPkhManagement extends Component
         $this->tanggal_surat = null;
         $this->tahun_ajaran = '';
         $this->semester = 'genap';
+        $this->format_surat = 'rekap_absensi';
         $this->bulan_rekap = [];
         $this->data_absensi = [];
         $this->nama_wali_kelas = '';

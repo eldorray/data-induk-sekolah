@@ -23,7 +23,11 @@ class SuratRekapPkhController extends Controller
 
         $settings = SchoolSetting::getAll();
 
-        $pdf = Pdf::loadView('pdf.surat-rekap-pkh', [
+        $viewName = $surat->format_surat === 'surat_keterangan'
+            ? 'pdf.surat-keterangan-pkh'
+            : 'pdf.surat-rekap-pkh';
+
+        $pdf = Pdf::loadView($viewName, [
             'surat' => $surat,
             'settings' => $settings,
         ]);
