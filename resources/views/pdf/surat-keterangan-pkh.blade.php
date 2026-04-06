@@ -230,7 +230,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>NIS/NISN</td>
+                    <td>NIK/NISN</td>
                     <td>:</td>
                     <td>{{ $surat->siswa->nik ?? '-' }} / {{ $surat->siswa->nisn ?? '-' }}</td>
                 </tr>

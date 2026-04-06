@@ -130,8 +130,11 @@
         }
 
         .ttd-jabatan {
-            margin-bottom: 50px;
             font-size: 11pt;
+        }
+
+        .ttd-space {
+            height: 60px;
         }
 
         .ttd-nama {
@@ -297,15 +300,17 @@
                 <td>
                     <p class="ttd-tempat">Mengetahui</p>
                     <p class="ttd-jabatan">Kepala {{ $settings['nama_sekolah'] ?? '' }}</p>
-                    <div class="stempel-ttd">
-                        @if (isset($settings['stempel_path']) && $settings['stempel_path'])
-                            <img src="{{ public_path('storage/' . $settings['stempel_path']) }}" class="stempel"
-                                alt="Stempel">
-                        @endif
-                        @if (isset($settings['ttd_kepala_path']) && $settings['ttd_kepala_path'])
-                            <img src="{{ public_path('storage/' . $settings['ttd_kepala_path']) }}"
-                                style="height: 50px;" alt="TTD">
-                        @endif
+                    <div class="ttd-space">
+                        <div class="stempel-ttd">
+                            @if (isset($settings['stempel_path']) && $settings['stempel_path'])
+                                <img src="{{ public_path('storage/' . $settings['stempel_path']) }}" class="stempel"
+                                    alt="Stempel">
+                            @endif
+                            @if (isset($settings['ttd_kepala_path']) && $settings['ttd_kepala_path'])
+                                <img src="{{ public_path('storage/' . $settings['ttd_kepala_path']) }}"
+                                    style="height: 50px;" alt="TTD">
+                            @endif
+                        </div>
                     </div>
                     <p class="ttd-nama">{{ $settings['nama_kepala'] ?? 'Kepala Sekolah' }}</p>
                     <p class="ttd-nip">NIP. {{ $settings['nip_kepala'] ?? '-' }}</p>
@@ -314,7 +319,7 @@
                     <p class="ttd-tempat">{{ $settings['kecamatan'] ?? '' }},
                         {{ $surat->tanggal_surat->translatedFormat('d F Y') }}</p>
                     <p class="ttd-jabatan">Wali Kelas</p>
-                    <br><br><br>
+                    <div class="ttd-space"></div>
                     <p class="ttd-nama">{{ $surat->nama_wali_kelas ?? '-' }}</p>
                     <p class="ttd-nip">NIP. {{ $surat->nip_wali_kelas ?? '-' }}</p>
                 </td>
