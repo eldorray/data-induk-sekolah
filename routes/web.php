@@ -19,6 +19,8 @@ use App\Livewire\SuratPernyataanTangcerManagement;
 use App\Livewire\SuratRekapPkhManagement;
 use App\Livewire\LicenseManagement;
 use App\Livewire\UserManagement;
+use App\Livewire\TracerAlumniForm;
+use App\Livewire\TracerAlumniManagement;
 use App\Livewire\NilaiIjazahKelas6\Index as NilaiIjazahIndex;
 use App\Livewire\NilaiIjazahKelas6\Show as NilaiIjazahShow;
 use App\Http\Controllers\MutasiSiswaController;
@@ -31,6 +33,9 @@ use App\Http\Controllers\SuratRekapPkhController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
+
+// Public Tracer Alumni Form
+Route::get('tracer-alumni', TracerAlumniForm::class)->name('tracer-alumni.form');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth'])
@@ -156,6 +161,11 @@ Route::get('licenses', LicenseManagement::class)
 Route::get('users', UserManagement::class)
     ->middleware(['auth', 'role:admin'])
     ->name('users.index');
+
+// Tracer Alumni Management (admin only)
+Route::get('tracer-alumni-management', TracerAlumniManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('tracer-alumni.index');
 
 // Nilai Ijazah Kelas 6 (admin + guru)
 Route::middleware(['auth', 'role:admin,guru'])->group(function () {
