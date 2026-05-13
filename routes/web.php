@@ -41,118 +41,118 @@ Route::view('profile', 'profile')
 
 // Siswa MI & SMP Routes
 Route::get('siswa-mi', SiswaMiManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('siswa-mi.index');
 
 Route::get('siswa-smp', SiswaSmpManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('siswa-smp.index');
 
 // Guru MI & SMP Routes
 Route::get('guru-mi', GuruMiManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('guru-mi.index');
 
 Route::get('guru-smp', GuruSmpManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('guru-smp.index');
 
 // Mapel MI & SMP Routes
 Route::get('mapel-mi', MapelMiManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('mapel-mi.index');
 
 Route::get('mapel-smp', MapelSmpManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('mapel-smp.index');
 
 Route::get('mutasi', MutasiSiswaManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('mutasi.index');
 
 Route::get('mutasi/{id}/print', [MutasiSiswaController::class, 'printPdf'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('mutasi.print');
 
 Route::get('surat-aktif', SuratKeteranganAktifManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-aktif.index');
 
 Route::get('surat-aktif/{id}/print', [SuratKeteranganAktifController::class, 'printPdf'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-aktif.print');
 
 // Surat Rekap PKH
 Route::get('surat-rekap-pkh', SuratRekapPkhManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-rekap-pkh.index');
 
 Route::get('surat-rekap-pkh/{id}/print', [SuratRekapPkhController::class, 'printPdf'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-rekap-pkh.print');
 
 Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('settings.index');
 
 // SK Guru MI Routes
 Route::get('sk-gty-mi', SkGtyMiManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('sk-gty-mi.index');
 
 Route::get('sk-gty-mi/{id}/print', [SkGuruMiController::class, 'printSkGty'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('sk-gty-mi.print');
 
 Route::get('sk-tugas-tambahan-mi', SkTugasTambahanMiManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('sk-tugas-tambahan-mi.index');
 
 Route::get('sk-tugas-tambahan-mi/{id}/print', [SkGuruMiController::class, 'printSkTugasTambahan'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('sk-tugas-tambahan-mi.print');
 
 Route::get('sk-pembagian-tugas-mi', SkPembagianTugasMiManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('sk-pembagian-tugas-mi.index');
 
 Route::get('sk-pembagian-tugas-mi/{id}/print', [SkGuruMiController::class, 'printSkPembagianTugas'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('sk-pembagian-tugas-mi.print');
 
 // Surat Pernyataan Insentif
 Route::get('surat-pernyataan-insentif', SuratPernyataanInsentifManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-insentif.index');
 
 Route::get('surat-pernyataan-insentif/{id}/print', [SuratPernyataanInsentifController::class, 'printPdf'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-insentif.print');
 
 Route::get('surat-pernyataan-insentif-export-all', [SuratPernyataanInsentifController::class, 'exportAllPdf'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-insentif.export-all');
 
 // Surat Pernyataan Tangcer
 Route::get('surat-pernyataan-tangcer', SuratPernyataanTangcerManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-tangcer.index');
 
 Route::get('surat-pernyataan-tangcer/{id}/print', [SuratPernyataanTangcerController::class, 'printPdf'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-tangcer.print');
 
 Route::get('surat-pernyataan-tangcer-export-all', [SuratPernyataanTangcerController::class, 'exportAllPdf'])
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-tangcer.export-all');
 
 // License Management
 Route::get('licenses', LicenseManagement::class)
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin'])
     ->name('licenses.index');
 
-// Nilai Ijazah Kelas 6
-Route::middleware('auth')->group(function () {
+// Nilai Ijazah Kelas 6 (admin + guru)
+Route::middleware(['auth', 'role:admin,guru'])->group(function () {
     Route::get('nilai-ijazah-kelas-6', NilaiIjazahIndex::class)
         ->name('nilai-ijazah.index');
 

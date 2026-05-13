@@ -173,7 +173,8 @@
 
                 <!-- Navigation -->
                 <nav class="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
-                    {{-- Dashboard --}}
+                    {{-- Dashboard (admin only) --}}
+                    @if(auth()->user()->isAdmin())
                     <a href="{{ route('dashboard') }}"
                         class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('dashboard') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
                         :class="{ 'justify-center px-0': sidebarCollapsed }" wire:navigate title="Dashboard">
@@ -204,7 +205,10 @@
                             class="whitespace-nowrap">Profile</span>
                     </a>
 
-                    {{-- ========== DROPDOWN: Data Induk ========== --}}
+                    @endif
+
+                    {{-- ========== DROPDOWN: Data Induk (admin only) ========== --}}
+                    @if(auth()->user()->isAdmin())
                     @php
                         $dataIndukActive =
                             request()->routeIs('siswa-mi.*') ||
@@ -287,7 +291,9 @@
                         </div>
                     </div>
 
-                    {{-- Nilai Ijazah Kelas 6 --}}
+                    @endif
+
+                    {{-- Nilai Ijazah Kelas 6 (admin + guru) --}}
                     <a href="{{ route('nilai-ijazah.index') }}"
                         class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('nilai-ijazah.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
                         :class="{ 'justify-center px-0': sidebarCollapsed }" wire:navigate title="Nilai Ijazah Kelas 6">
@@ -306,6 +312,9 @@
                         <span x-show="!sidebarCollapsed" x-transition.opacity.duration.300ms
                             class="whitespace-nowrap">Nilai Ijazah Kelas 6</span>
                     </a>
+
+                    {{-- ========== Admin-only sections (SK, Surat, Lisensi, Pengaturan) ========== --}}
+                    @if(auth()->user()->isAdmin())
 
                     {{-- ========== DROPDOWN: SK ========== --}}
                     @php
@@ -496,6 +505,9 @@
                         <span x-show="!sidebarCollapsed" x-transition.opacity.duration.300ms
                             class="whitespace-nowrap">Pengaturan</span>
                     </a>
+
+                    @endif
+                    {{-- /Admin-only sections --}}
                 </nav>
 
                 <!-- User Menu -->
