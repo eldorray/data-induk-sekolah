@@ -32,7 +32,7 @@ class NilaiIjazahController extends Controller
             'tahunAjaran' => $tahunAjaran,
             'siswas' => $siswas,
             'settings' => $settings,
-        ])->setPaper('a4', 'portrait');
+        ])->setPaper([0, 0, 609.45, 935.43], 'portrait'); // F4: 215mm x 330mm
 
         $filename = 'cover-ijazah-dummy-'.$tahunAjaran->nama_tahun_ajaran.'.pdf';
         $filename = str_replace('/', '-', $filename);
@@ -70,7 +70,7 @@ class NilaiIjazahController extends Controller
             'scoresGrouped' => $scores,
             'settings' => $settings,
             'calculator' => $this->calculator,
-        ])->setPaper('a4', 'portrait');
+        ])->setPaper([0, 0, 609.45, 935.43], 'portrait'); // F4: 215mm x 330mm
 
         $filename = 'nilai-ijazah-'.$tahunAjaran->nama_tahun_ajaran.'.pdf';
         $filename = str_replace('/', '-', $filename);
