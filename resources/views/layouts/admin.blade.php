@@ -488,6 +488,21 @@
                             class="whitespace-nowrap">Lisensi</span>
                     </a>
 
+                    {{-- Manajemen User --}}
+                    <a href="{{ route('users.index') }}"
+                        class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('users.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
+                        :class="{ 'justify-center px-0': sidebarCollapsed }" wire:navigate title="Manajemen User">
+                        <div
+                            class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 {{ request()->routeIs('users.*') ? 'bg-white/20' : 'bg-gray-100' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            </svg>
+                        </div>
+                        <span x-show="!sidebarCollapsed" x-transition.opacity.duration.300ms
+                            class="whitespace-nowrap">Manajemen User</span>
+                    </a>
+
                     {{-- Pengaturan --}}
                     <a href="{{ route('settings.index') }}"
                         class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('settings.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
