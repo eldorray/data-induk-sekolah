@@ -18,7 +18,10 @@ use App\Livewire\SuratPernyataanInsentifManagement;
 use App\Livewire\SuratPernyataanTangcerManagement;
 use App\Livewire\SuratRekapPkhManagement;
 use App\Livewire\LicenseManagement;
+use App\Livewire\NilaiIjazahKelas6\Index as NilaiIjazahIndex;
+use App\Livewire\NilaiIjazahKelas6\Show as NilaiIjazahShow;
 use App\Http\Controllers\MutasiSiswaController;
+use App\Http\Controllers\NilaiIjazahController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SkGuruMiController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
@@ -147,6 +150,28 @@ Route::get('surat-pernyataan-tangcer-export-all', [SuratPernyataanTangcerControl
 Route::get('licenses', LicenseManagement::class)
     ->middleware(['auth'])
     ->name('licenses.index');
+
+// Nilai Ijazah Kelas 6
+Route::middleware('auth')->group(function () {
+    Route::get('nilai-ijazah-kelas-6', NilaiIjazahIndex::class)
+        ->name('nilai-ijazah.index');
+
+    Route::get('nilai-ijazah-kelas-6/{tahunAjaran}', NilaiIjazahShow::class)
+        ->whereNumber('tahunAjaran')
+        ->name('nilai-ijazah.show');
+
+    Route::get('nilai-ijazah-kelas-6/{tahunAjaran}/cetak-cover', [NilaiIjazahController::class, 'printCover'])
+        ->whereNumber('tahunAjaran')
+        ->name('nilai-ijazah.print-cover');
+
+    Route::get('nilai-ijazah-kelas-6/{tahunAjaran}/cetak-nilai', [NilaiIjazahController::class, 'printNilai'])
+        ->whereNumber('tahunAjaran')
+        ->name('nilai-ijazah.print-nilai');
+
+    Route::get('nilai-ijazah-kelas-6/{tahunAjaran}/export-rekap', [NilaiIjazahController::class, 'exportRekap'])
+        ->whereNumber('tahunAjaran')
+        ->name('nilai-ijazah.export-rekap');
+});
 
 
 // Auth Routes (Register disabled)
