@@ -8,6 +8,8 @@
 
     <title>Admin - {{ config('app.name', 'Laravel') }}</title>
 
+    @include('partials.favicon')
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
@@ -120,32 +122,13 @@
                 <!-- Logo -->
                 <div class="flex items-center h-16 px-4 border-b border-gray-200/80 apple-ease"
                     :class="{ 'justify-center': sidebarCollapsed, 'gap-3': !sidebarCollapsed }">
-                    <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center flex-shrink-0 shadow-lg icon-bounce">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                        <div class="hidden lg:flex items-center px-3 py-3 border-b border-gray-200/80"
-                            :class="{ 'justify-center': sidebarCollapsed, 'justify-end': !sidebarCollapsed }">
-                            <button @click="sidebarCollapsed = !sidebarCollapsed"
-                                class="toggle-btn p-2.5 rounded-xl text-gray-400 hover:text-gray-600"
-                                :title="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
-                                <svg class="w-5 h-5 apple-spring" :class="{ 'rotate-180': sidebarCollapsed }"
-                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+                    <x-app-logo size="md" class="flex-shrink-0 shadow-lg icon-bounce" />
                     <span x-show="!sidebarCollapsed" x-transition:enter="transition-all duration-300 ease-out"
                         x-transition:enter-start="opacity-0 -translate-x-2"
                         x-transition:enter-end="opacity-100 translate-x-0"
                         x-transition:leave="transition-all duration-200 ease-in" x-transition:leave-start="opacity-100"
                         x-transition:leave-end="opacity-0 -translate-x-2"
                         class="font-semibold text-gray-900 whitespace-nowrap">Admin Panel</span>
-
                 </div>
 
                 <!-- Collapse Toggle Button (Desktop only) -->

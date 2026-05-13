@@ -32,11 +32,15 @@ class SchoolSettingsManagement extends Component
     public $kop_surat;
     public $stempel;
     public $ttd_kepala;
+    public $app_logo;
+    public $favicon;
 
     // Current file paths
     public string $current_kop_surat = '';
     public string $current_stempel = '';
     public string $current_ttd_kepala = '';
+    public string $current_app_logo = '';
+    public string $current_favicon = '';
 
     public function mount(): void
     {
@@ -61,6 +65,8 @@ class SchoolSettingsManagement extends Component
         $this->current_kop_surat = $settings['kop_surat_path'] ?? '';
         $this->current_stempel = $settings['stempel_path'] ?? '';
         $this->current_ttd_kepala = $settings['ttd_kepala_path'] ?? '';
+        $this->current_app_logo = $settings['app_logo_path'] ?? '';
+        $this->current_favicon = $settings['favicon_path'] ?? '';
     }
 
     public function save(): void
@@ -70,6 +76,8 @@ class SchoolSettingsManagement extends Component
             'kop_surat' => 'nullable|image|max:2048',
             'stempel' => 'nullable|image|max:1024',
             'ttd_kepala' => 'nullable|image|max:1024',
+            'app_logo' => 'nullable|image|max:1024',
+            'favicon' => 'nullable|file|mimes:ico,png,svg,jpg,jpeg|max:512',
         ]);
 
         // Save text settings
@@ -118,6 +126,24 @@ class SchoolSettingsManagement extends Component
             $this->current_ttd_kepala = $path;
         }
 
+        if ($this->app_logo) {
+            if ($this->current_app_logo) {
+                Storage::disk('public')->delete($this->current_app_logo);
+            }
+            $path = $this->app_logo->store('school', 'public');
+            SchoolSetting::set('app_logo_path', $path);
+            $this->current_app_logo = $path;
+        }
+
+        if ($this->favicon) {
+            if ($this->current_favicon) {
+                Storage::disk('public')->delete($this->current_favicon);
+            }
+            $path = $this->favicon->store('school', 'public');
+            SchoolSetting::set('favicon_path', $path);
+            $this->current_favicon = $path;
+        }
+
         // Clear cache
         SchoolSetting::clearCache();
 
@@ -125,6 +151,8 @@ class SchoolSettingsManagement extends Component
         $this->kop_surat = null;
         $this->stempel = null;
         $this->ttd_kepala = null;
+        $this->app_logo = null;
+        $this->favicon = null;
 
         session()->flash('success', 'Pengaturan sekolah berhasil disimpan.');
     }
@@ -159,6 +187,28 @@ class SchoolSettingsManagement extends Component
             $this->current_ttd_kepala = '';
             SchoolSetting::clearCache();
             session()->flash('success', 'Tanda tangan berhasil dihapus.');
+        }
+    }
+
+    public function deleteLogo(): void
+    {
+        if ($this->current_app_logo) {
+            Storage::disk('public')->delete($this->current_app_logo);
+            SchoolSetting::set('app_logo_path', '');
+            $this->current_app_logo = '';
+            SchoolSetting::clearCache();
+            session()->flash('success', 'Logo aplikasi berhasil dihapus.');
+        }
+    }
+
+    public function deleteFavicon(): void
+    {
+        if ($this->current_favicon) {
+            Storage::disk('public')->delete($this->current_favicon);
+            SchoolSetting::set('favicon_path', '');
+            $this->current_favicon = '';
+            SchoolSetting::clearCache();
+            session()->flash('success', 'Favicon berhasil dihapus.');
         }
     }
 

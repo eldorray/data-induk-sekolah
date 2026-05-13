@@ -7,6 +7,58 @@
     @endif
 
     <form wire:submit="save" class="space-y-6">
+        {{-- Logo Aplikasi & Favicon --}}
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Logo & Favicon Aplikasi</h3>
+                <p class="text-sm text-gray-500 mt-1">Logo akan tampil di halaman login, welcome, sidebar admin, dan
+                    form publik. Favicon tampil di tab browser.</p>
+            </div>
+            <div class="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- Logo Aplikasi --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Aplikasi</label>
+                    @if ($current_app_logo)
+                        <div class="mb-3 p-3 bg-gray-50 rounded-xl border">
+                            <div class="flex items-center justify-between gap-3">
+                                <img src="{{ asset('storage/' . $current_app_logo) }}" alt="Logo Aplikasi"
+                                    class="max-h-20 max-w-[160px] object-contain">
+                                <button type="button" wire:click="deleteLogo"
+                                    class="text-red-500 hover:text-red-700 text-sm">Hapus</button>
+                            </div>
+                        </div>
+                    @endif
+                    <input type="file" wire:model="app_logo" accept="image/*"
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                    @error('app_logo')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                    <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, SVG. Maks: 1MB. Rekomendasi: 256x256 px (persegi)</p>
+                </div>
+
+                {{-- Favicon --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Favicon</label>
+                    @if ($current_favicon)
+                        <div class="mb-3 p-3 bg-gray-50 rounded-xl border">
+                            <div class="flex items-center justify-between gap-3">
+                                <img src="{{ asset('storage/' . $current_favicon) }}" alt="Favicon"
+                                    class="max-h-12 max-w-12 object-contain">
+                                <button type="button" wire:click="deleteFavicon"
+                                    class="text-red-500 hover:text-red-700 text-sm">Hapus</button>
+                            </div>
+                        </div>
+                    @endif
+                    <input type="file" wire:model="favicon" accept=".ico,.png,.svg,.jpg,.jpeg"
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                    @error('favicon')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
+                    <p class="text-xs text-gray-500 mt-1">Format: ICO, PNG, SVG. Maks: 512KB. Rekomendasi: 32x32 atau 64x64 px</p>
+                </div>
+            </div>
+        </div>
+
         {{-- KOP Surat Section --}}
         <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
