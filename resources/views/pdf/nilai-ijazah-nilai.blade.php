@@ -5,8 +5,8 @@
     <title>Nilai Ijazah - {{ $tahunAjaran->nama_tahun_ajaran }}</title>
     <style>
         @page {
-            size: A4 portrait;
-            margin: 15mm 12mm 15mm 12mm;
+            size: 215mm 330mm; /* F4 */
+            margin: 15mm 14mm 15mm 14mm;
         }
 
         * { box-sizing: border-box; }
