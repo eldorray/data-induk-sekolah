@@ -287,6 +287,26 @@
                         </div>
                     </div>
 
+                    {{-- Nilai Ijazah Kelas 6 --}}
+                    <a href="{{ route('nilai-ijazah.index') }}"
+                        class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('nilai-ijazah.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
+                        :class="{ 'justify-center px-0': sidebarCollapsed }" wire:navigate title="Nilai Ijazah Kelas 6">
+                        <div
+                            class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 {{ request()->routeIs('nilai-ijazah.*') ? 'bg-white/20' : 'bg-gray-100' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222">
+                                </path>
+                            </svg>
+                        </div>
+                        <span x-show="!sidebarCollapsed" x-transition.opacity.duration.300ms
+                            class="whitespace-nowrap">Nilai Ijazah Kelas 6</span>
+                    </a>
+
                     {{-- ========== DROPDOWN: SK ========== --}}
                     @php
                         $skActive =
