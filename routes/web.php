@@ -18,6 +18,7 @@ use App\Livewire\SuratPernyataanInsentifManagement;
 use App\Livewire\SuratPernyataanTangcerManagement;
 use App\Livewire\SuratRekapPkhManagement;
 use App\Livewire\LicenseManagement;
+use App\Livewire\UserManagement;
 use App\Livewire\NilaiIjazahKelas6\Index as NilaiIjazahIndex;
 use App\Livewire\NilaiIjazahKelas6\Show as NilaiIjazahShow;
 use App\Http\Controllers\MutasiSiswaController;
@@ -150,6 +151,11 @@ Route::get('surat-pernyataan-tangcer-export-all', [SuratPernyataanTangcerControl
 Route::get('licenses', LicenseManagement::class)
     ->middleware(['auth', 'role:admin'])
     ->name('licenses.index');
+
+// User Management (admin only)
+Route::get('users', UserManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('users.index');
 
 // Nilai Ijazah Kelas 6 (admin + guru)
 Route::middleware(['auth', 'role:admin,guru'])->group(function () {
