@@ -187,6 +187,10 @@ Route::middleware(['auth', 'role:admin,guru'])->group(function () {
     Route::get('nilai-ijazah-kelas-6/{tahunAjaran}/export-rekap', [NilaiIjazahController::class, 'exportRekap'])
         ->whereNumber('tahunAjaran')
         ->name('nilai-ijazah.export-rekap');
+
+    Route::get('nilai-ijazah-kelas-6/{tahunAjaran}/print-rekap', [NilaiIjazahController::class, 'printRekap'])
+        ->whereNumber('tahunAjaran')
+        ->name('nilai-ijazah.print-rekap');
 });
 
 

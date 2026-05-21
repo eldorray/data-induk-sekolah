@@ -109,4 +109,44 @@ class NilaiIjazahController extends Controller
 
         return Excel::download(new NilaiIjazahRekapExport($tahunAjaran), $filename);
     }
+
+    /**
+     * Cetak rekap nilai rata-rata (70% raport + 30% UM) sebagai PDF.
+     */
+    public function printRekap(NilaiIjazahTahunAjaran $tahunAjaran)
+    {
+        $siswas = $this->resolveSiswas(null);
+
+        $mapels = MapelMi::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('nama_mapel')
+            ->get();
+
+        $scores = NilaiIjazahScore::where('nilai_ijazah_tahun_ajaran_id', $tahunAjaran->id)
+            ->whereIn('siswa_id', $siswas->pluck('id'))
+            ->where('siswa_type', 'siswa_mi')
+            ->where('mapel_type', 'mapel_mi')
+            ->get();
+
+        // Build grid: scoresGrid[siswa_id][mapel_id] = score model
+        $scoresGrid = [];
+        foreach ($scores as $score) {
+            $scoresGrid[$score->siswa_id][$score->mapel_id] = $score;
+        }
+
+        $settings = SchoolSetting::getAll();
+
+        $pdf = Pdf::loadView('pdf.nilai-ijazah-rekap', [
+            'tahunAjaran' => $tahunAjaran,
+            'siswas' => $siswas,
+            'mapels' => $mapels,
+            'scoresGrid' => $scoresGrid,
+            'settings' => $settings,
+            'calculator' => $this->calculator,
+        ])->setPaper([0, 0, 935.43, 609.45], 'landscape'); // F4 landscape
+
+        $filename = 'rekap-nilai-ijazah-'.str_replace('/', '-', $tahunAjaran->nama_tahun_ajaran).'.pdf';
+
+        return $pdf->stream($filename);
+    }
 }
