@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Nilai Ijazah - {{ $tahunAjaran->nama_tahun_ajaran }}</title>
     <style>
         @page {
-            size: 215mm 330mm; /* F4 */
+            size: 215mm 330mm;
+            /* F4 */
             margin: 15mm 14mm 15mm 14mm;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             font-family: "Times New Roman", Times, serif;
@@ -23,7 +27,9 @@
             page-break-after: always;
         }
 
-        .page:last-child { page-break-after: auto; }
+        .page:last-child {
+            page-break-after: auto;
+        }
 
         .header {
             text-align: center;
@@ -36,12 +42,14 @@
             font-size: 11pt;
             font-weight: bold;
         }
+
         .header .line2 {
             font-size: 15pt;
             font-weight: bold;
             letter-spacing: 2px;
             margin: 2mm 0 1mm 0;
         }
+
         .header .line3 {
             font-size: 9pt;
             color: #374151;
@@ -71,8 +79,13 @@
             font-size: 10.5pt;
         }
 
-        .identity td.lab { width: 40mm; }
-        .identity td.col { width: 4mm; }
+        .identity td.lab {
+            width: 40mm;
+        }
+
+        .identity td.col {
+            width: 4mm;
+        }
 
         table.nilai {
             width: 100%;
@@ -93,10 +106,25 @@
             font-weight: bold;
         }
 
-        table.nilai td.num { text-align: center; }
-        table.nilai td.mapel { text-align: left; }
-        table.nilai td.final { text-align: center; font-weight: bold; background: #f3f4f6; }
-        table.nilai td.empty { text-align: center; font-style: italic; color: #b91c1c; }
+        table.nilai td.num {
+            text-align: center;
+        }
+
+        table.nilai td.mapel {
+            text-align: left;
+        }
+
+        table.nilai td.final {
+            text-align: center;
+            font-weight: bold;
+            background: #f3f4f6;
+        }
+
+        table.nilai td.empty {
+            text-align: center;
+            font-style: italic;
+            color: #b91c1c;
+        }
 
         .summary {
             margin-top: 4mm;
@@ -166,13 +194,14 @@
         }
     </style>
 </head>
+
 <body>
     @php
-        $namaSekolah = $settings['nama_sekolah'] ?? ($settings['nama_madrasah'] ?? 'Nama Madrasah');
-        $alamatSekolah = $settings['alamat_sekolah'] ?? ($settings['alamat_madrasah'] ?? '');
-        $kepalaSekolah = $settings['nama_kepala_sekolah'] ?? ($settings['kepala_madrasah'] ?? '');
-        $nipKepala = $settings['nip_kepala_sekolah'] ?? ($settings['nip_kepala_madrasah'] ?? '');
-        $tempatTtd = $settings['kota_surat'] ?? ($settings['kabupaten_sekolah'] ?? '');
+        $namaSekolah = $settings['nama_sekolah'] ?? 'Nama Madrasah';
+        $alamatSekolah = $settings['alamat'] ?? '';
+        $kepalaSekolah = $settings['nama_kepala'] ?? '';
+        $nipKepala = $settings['nip_kepala'] ?? '';
+        $tempatTtd = $settings['kota'] ?? '';
         \Carbon\Carbon::setLocale('id');
         $tanggalCetak = \Carbon\Carbon::now()->translatedFormat('d F Y');
     @endphp
@@ -212,7 +241,10 @@
                         <td>{{ $siswa->nisn ?: '-' }}</td>
                         <td class="lab">Tempat, Tgl Lahir</td>
                         <td class="col">:</td>
-                        <td>{{ $siswa->tempat_lahir ?: '-' }}@if ($siswa->tanggal_lahir), {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}@endif</td>
+                        <td>{{ $siswa->tempat_lahir ?: '-' }}@if ($siswa->tanggal_lahir)
+                                , {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <td class="lab">Kelas</td>
@@ -336,4 +368,5 @@
         </div>
     @endforeach
 </body>
+
 </html>

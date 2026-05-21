@@ -46,6 +46,7 @@
             right: 5mm;
             bottom: 5mm;
             border: 3pt solid #2d6b3f;
+            z-index: 0;
         }
 
         .border-inner {
@@ -54,7 +55,11 @@
             left: 8mm;
             right: 8mm;
             bottom: 8mm;
-            border: 1.5pt solid #2d6b3f;
+            border-top: 1.5pt solid #2d6b3f;
+            border-left: 1.5pt solid #2d6b3f;
+            border-right: 1.5pt solid #2d6b3f;
+            border-bottom: none;
+            z-index: 0;
         }
 
         .border-pattern-top,
@@ -236,6 +241,11 @@
             padding-left: 2mm;
         }
 
+        .footer-section .field-table .val,
+        .footer-table .val {
+            border-bottom: none;
+        }
+
         .menerangkan-text {
             font-size: 11pt;
             font-style: italic;
@@ -274,19 +284,28 @@
         /* ================= Footer ================= */
         .footer-section {
             position: absolute;
-            bottom: 14mm;
-            left: 14mm;
-            right: 14mm;
-            z-index: 1;
+            bottom: 12mm;
+            left: 20mm;
+            right: 20mm;
+            z-index: 10;
         }
 
         .footer-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: none;
         }
 
+        .footer-table tr,
         .footer-table td {
             vertical-align: top;
+            border: none;
+            border-top: none;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+            padding: 0;
         }
 
         .foto-area {
@@ -316,6 +335,7 @@
 
         .ttd-space {
             height: 20mm;
+            border: none;
         }
 
         .ttd-area .nama-pejabat {
@@ -381,14 +401,14 @@
 
 <body>
     @php
-        $namaSekolah = $settings['nama_sekolah'] ?? ($settings['nama_madrasah'] ?? 'Nama Madrasah');
-        $alamatSekolah = $settings['alamat_sekolah'] ?? ($settings['alamat_madrasah'] ?? '');
-        $npsn = $settings['npsn'] ?? ($settings['nomor_pokok_sekolah_nasional'] ?? '');
-        $kepalaSekolah = $settings['nama_kepala_sekolah'] ?? ($settings['kepala_madrasah'] ?? '');
-        $nipKepala = $settings['nip_kepala_sekolah'] ?? ($settings['nip_kepala_madrasah'] ?? '');
-        $kabupaten = $settings['kabupaten_kota'] ?? ($settings['kabupaten'] ?? '');
+        $namaSekolah = $settings['nama_sekolah'] ?? 'Nama Madrasah';
+        $alamatSekolah = $settings['alamat'] ?? '';
+        $npsn = $settings['npsn'] ?? '';
+        $kepalaSekolah = $settings['nama_kepala'] ?? '';
+        $nipKepala = $settings['nip_kepala'] ?? '';
+        $kabupaten = $settings['kota'] ?? '';
         $provinsi = $settings['provinsi'] ?? '';
-        $kotaSurat = $settings['kota_surat'] ?? ($kabupaten ?: '');
+        $kotaSurat = $kabupaten ?: '';
         \Carbon\Carbon::setLocale('id');
 
         $tahunParts = explode('/', $tahunAjaran->nama_tahun_ajaran);
@@ -461,17 +481,17 @@
                         </tr>
                     </table>
 
-                    <div class="menerangkan-text">menerangkan bahwa:</div>
+                    <div class="menerangkan-text">Menerangkan bahwa:</div>
 
                     <table class="field-table">
                         <tr>
-                            <td class="lbl">nama</td>
+                            <td class="lbl">Nama</td>
                             <td class="colon">:</td>
                             <td class="val" style="font-weight: bold; font-size: 12pt;">{{ $siswa->nama_lengkap }}
                             </td>
                         </tr>
                         <tr>
-                            <td class="lbl">tempat dan tanggal lahir</td>
+                            <td class="lbl">Tempat dan tanggal lahir</td>
                             <td class="colon">:</td>
                             <td class="val">{{ $siswa->tempat_lahir ?: '' }}@if ($siswa->tanggal_lahir)
                                     , {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}
@@ -479,12 +499,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="lbl">nama orang tua/wali</td>
+                            <td class="lbl">Nama orang tua/wali</td>
                             <td class="colon">:</td>
                             <td class="val">{{ $siswa->nama_ayah_kandung ?: ($siswa->nama_wali ?: '') }}</td>
                         </tr>
                         <tr>
-                            <td class="lbl">Nomor Induk Siswa</td>
+                            <td class="lbl">Nomor Induk Kependudukan</td>
                             <td class="colon">:</td>
                             <td class="val">{{ $siswa->nik ?: '' }}</td>
                         </tr>
@@ -508,30 +528,30 @@
                         perundang-undangan.
                     </p>
                 </div>
+            </div>
 
-                {{-- Footer: foto + tanda tangan --}}
-                <div class="footer-section">
-                    <table class="footer-table">
-                        <tr>
-                            <td style="width: 40%; text-align: center; vertical-align: bottom;">
-                                <div class="foto-area">
-                                    Pas Foto<br>3 &times; 4 cm
+            {{-- Footer: foto + tanda tangan (di luar .content, langsung di .page) --}}
+            <div class="footer-section">
+                <table class="footer-table">
+                    <tr>
+                        <td style="width: 40%; text-align: center; vertical-align: bottom; border: none;">
+                            <div class="foto-area">
+                                Pas Foto<br>3 &times; 4 cm
+                            </div>
+                        </td>
+                        <td style="width: 60%; border: none;">
+                            <div class="ttd-area">
+                                <div class="tempat-tanggal">
+                                    {{ $kotaSurat ? $kotaSurat . ', ' : '' }}{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
                                 </div>
-                            </td>
-                            <td style="width: 60%;">
-                                <div class="ttd-area">
-                                    <div class="tempat-tanggal">
-                                        {{ $kotaSurat ? $kotaSurat . ', ' : '' }}{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
-                                    </div>
-                                    <div class="jabatan">Kepala,</div>
-                                    <div class="ttd-space"></div>
-                                    <div class="nama-pejabat">{{ $kepalaSekolah ?: '' }}</div>
-                                    <div class="nip-text">NIP. {{ $nipKepala ?: '' }}</div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                                <div class="jabatan">Kepala,</div>
+                                <div class="ttd-space"></div>
+                                <div class="nama-pejabat">{{ $kepalaSekolah ?: '' }}</div>
+                                <div class="nip-text">NIP. {{ $nipKepala ?: '' }}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
             {{-- Serial number --}}
