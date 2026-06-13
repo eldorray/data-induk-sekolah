@@ -455,6 +455,22 @@
                         </div>
                     </div>
 
+                    {{-- Kuitansi BOS --}}
+                    <a href="{{ route('kuitansi-bos.index') }}"
+                        class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('kuitansi-bos.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
+                        :class="{ 'justify-center px-0': sidebarCollapsed }" wire:navigate title="Kuitansi BOS">
+                        <div
+                            class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 {{ request()->routeIs('kuitansi-bos.*') ? 'bg-white/20' : 'bg-gray-100' }}">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <span x-show="!sidebarCollapsed" x-transition.opacity.duration.300ms
+                            class="whitespace-nowrap">Kuitansi BOS</span>
+                    </a>
+
                     {{-- Lisensi --}}
                     <a href="{{ route('licenses.index') }}"
                         class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('licenses.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"

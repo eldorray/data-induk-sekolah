@@ -22,5 +22,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'fahmie@gmail.com',
             'password' => bcrypt('password'),
         ]);
+
+        $this->call(KuitansiSettingSeeder::class);
     }
 }

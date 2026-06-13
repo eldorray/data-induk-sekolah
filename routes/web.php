@@ -30,6 +30,8 @@ use App\Http\Controllers\SkGuruMiController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
 use App\Http\Controllers\SuratPernyataanTangcerController;
 use App\Http\Controllers\SuratRekapPkhController;
+use App\Http\Controllers\KuitansiController;
+use App\Livewire\KuitansiBosManagement;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -96,6 +98,20 @@ Route::get('surat-rekap-pkh', SuratRekapPkhManagement::class)
 Route::get('surat-rekap-pkh/{id}/print', [SuratRekapPkhController::class, 'printPdf'])
     ->middleware(['auth', 'role:admin'])
     ->name('surat-rekap-pkh.print');
+
+// Kuitansi / Bukti Pembayaran BOS
+Route::get('kuitansi-bos', KuitansiBosManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('kuitansi-bos.index');
+
+Route::get('kuitansi-bos/cetak-terpilih', [KuitansiController::class, 'printSelected'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('kuitansi-bos.print-selected');
+
+Route::get('kuitansi-bos/{id}/print', [KuitansiController::class, 'printPdf'])
+    ->whereNumber('id')
+    ->middleware(['auth', 'role:admin'])
+    ->name('kuitansi-bos.print');
 
 Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
     ->middleware(['auth', 'role:admin'])
