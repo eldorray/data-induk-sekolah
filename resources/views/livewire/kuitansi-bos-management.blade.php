@@ -140,6 +140,19 @@
                                             </path>
                                         </svg>
                                     </a>
+                                    @if ($kuitansi->lpjBos)
+                                        <a href="{{ route('lpj-bos.show', $kuitansi->lpjBos->id) }}" wire:navigate
+                                            class="p-2 rounded-lg hover:bg-blue-50 text-gray-600 hover:text-blue-600 transition-colors text-xs font-semibold"
+                                            title="Detail LPJ BOS">
+                                            LPJ
+                                        </a>
+                                    @else
+                                        <a href="{{ route('lpj-bos.index', ['search' => $kuitansi->nomor_bukti]) }}" wire:navigate
+                                            class="p-2 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors text-xs font-semibold"
+                                            title="Buat LPJ BOS">
+                                            LPJ
+                                        </a>
+                                    @endif
                                     <button wire:click="openEditModal({{ $kuitansi->id }})"
                                         class="p-2 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors"
                                         title="Edit">

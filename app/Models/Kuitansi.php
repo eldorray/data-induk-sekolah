@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helpers\Terbilang;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Kuitansi extends Model
 {
@@ -20,6 +21,11 @@ class Kuitansi extends Model
         'tanggal_lunas' => 'date',
         'jumlah_uang' => 'integer',
     ];
+
+    public function lpjBos(): HasOne
+    {
+        return $this->hasOne(LpjBos::class);
+    }
 
     /**
      * Terbilang otomatis dari jumlah_uang (tidak pernah diinput manual).
@@ -62,6 +68,6 @@ class Kuitansi extends Model
      */
     public static function rupiah($angka): string
     {
-        return 'Rp ' . number_format((int) $angka, 0, ',', '.');
+        return 'Rp '.number_format((int) $angka, 0, ',', '.');
     }
 }

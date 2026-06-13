@@ -1,37 +1,40 @@
 <?php
 
-use App\Livewire\Auth\Login;
-use App\Livewire\Auth\ForgotPassword;
-use App\Livewire\Auth\ResetPassword;
-use App\Livewire\SiswaMiManagement;
-use App\Livewire\SiswaSmpManagement;
-use App\Livewire\GuruMiManagement;
-use App\Livewire\GuruSmpManagement;
-use App\Livewire\MapelMiManagement;
-use App\Livewire\MapelSmpManagement;
-use App\Livewire\MutasiSiswaManagement;
-use App\Livewire\SuratKeteranganAktifManagement;
-use App\Livewire\SkGtyMiManagement;
-use App\Livewire\SkTugasTambahanMiManagement;
-use App\Livewire\SkPembagianTugasMiManagement;
-use App\Livewire\SuratPernyataanInsentifManagement;
-use App\Livewire\SuratPernyataanTangcerManagement;
-use App\Livewire\SuratRekapPkhManagement;
-use App\Livewire\LicenseManagement;
-use App\Livewire\UserManagement;
-use App\Livewire\TracerAlumniForm;
-use App\Livewire\TracerAlumniManagement;
-use App\Livewire\NilaiIjazahKelas6\Index as NilaiIjazahIndex;
-use App\Livewire\NilaiIjazahKelas6\Show as NilaiIjazahShow;
+use App\Http\Controllers\KuitansiController;
+use App\Http\Controllers\LpjBosController;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\NilaiIjazahController;
-use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SkGuruMiController;
+use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
 use App\Http\Controllers\SuratPernyataanTangcerController;
 use App\Http\Controllers\SuratRekapPkhController;
-use App\Http\Controllers\KuitansiController;
+use App\Livewire\Auth\ForgotPassword;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\ResetPassword;
+use App\Livewire\GuruMiManagement;
+use App\Livewire\GuruSmpManagement;
 use App\Livewire\KuitansiBosManagement;
+use App\Livewire\LicenseManagement;
+use App\Livewire\LpjBosDetail;
+use App\Livewire\LpjBosManagement;
+use App\Livewire\MapelMiManagement;
+use App\Livewire\MapelSmpManagement;
+use App\Livewire\MutasiSiswaManagement;
+use App\Livewire\NilaiIjazahKelas6\Index as NilaiIjazahIndex;
+use App\Livewire\NilaiIjazahKelas6\Show as NilaiIjazahShow;
+use App\Livewire\SiswaMiManagement;
+use App\Livewire\SiswaSmpManagement;
+use App\Livewire\SkGtyMiManagement;
+use App\Livewire\SkPembagianTugasMiManagement;
+use App\Livewire\SkTugasTambahanMiManagement;
+use App\Livewire\SuratKeteranganAktifManagement;
+use App\Livewire\SuratPernyataanInsentifManagement;
+use App\Livewire\SuratPernyataanTangcerManagement;
+use App\Livewire\SuratRekapPkhManagement;
+use App\Livewire\TracerAlumniForm;
+use App\Livewire\TracerAlumniManagement;
+use App\Livewire\UserManagement;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -112,6 +115,25 @@ Route::get('kuitansi-bos/{id}/print', [KuitansiController::class, 'printPdf'])
     ->whereNumber('id')
     ->middleware(['auth', 'role:admin'])
     ->name('kuitansi-bos.print');
+
+// LPJ BOS
+Route::get('lpj-bos', LpjBosManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('lpj-bos.index');
+
+Route::get('lpj-bos/print-rekap', [LpjBosController::class, 'printRekap'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('lpj-bos.print-rekap');
+
+Route::get('lpj-bos/{lpj}', LpjBosDetail::class)
+    ->whereNumber('lpj')
+    ->middleware(['auth', 'role:admin'])
+    ->name('lpj-bos.show');
+
+Route::get('lpj-bos/{id}/print', [LpjBosController::class, 'printPdf'])
+    ->whereNumber('id')
+    ->middleware(['auth', 'role:admin'])
+    ->name('lpj-bos.print');
 
 Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
     ->middleware(['auth', 'role:admin'])
@@ -209,7 +231,6 @@ Route::middleware(['auth', 'role:admin,guru'])->group(function () {
         ->name('nilai-ijazah.print-rekap');
 });
 
-
 // Auth Routes (Register disabled)
 Route::middleware('guest')->group(function () {
     Route::get('login', Login::class)->name('login');
@@ -222,6 +243,7 @@ Route::middleware('auth')->group(function () {
         \Illuminate\Support\Facades\Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+
         return redirect('/');
     })->name('logout');
 });

@@ -14,7 +14,9 @@ class KuitansiBosManagement extends Component
 
     // Search & pagination
     public string $search = '';
+
     public string $filterTahun = '';
+
     public int $perPage = 10;
 
     // Bulk selection (untuk "Cetak Terpilih")
@@ -22,29 +24,47 @@ class KuitansiBosManagement extends Component
 
     // Modal states
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public bool $showSettingsModal = false;
+
     public bool $isEditing = false;
 
     // Form data (per kuitansi)
     public ?int $kuitansiId = null;
+
     public string $nomor_bukti = '';
+
     public string $tahun_anggaran = '';
+
     public string $penerima = '';
+
     public ?int $jumlah_uang = null;
+
     public string $uraian_pembayaran = '';
+
     public ?string $tanggal_lunas = null;
 
     // Pengaturan lembaga (konstanta)
     public string $set_tahun_anggaran = '';
+
     public string $set_nama_madrasah = '';
+
     public string $set_desa_kecamatan = '';
+
     public string $set_kabupaten = '';
+
     public string $set_provinsi = '';
+
     public string $set_sumber_dana = '';
+
     public string $set_format_nomor = '';
+
     public string $set_sudah_terima_dari = '';
+
     public string $set_kepala_madrasah = '';
+
     public string $set_bendahara_madrasah = '';
 
     protected function rules(): array
@@ -263,11 +283,12 @@ class KuitansiBosManagement extends Component
     public function render()
     {
         $kuitansis = Kuitansi::query()
+            ->with('lpjBos')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('penerima', 'like', '%' . $this->search . '%')
-                        ->orWhere('nomor_bukti', 'like', '%' . $this->search . '%')
-                        ->orWhere('uraian_pembayaran', 'like', '%' . $this->search . '%');
+                    $q->where('penerima', 'like', '%'.$this->search.'%')
+                        ->orWhere('nomor_bukti', 'like', '%'.$this->search.'%')
+                        ->orWhere('uraian_pembayaran', 'like', '%'.$this->search.'%');
                 });
             })
             ->when($this->filterTahun, function ($query) {
