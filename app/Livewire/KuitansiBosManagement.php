@@ -151,6 +151,26 @@ class KuitansiBosManagement extends Component
         $this->closeModal();
     }
 
+    /**
+     * Salin (duplikat) kuitansi terpilih menjadi record baru.
+     */
+    public function copySelected(): void
+    {
+        $items = Kuitansi::whereIn('id', $this->selected)->orderBy('created_at')->get();
+
+        if ($items->isEmpty()) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            $item->replicate()->save();
+        }
+
+        $count = $items->count();
+        $this->selected = [];
+        session()->flash('success', "{$count} kuitansi berhasil disalin. Jangan lupa ubah nomor bukti pada salinan.");
+    }
+
     public function openDeleteModal(int $id): void
     {
         $this->kuitansiId = $id;
