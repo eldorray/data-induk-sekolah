@@ -30,6 +30,36 @@ class LpjBosDetail extends Component
         $this->hydrateCaptions();
     }
 
+    // Auto-process each category right after Livewire finishes binding the
+    // temporary upload to the property. This runs only once the files are
+    // actually present server-side, avoiding the race a manual "Upload" click
+    // had (action firing before the temp upload completed).
+    public function updatedFotoFiles(): void
+    {
+        $this->autoUpload(LpjBosAttachment::CATEGORY_FOTO);
+    }
+
+    public function updatedKwitansiFiles(): void
+    {
+        $this->autoUpload(LpjBosAttachment::CATEGORY_KWITANSI);
+    }
+
+    public function updatedUndanganFiles(): void
+    {
+        $this->autoUpload(LpjBosAttachment::CATEGORY_UNDANGAN);
+    }
+
+    private function autoUpload(string $category): void
+    {
+        $property = $this->propertyForCategory($category);
+
+        if (empty($this->{$property})) {
+            return;
+        }
+
+        $this->upload($category, app(LpjBosImageCompressor::class));
+    }
+
     private function rulesForCategory(string $category): array
     {
         $property = $this->propertyForCategory($category);

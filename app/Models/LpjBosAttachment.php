@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class LpjBosAttachment extends Model
 {
@@ -53,6 +52,9 @@ class LpjBosAttachment extends Model
 
     public function getUrlAttribute(): string
     {
-        return Storage::disk('public')->url($this->file_path);
+        // Use asset() so the URL follows the host the user is actually browsing
+        // (e.g. Herd's *.test domain). The public disk's url() is hardcoded to
+        // APP_URL (http://localhost), which the browser cannot reach.
+        return asset('storage/'.ltrim($this->file_path, '/'));
     }
 }

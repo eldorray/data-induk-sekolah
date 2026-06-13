@@ -48,21 +48,47 @@ class LpjBosDetailTest extends TestCase
             ->assertSee('Foto');
     }
 
-    public function test_uploads_image_and_pdf_attachments(): void
+    public function test_attachment_image_url_uses_the_request_host_not_a_hardcoded_app_url(): void
+    {
+        $admin = User::factory()->create(['role' => User::ROLE_ADMIN]);
+        $lpj = $this->createLpj();
+
+        LpjBosAttachment::create([
+            'lpj_bos_id' => $lpj->id,
+            'kategori' => 'foto',
+            'file_path' => 'lpj-bos/1/foto/a.jpg',
+            'original_name' => 'a.jpg',
+            'mime_type' => 'image/jpeg',
+            'file_size' => 1,
+            'sort_order' => 1,
+        ]);
+
+        // Serve the page from a non-default host (as Herd does with .test domains).
+        // The image src must point at that same host so the browser can load it.
+        $this->actingAs($admin)
+            ->get('http://data-induk.test/lpj-bos/'.$lpj->id)
+            ->assertOk()
+            ->assertSee('http://data-induk.test/storage/lpj-bos/1/foto/a.jpg')
+            ->assertDontSee('http://localhost/storage/lpj-bos/1/foto/a.jpg');
+    }
+
+    public function test_selecting_files_uploads_automatically_without_a_separate_button(): void
     {
         Storage::fake('public');
         $lpj = $this->createLpj();
 
+        // Mirror the browser flow: selecting a file binds it to the property and
+        // triggers the `updated<Property>` lifecycle hook. No manual action call.
         Livewire::test(LpjBosDetail::class, ['lpj' => $lpj])
             ->set('fotoFiles', [UploadedFile::fake()->image('foto.jpg', 1200, 800)->size(9000)])
-            ->call('upload', LpjBosAttachment::CATEGORY_FOTO)
             ->assertHasNoErrors()
             ->set('kwitansiFiles', [UploadedFile::fake()->create('kwitansi.pdf', 4000, 'application/pdf')])
-            ->call('upload', LpjBosAttachment::CATEGORY_KWITANSI)
             ->assertHasNoErrors();
 
         $this->assertDatabaseHas('lpj_bos_attachments', ['lpj_bos_id' => $lpj->id, 'kategori' => 'foto']);
         $this->assertDatabaseHas('lpj_bos_attachments', ['lpj_bos_id' => $lpj->id, 'kategori' => 'kwitansi']);
+        // Input arrays are cleared after processing so the same file is not re-saved.
+        $this->assertSame(2, $lpj->fresh()->attachments()->count());
         $this->assertTrue($lpj->fresh()->is_complete);
     }
 

@@ -33,13 +33,19 @@
             <div class="px-6 py-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900">{{ $section['title'] }}</h3>
-                    <p class="text-xs text-gray-500">PDF/JPG/PNG. Gambar max 10MB, PDF max 5MB.</p>
+                    <p class="text-xs text-gray-500">PDF/JPG/PNG. Gambar max 10MB, PDF max 5MB. File otomatis terunggah setelah dipilih.</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <input type="file" multiple wire:model="{{ $section['property'] }}" accept=".pdf,.jpg,.jpeg,.png"
+                        wire:loading.attr="disabled" wire:target="{{ $section['property'] }}"
                         class="text-sm border border-gray-200 rounded-xl px-3 py-2">
-                    <button wire:click="upload('{{ $category }}')" wire:loading.attr="disabled"
-                        class="px-4 py-2 rounded-xl bg-gray-900 text-white text-sm font-medium">Upload</button>
+                    <span wire:loading.flex wire:target="{{ $section['property'] }}" class="items-center gap-2 text-sm text-gray-500">
+                        <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Mengunggah...
+                    </span>
                 </div>
             </div>
             @error($section['property']) <div class="px-6 pt-3 text-xs text-red-500">{{ $message }}</div> @enderror
