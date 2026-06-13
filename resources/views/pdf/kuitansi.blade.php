@@ -101,7 +101,6 @@
 
 <body>
     @php
-        $tahunAnggaran = $settings['kuitansi_tahun_anggaran'] ?? date('Y');
         $namaMadrasah = $settings['kuitansi_nama_madrasah'] ?? '';
         $desaKecamatan = $settings['kuitansi_desa_kecamatan'] ?? '';
         $kabupaten = $settings['kuitansi_kabupaten'] ?? '';
@@ -126,7 +125,7 @@
                                 <tr>
                                     <td class="lbl">Tahun Anggaran</td>
                                     <td class="sep">:</td>
-                                    <td>{{ $tahunAnggaran }}</td>
+                                    <td>{{ $k->tahun_anggaran ?? ($settings['kuitansi_tahun_anggaran'] ?? date('Y')) }}</td>
                                 </tr>
                                 <tr>
                                     <td class="lbl">Nomor Bukti</td>

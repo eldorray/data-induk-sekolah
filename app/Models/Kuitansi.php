@@ -9,6 +9,7 @@ class Kuitansi extends Model
 {
     protected $fillable = [
         'nomor_bukti',
+        'tahun_anggaran',
         'penerima',
         'jumlah_uang',
         'uraian_pembayaran',

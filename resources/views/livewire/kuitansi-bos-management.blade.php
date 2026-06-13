@@ -11,6 +11,13 @@
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
+            <select wire:model.live="filterTahun"
+                class="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                <option value="">Semua Tahun</option>
+                @foreach ($tahunOptions as $tahun)
+                    <option value="{{ $tahun }}">{{ $tahun }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="flex items-center gap-2">
             <button wire:click="openSettingsModal"
@@ -76,6 +83,8 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Nomor Bukti</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            Tahun</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Penerima</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             Uraian</th>
@@ -96,6 +105,7 @@
                             </td>
                             <td class="px-6 py-4 text-sm font-mono text-gray-900">{{ $kuitansi->nomor_bukti_lengkap }}
                             </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $kuitansi->tahun_anggaran ?? '-' }}</td>
                             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $kuitansi->penerima }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate"
                                 title="{{ $kuitansi->uraian_pembayaran }}">{{ $kuitansi->uraian_pembayaran }}</td>
@@ -137,7 +147,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="8" class="px-6 py-12 text-center text-gray-500">
                                 <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -184,6 +194,20 @@
                                         <span class="font-mono text-gray-700">{{ $this->nomorBuktiPreview }}</span>
                                     </p>
                                     @error('nomor_bukti')
+                                        <span class="text-xs text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Tahun Anggaran --}}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tahun Anggaran
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="text" inputmode="numeric" wire:model.live="tahun_anggaran"
+                                        placeholder="mis. 2026"
+                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                    <p class="mt-1 text-xs text-gray-500">Dipakai untuk filter & ditampilkan di
+                                        kuitansi.</p>
+                                    @error('tahun_anggaran')
                                         <span class="text-xs text-red-500">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -279,7 +303,7 @@
                                             <div class="w-1/2">
                                                 <div class="flex"><span class="shrink-0"
                                                         style="width:84px;">Tahun Anggaran</span><span>:
-                                                        {{ $settings['kuitansi_tahun_anggaran'] ?? '2026' }}</span>
+                                                        {{ $tahun_anggaran ?: '...' }}</span>
                                                 </div>
                                                 <div class="flex"><span class="shrink-0"
                                                         style="width:84px;">Nomor Bukti</span><span>:

@@ -14,6 +14,7 @@ class KuitansiBosManagement extends Component
 
     // Search & pagination
     public string $search = '';
+    public string $filterTahun = '';
     public int $perPage = 10;
 
     // Bulk selection (untuk "Cetak Terpilih")
@@ -28,6 +29,7 @@ class KuitansiBosManagement extends Component
     // Form data (per kuitansi)
     public ?int $kuitansiId = null;
     public string $nomor_bukti = '';
+    public string $tahun_anggaran = '';
     public string $penerima = '';
     public ?int $jumlah_uang = null;
     public string $uraian_pembayaran = '';
@@ -49,6 +51,7 @@ class KuitansiBosManagement extends Component
     {
         return [
             'nomor_bukti' => 'required|string|max:20',
+            'tahun_anggaran' => 'required|string|max:10',
             'penerima' => 'required|string|max:255',
             'jumlah_uang' => 'required|integer|min:1',
             'uraian_pembayaran' => 'required|string',
@@ -58,6 +61,7 @@ class KuitansiBosManagement extends Component
 
     protected $messages = [
         'nomor_bukti.required' => 'Nomor urut bukti wajib diisi.',
+        'tahun_anggaran.required' => 'Tahun anggaran wajib diisi.',
         'penerima.required' => 'Nama penerima wajib diisi.',
         'jumlah_uang.required' => 'Jumlah uang wajib diisi.',
         'jumlah_uang.min' => 'Jumlah uang harus lebih dari 0.',
@@ -66,6 +70,11 @@ class KuitansiBosManagement extends Component
     ];
 
     public function updatingSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingFilterTahun(): void
     {
         $this->resetPage();
     }
@@ -91,15 +100,14 @@ class KuitansiBosManagement extends Component
      */
     public function getTahunWarningProperty(): ?string
     {
-        if (! $this->tanggal_lunas) {
+        if (! $this->tanggal_lunas || ! $this->tahun_anggaran) {
             return null;
         }
 
-        $tahunAnggaran = SchoolSetting::get('kuitansi_tahun_anggaran', (string) date('Y'));
         $tahunLunas = substr($this->tanggal_lunas, 0, 4);
 
-        if ($tahunLunas !== (string) $tahunAnggaran) {
-            return "Tahun tanggal lunas ({$tahunLunas}) berbeda dengan tahun anggaran ({$tahunAnggaran}). Pastikan ini disengaja.";
+        if ($tahunLunas !== $this->tahun_anggaran) {
+            return "Tahun tanggal lunas ({$tahunLunas}) berbeda dengan tahun anggaran ({$this->tahun_anggaran}). Pastikan ini disengaja.";
         }
 
         return null;
@@ -108,6 +116,7 @@ class KuitansiBosManagement extends Component
     public function openCreateModal(): void
     {
         $this->resetForm();
+        $this->tahun_anggaran = SchoolSetting::get('kuitansi_tahun_anggaran', (string) date('Y'));
         $this->tanggal_lunas = date('Y-m-d');
         $this->isEditing = false;
         $this->showModal = true;
@@ -118,6 +127,7 @@ class KuitansiBosManagement extends Component
         $k = Kuitansi::findOrFail($id);
         $this->kuitansiId = $k->id;
         $this->nomor_bukti = $k->nomor_bukti;
+        $this->tahun_anggaran = $k->tahun_anggaran ?? '';
         $this->penerima = $k->penerima;
         $this->jumlah_uang = $k->jumlah_uang;
         $this->uraian_pembayaran = $k->uraian_pembayaran;
@@ -167,6 +177,7 @@ class KuitansiBosManagement extends Component
     {
         $this->kuitansiId = null;
         $this->nomor_bukti = '';
+        $this->tahun_anggaran = '';
         $this->penerima = '';
         $this->jumlah_uang = null;
         $this->uraian_pembayaran = '';
@@ -228,15 +239,29 @@ class KuitansiBosManagement extends Component
     {
         $kuitansis = Kuitansi::query()
             ->when($this->search, function ($query) {
-                $query->where('penerima', 'like', '%' . $this->search . '%')
-                    ->orWhere('nomor_bukti', 'like', '%' . $this->search . '%')
-                    ->orWhere('uraian_pembayaran', 'like', '%' . $this->search . '%');
+                $query->where(function ($q) {
+                    $q->where('penerima', 'like', '%' . $this->search . '%')
+                        ->orWhere('nomor_bukti', 'like', '%' . $this->search . '%')
+                        ->orWhere('uraian_pembayaran', 'like', '%' . $this->search . '%');
+                });
+            })
+            ->when($this->filterTahun, function ($query) {
+                $query->where('tahun_anggaran', $this->filterTahun);
             })
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
 
+        $tahunOptions = Kuitansi::query()
+            ->select('tahun_anggaran')
+            ->whereNotNull('tahun_anggaran')
+            ->distinct()
+            ->orderBy('tahun_anggaran', 'desc')
+            ->pluck('tahun_anggaran')
+            ->all();
+
         return view('livewire.kuitansi-bos-management', [
             'kuitansis' => $kuitansis,
+            'tahunOptions' => $tahunOptions,
             'settings' => SchoolSetting::getAll(),
         ])->layout('layouts.admin', ['header' => 'Kuitansi / Bukti Pembayaran BOS']);
     }
