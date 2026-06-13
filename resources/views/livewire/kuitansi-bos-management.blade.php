@@ -18,6 +18,13 @@
                     <option value="{{ $tahun }}">{{ $tahun }}</option>
                 @endforeach
             </select>
+            <select wire:model.live="perPage"
+                class="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                <option value="5">5 data</option>
+                <option value="10">10 data</option>
+                <option value="25">25 data</option>
+                <option value="100">100 data</option>
+            </select>
         </div>
         <div class="flex items-center gap-2">
             <button wire:click="openSettingsModal"

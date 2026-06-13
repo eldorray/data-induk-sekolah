@@ -79,6 +79,11 @@ class KuitansiBosManagement extends Component
         $this->resetPage();
     }
 
+    public function updatingPerPage(): void
+    {
+        $this->resetPage();
+    }
+
     /**
      * Preview terbilang live mengikuti jumlah_uang.
      */
