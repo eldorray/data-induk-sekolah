@@ -3,24 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\LpjBos;
+use App\Services\LpjBosPdfMerger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class LpjBosController extends Controller
 {
-    public function printPdf(int $id)
+    public function printPdf(int $id, LpjBosPdfMerger $merger)
     {
         $lpj = LpjBos::with(['kuitansi', 'attachments'])->findOrFail($id);
 
-        $pdf = Pdf::loadView('pdf.lpj-bos', [
-            'lpj' => $lpj,
-            'imageAttachments' => $lpj->attachments->filter->is_image,
-            'pdfAttachments' => $lpj->attachments->filter->is_pdf,
+        $content = $merger->merge($lpj);
+
+        return response($content, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="lpj-bos-'.$lpj->kuitansi->nomor_bukti.'.pdf"',
         ]);
-
-        $pdf->setPaper('a4', 'portrait');
-
-        return $pdf->stream('lpj-bos-'.$lpj->kuitansi->nomor_bukti.'.pdf');
     }
 
     public function printRekap(Request $request)

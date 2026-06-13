@@ -25,18 +25,21 @@ class LpjBosPdfTest extends TestCase
 
     public function test_admin_can_print_single_lpj_pdf(): void
     {
-        Pdf::shouldReceive('loadView')
+        $combiner = \Mockery::mock(\App\Services\PdfCombiner::class);
+        $combiner->shouldReceive('combine')
             ->once()
-            ->with('pdf.lpj-bos', \Mockery::on(fn ($data) => $data['lpj']->nama_kegiatan === 'Pengadaan ATK'))
-            ->andReturn($this->fakePdf());
+            ->with(\Mockery::on(fn ($paths) => is_array($paths) && count($paths) >= 1))
+            ->andReturn('%PDF-1.4 fake-merged');
+        $this->app->instance(\App\Services\PdfCombiner::class, $combiner);
 
         $admin = User::factory()->create(['role' => User::ROLE_ADMIN]);
         $lpj = $this->createLpj('Pengadaan ATK');
 
-        $this->actingAs($admin)
-            ->get(route('lpj-bos.print', $lpj->id))
-            ->assertOk()
-            ->assertSee('PDF:lpj-bos-');
+        $response = $this->actingAs($admin)->get(route('lpj-bos.print', $lpj->id));
+
+        $response->assertOk();
+        $this->assertSame('application/pdf', $response->headers->get('content-type'));
+        $this->assertStringContainsString('fake-merged', $response->getContent());
     }
 
     public function test_admin_can_print_filtered_rekap_pdf(): void
