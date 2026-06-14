@@ -5,11 +5,17 @@ namespace App\Livewire;
 use App\Helpers\Terbilang;
 use App\Models\Kuitansi;
 use App\Models\SchoolSetting;
+use App\Services\LpjBosImageCompressor;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class KuitansiBosManagement extends Component
 {
+    use WithFileUploads;
     use WithPagination;
 
     // Search & pagination
@@ -30,6 +36,13 @@ class KuitansiBosManagement extends Component
     public bool $showSettingsModal = false;
 
     public bool $isEditing = false;
+
+    // Upload kuitansi yang sudah ditandatangani
+    public bool $showSignedModal = false;
+
+    public ?int $signedKuitansiId = null;
+
+    public ?UploadedFile $signedFile = null;
 
     // Form data (per kuitansi)
     public ?int $kuitansiId = null;
@@ -181,7 +194,7 @@ class KuitansiBosManagement extends Component
      */
     public function copySelected(): void
     {
-        $items = Kuitansi::whereIn('id', $this->selected)->orderBy('created_at')->get();
+        $items = Kuitansi::whereIn('id', $this->selected)->get();
 
         if ($items->isEmpty()) {
             return;
@@ -228,6 +241,87 @@ class KuitansiBosManagement extends Component
         $this->uraian_pembayaran = '';
         $this->tanggal_lunas = null;
         $this->resetErrorBag();
+    }
+
+    // ===== Upload kuitansi yang sudah ditandatangani =====
+
+    public function openSignedUploadModal(int $id): void
+    {
+        $this->signedKuitansiId = $id;
+        $this->signedFile = null;
+        $this->resetErrorBag();
+        $this->showSignedModal = true;
+    }
+
+    public function closeSignedUploadModal(): void
+    {
+        $this->showSignedModal = false;
+        $this->signedKuitansiId = null;
+        $this->signedFile = null;
+        $this->resetErrorBag();
+    }
+
+    public function uploadSignedFile(LpjBosImageCompressor $compressor): void
+    {
+        if (! $this->signedKuitansiId) {
+            return;
+        }
+
+        $this->validate([
+            'signedFile' => 'required|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        ], [
+            'signedFile.required' => 'File kuitansi yang sudah ditandatangani wajib dipilih.',
+            'signedFile.mimes' => 'Format file harus JPG, JPEG, PNG, atau PDF.',
+            'signedFile.max' => 'Ukuran file maksimal 10 MB.',
+        ]);
+
+        $kuitansi = Kuitansi::findOrFail($this->signedKuitansiId);
+        $file = $this->signedFile;
+        $isPdf = $file->getMimeType() === 'application/pdf';
+
+        if ($isPdf && $file->getSize() > 5 * 1024 * 1024) {
+            $this->addError('signedFile', 'File PDF maksimal 5 MB.');
+
+            return;
+        }
+
+        // Hapus file lama bila ada (replace).
+        if ($kuitansi->signed_file_path) {
+            Storage::disk('public')->delete($kuitansi->signed_file_path);
+        }
+
+        $directory = 'kuitansi-bos/signed/'.$kuitansi->id;
+        $path = $isPdf
+            ? $file->storeAs($directory, Str::uuid()->toString().'.pdf', 'public')
+            : $compressor->store($file, $directory);
+
+        $kuitansi->update([
+            'signed_file_path' => $path,
+            'signed_original_name' => $file->getClientOriginalName(),
+            'signed_mime_type' => $isPdf ? 'application/pdf' : 'image/jpeg',
+            'signed_file_size' => Storage::disk('public')->size($path),
+            'signed_uploaded_at' => now(),
+        ]);
+
+        $this->closeSignedUploadModal();
+        session()->flash('success', 'Kuitansi yang sudah ditandatangani berhasil diupload.');
+    }
+
+    public function deleteSignedFile(int $id): void
+    {
+        $kuitansi = Kuitansi::findOrFail($id);
+
+        if ($kuitansi->signed_file_path) {
+            Storage::disk('public')->delete($kuitansi->signed_file_path);
+            $kuitansi->update([
+                'signed_file_path' => null,
+                'signed_original_name' => null,
+                'signed_mime_type' => null,
+                'signed_file_size' => null,
+                'signed_uploaded_at' => null,
+            ]);
+            session()->flash('success', 'File kuitansi yang sudah ditandatangani berhasil dihapus.');
+        }
     }
 
     // ===== Pengaturan lembaga =====
