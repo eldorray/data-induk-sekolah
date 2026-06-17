@@ -357,7 +357,7 @@
 
                     {{-- ========== DROPDOWN: Surat Siswa ========== --}}
                     @php
-                        $suratSiswaActive = request()->routeIs('mutasi.*') || request()->routeIs('surat-aktif.*') || request()->routeIs('surat-rekap-pkh.*');
+                        $suratSiswaActive = request()->routeIs('mutasi.*') || request()->routeIs('surat-aktif.*') || request()->routeIs('surat-rekap-pkh.*') || request()->routeIs('surat-terima-pindahan.*') || request()->routeIs('syarat-pindahan.*');
                     @endphp
                     <div x-data="{ open: {{ $suratSiswaActive ? 'true' : 'false' }} }" class="space-y-0.5">
                         <button @click="open = !open"
@@ -404,6 +404,22 @@
                                     class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ request()->routeIs('surat-rekap-pkh.*') ? 'bg-white' : 'bg-gray-300' }}">
                                 </div>
                                 <span class="whitespace-nowrap">Rekap PKH</span>
+                            </a>
+                            <a href="{{ route('surat-terima-pindahan.index') }}"
+                                class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('surat-terima-pindahan.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900' }}"
+                                wire:navigate>
+                                <div
+                                    class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ request()->routeIs('surat-terima-pindahan.*') ? 'bg-white' : 'bg-gray-300' }}">
+                                </div>
+                                <span class="whitespace-nowrap">Terima Siswa Pindahan</span>
+                            </a>
+                            <a href="{{ route('syarat-pindahan.index') }}"
+                                class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('syarat-pindahan.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900' }}"
+                                wire:navigate>
+                                <div
+                                    class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ request()->routeIs('syarat-pindahan.*') ? 'bg-white' : 'bg-gray-300' }}">
+                                </div>
+                                <span class="whitespace-nowrap">&middot; Kelola Syarat</span>
                             </a>
                         </div>
                     </div>

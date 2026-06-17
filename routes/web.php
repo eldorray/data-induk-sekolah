@@ -6,6 +6,7 @@ use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\NilaiIjazahController;
 use App\Http\Controllers\SkGuruMiController;
 use App\Http\Controllers\SuratKeteranganAktifController;
+use App\Http\Controllers\SuratTerimaPindahanController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
 use App\Http\Controllers\SuratPernyataanTangcerController;
 use App\Http\Controllers\SuratRekapPkhController;
@@ -29,6 +30,8 @@ use App\Livewire\SkGtyMiManagement;
 use App\Livewire\SkPembagianTugasMiManagement;
 use App\Livewire\SkTugasTambahanMiManagement;
 use App\Livewire\SuratKeteranganAktifManagement;
+use App\Livewire\SuratTerimaPindahanManagement;
+use App\Livewire\SyaratPindahanManagement;
 use App\Livewire\SuratPernyataanInsentifManagement;
 use App\Livewire\SuratPernyataanTangcerManagement;
 use App\Livewire\SuratRekapPkhManagement;
@@ -92,6 +95,24 @@ Route::get('surat-aktif', SuratKeteranganAktifManagement::class)
 Route::get('surat-aktif/{id}/print', [SuratKeteranganAktifController::class, 'printPdf'])
     ->middleware(['auth', 'role:admin'])
     ->name('surat-aktif.print');
+
+// Surat Menerima Siswa Pindahan
+Route::get('surat-terima-pindahan', SuratTerimaPindahanManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-terima-pindahan.index');
+
+Route::get('surat-terima-pindahan/{id}/print', [SuratTerimaPindahanController::class, 'printPdf'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-terima-pindahan.print');
+
+Route::post('surat-terima-pindahan/cetak-dokumen', [SuratTerimaPindahanController::class, 'cetakDokumen'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-terima-pindahan.cetak-dokumen');
+
+// Manajemen Syarat Pindahan
+Route::get('syarat-pindahan', SyaratPindahanManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('syarat-pindahan.index');
 
 // Surat Rekap PKH
 Route::get('surat-rekap-pkh', SuratRekapPkhManagement::class)
