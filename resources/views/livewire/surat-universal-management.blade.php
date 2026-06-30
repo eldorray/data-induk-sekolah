@@ -235,6 +235,7 @@
                                                 height: 360,
                                                 plugins: 'lists advlist autolink link',
                                                 toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | link removeformat',
+                                                toolbar_mode: 'wrap',
                                                 content_style: &quot;body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.4} p{margin:6px 0}&quot;,
                                                 setup: (ed) => {
                                                     ed.on('init', () => ed.setContent($wire.isi || ''));
