@@ -12,6 +12,7 @@ use App\Http\Controllers\SuratPernyataanTangcerController;
 use App\Http\Controllers\SuratRekapPkhController;
 use App\Http\Controllers\SuratUniversalController;
 use App\Livewire\SuratUniversalManagement;
+use App\Livewire\SuratUniversalForm;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\ResetPassword;
@@ -217,6 +218,14 @@ Route::get('surat-pernyataan-tangcer-export-all', [SuratPernyataanTangcerControl
 Route::get('surat-universal', SuratUniversalManagement::class)
     ->middleware(['auth', 'role:admin'])
     ->name('surat-universal.index');
+
+Route::get('surat-universal/create', SuratUniversalForm::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-universal.create');
+
+Route::get('surat-universal/{id}/edit', SuratUniversalForm::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-universal.edit');
 
 Route::get('surat-universal/{id}/print', [SuratUniversalController::class, 'printPdf'])
     ->middleware(['auth', 'role:admin'])
