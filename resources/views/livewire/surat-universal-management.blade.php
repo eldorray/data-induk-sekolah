@@ -2,6 +2,8 @@
     @assets
         <script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
         <style>
+            /* TinyMCE menu/dialog (tabel, link) muncul di body — naikin di atas modal z-9999 */
+            .tox-tinymce-aux { z-index: 100000 !important; }
             /* Live preview — tiru tampilan print (Times, justify, kertas putih) */
             .surat-preview {
                 font-family: 'Times New Roman', Times, serif;
