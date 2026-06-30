@@ -22,7 +22,7 @@
             .surat-preview .sp-isi blockquote { border-left: 3px solid #ccc; margin: 8px 0; padding-left: 12px; }
             .surat-preview .sp-ttd { margin-top: 24px; }
             .surat-preview .sp-ttd .sp-atas { text-align: center; margin: 0 0 2px; }
-            .surat-preview .sp-ttd .sp-tgl { margin: 0 0 2px; }
+            .surat-preview .sp-ttd .sp-tempat { text-align: right; margin: 0 0 2px; }
             .surat-preview .sp-ttd .sp-sign { width: 100%; border-collapse: collapse; }
             .surat-preview .sp-ttd .sp-sign td { text-align: center; vertical-align: top; padding: 0 8px; }
             .surat-preview .sp-ttd .sp-spasi { height: 64px; }
@@ -47,11 +47,12 @@
                 return parseInt(p[2]) + ' ' + b[parseInt(p[1]) - 1] + ' ' + p[0];
             },
             get sigRows() {
-                const n = this.signers.length;
+                const s = this.signers;
+                const n = s.length;
                 if (!n) return [];
-                const per = n === 4 ? 2 : Math.min(n, 3);
+                if (n === 3) return [[s[0], s[2]], [s[1]]]; // tengah turun ke bawah
                 const rows = [];
-                for (let i = 0; i < n; i += per) rows.push(this.signers.slice(i, i + per));
+                for (let i = 0; i < n; i += 2) rows.push(s.slice(i, i + 2));
                 return rows;
             }
         }">
@@ -236,12 +237,11 @@
                         <div class="sp-isi" x-html="isi"></div>
                         <div class="sp-ttd" x-show="signers.length">
                             <p class="sp-atas" x-show="ttd_atas" x-text="ttd_atas"></p>
+                            <p class="sp-tempat"><span x-text="tempat"></span><span x-show="tempat">, </span><span x-text="tglFormatted"></span></p>
                             <template x-for="(row, ri) in sigRows" :key="ri">
                                 <table class="sp-sign"><tbody><tr>
                                     <template x-for="(s, ci) in row" :key="ci">
                                         <td>
-                                            <p class="sp-tgl" x-show="ri === 0 && ci === row.length - 1"
-                                                x-text="(tempat ? tempat + ', ' : '') + tglFormatted"></p>
                                             <p x-text="s.jabatan"></p>
                                             <div class="sp-spasi"></div>
                                             <p class="sp-nama" x-text="s.nama"></p>
