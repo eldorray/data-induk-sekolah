@@ -23,6 +23,8 @@
         .isi-surat ul { list-style-type: disc; }
         .isi-surat ol { list-style-type: decimal; }
         .isi-surat li { margin: 2px 0; }
+        .isi-surat table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+        .isi-surat table td, .isi-surat table th { border: 1px solid #000; padding: 4px 6px; vertical-align: top; }
         .isi-surat pre { font-family: monospace; white-space: pre-wrap; }
         .ttd-container { margin-top: 24px; float: right; width: 260px; text-align: center; }
         .ttd-tempat { margin-bottom: 2px; }

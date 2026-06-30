@@ -19,6 +19,8 @@
             .surat-preview .sp-isi ul, .surat-preview .sp-isi ol { margin: 8px 0; padding-left: 30px; }
             .surat-preview .sp-isi ul { list-style: disc; }
             .surat-preview .sp-isi ol { list-style: decimal; }
+            .surat-preview .sp-isi table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+            .surat-preview .sp-isi table td, .surat-preview .sp-isi table th { border: 1px solid #000; padding: 4px 6px; }
             .surat-preview .sp-isi h1 { font-size: 14pt; margin: 10px 0; }
             .surat-preview .sp-isi blockquote { border-left: 3px solid #ccc; margin: 8px 0; padding-left: 12px; }
             .surat-preview .sp-ttd { margin-top: 24px; width: 260px; margin-left: auto; text-align: center; }
@@ -233,9 +235,11 @@
                                                 promotion: false,
                                                 statusbar: false,
                                                 height: 360,
-                                                plugins: 'lists advlist autolink link',
-                                                toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | link removeformat',
+                                                plugins: 'lists advlist autolink link table',
+                                                toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | table | link removeformat',
                                                 toolbar_mode: 'wrap',
+                                                table_default_attributes: { border: '1' },
+                                                table_default_styles: { 'border-collapse': 'collapse', width: '100%' },
                                                 content_style: &quot;body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.4} p{margin:6px 0}&quot;,
                                                 setup: (ed) => {
                                                     ed.on('init', () => ed.setContent($wire.isi || ''));
