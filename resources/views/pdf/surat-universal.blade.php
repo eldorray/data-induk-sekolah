@@ -27,11 +27,12 @@
         .isi-surat table td, .isi-surat table th { border: 1px solid #000; padding: 4px 6px; vertical-align: top; }
         .isi-surat table.no-border td, .isi-surat table.no-border th { border: 0; }
         .isi-surat pre { font-family: monospace; white-space: pre-wrap; }
-        .ttd-container { margin-top: 24px; float: right; width: 260px; text-align: center; }
-        .ttd-tempat { margin-bottom: 2px; }
-        .ttd-jabatan { margin-bottom: 4px; }
-        .ttd-spasi { height: 70px; position: relative; }
-        .ttd-spasi img { position: absolute; left: 50%; top: 0; transform: translateX(-50%); max-height: 75px; }
+        .ttd-block { margin-top: 24px; }
+        .ttd-atas { text-align: center; margin: 0 0 2px; }
+        .ttd-tempat { text-align: right; margin: 0 0 2px; }
+        .ttd-sign { width: 100%; border-collapse: collapse; }
+        .ttd-sign td { text-align: center; vertical-align: top; padding: 0 8px; }
+        .ttd-spasi { height: 70px; }
         .ttd-nama { font-weight: bold; text-decoration: underline; }
         .ttd-nip { font-size: 11pt; }
         .clear { clear: both; }
@@ -61,24 +62,36 @@
     </div>
 
     {{-- Tanda Tangan --}}
-    <div class="ttd-container">
-        <p class="ttd-tempat">{{ $surat->tempat ?? '' }}, {{ $surat->tanggal_surat->translatedFormat('d F Y') }}</p>
-        @if ($surat->ttd_jabatan)
-            <p class="ttd-jabatan">{{ $surat->ttd_jabatan }}</p>
-        @endif
-        <div class="ttd-spasi">
-            @if (!empty($settings['ttd_kepala_path']))
-                <img src="{{ public_path('storage/' . $settings['ttd_kepala_path']) }}" alt="">
+    @php
+        $signers = $surat->signers ?? [];
+        $n = count($signers);
+        $perRow = $n === 4 ? 2 : max(min($n, 3), 1);
+        $rows = array_chunk($signers, $perRow);
+    @endphp
+    @if ($n)
+        <div class="ttd-block">
+            @if ($surat->ttd_atas)
+                <p class="ttd-atas">{{ $surat->ttd_atas }}</p>
             @endif
+            <p class="ttd-tempat">{{ $surat->tempat ? $surat->tempat . ', ' : '' }}{{ $surat->tanggal_surat->translatedFormat('d F Y') }}</p>
+            @foreach ($rows as $row)
+                <table class="ttd-sign">
+                    <tr>
+                        @foreach ($row as $s)
+                            <td>
+                                <p>{{ $s['jabatan'] ?? '' }}</p>
+                                <div class="ttd-spasi"></div>
+                                <p class="ttd-nama">{{ $s['nama'] ?? '' }}</p>
+                                @if (!empty($s['nip']))
+                                    <p class="ttd-nip">NIP. {{ $s['nip'] }}</p>
+                                @endif
+                            </td>
+                        @endforeach
+                    </tr>
+                </table>
+            @endforeach
         </div>
-        @if ($surat->ttd_nama)
-            <p class="ttd-nama">{{ $surat->ttd_nama }}</p>
-        @endif
-        @if ($surat->ttd_nip)
-            <p class="ttd-nip">NIP. {{ $surat->ttd_nip }}</p>
-        @endif
-    </div>
-    <div class="clear"></div>
+    @endif
 </body>
 
 </html>

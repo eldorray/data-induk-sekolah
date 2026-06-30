@@ -15,13 +15,13 @@ class SuratUniversal extends Model
         'kop_path',
         'isi',
         'tempat',
-        'ttd_jabatan',
-        'ttd_nama',
-        'ttd_nip',
+        'signers',
+        'ttd_atas',
     ];
 
     protected $casts = [
         'tanggal_surat' => 'date',
+        'signers' => 'array',
     ];
 
     public const JENJANG_OPTIONS = ['MI', 'SMP', 'RA/TK', 'MTs', 'MA', 'Lainnya'];

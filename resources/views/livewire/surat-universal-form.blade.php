@@ -20,7 +20,11 @@
             .surat-preview .sp-isi table.no-border td, .surat-preview .sp-isi table.no-border th { border: 0; }
             .surat-preview .sp-isi h1 { font-size: 14pt; margin: 10px 0; }
             .surat-preview .sp-isi blockquote { border-left: 3px solid #ccc; margin: 8px 0; padding-left: 12px; }
-            .surat-preview .sp-ttd { margin-top: 24px; width: 260px; margin-left: auto; text-align: center; }
+            .surat-preview .sp-ttd { margin-top: 24px; }
+            .surat-preview .sp-ttd .sp-atas { text-align: center; margin: 0 0 2px; }
+            .surat-preview .sp-ttd .sp-tempat { text-align: right; margin: 0 0 2px; }
+            .surat-preview .sp-ttd .sp-sign { width: 100%; border-collapse: collapse; }
+            .surat-preview .sp-ttd .sp-sign td { text-align: center; vertical-align: top; padding: 0 8px; }
             .surat-preview .sp-ttd .sp-spasi { height: 64px; }
             .surat-preview .sp-ttd .sp-nama { font-weight: bold; text-decoration: underline; }
             .surat-preview .sp-kop img { width: 100%; height: auto; }
@@ -32,9 +36,8 @@
             judul: $wire.entangle('judul'),
             nomor_surat: $wire.entangle('nomor_surat'),
             tempat: $wire.entangle('tempat'),
-            ttd_jabatan: $wire.entangle('ttd_jabatan'),
-            ttd_nama: $wire.entangle('ttd_nama'),
-            ttd_nip: $wire.entangle('ttd_nip'),
+            ttd_atas: $wire.entangle('ttd_atas'),
+            signers: $wire.entangle('signers'),
             tanggal_surat: $wire.entangle('tanggal_surat'),
             isi: $wire.entangle('isi'),
             get tglFormatted() {
@@ -42,6 +45,14 @@
                 const b = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
                 const p = this.tanggal_surat.split('-');
                 return parseInt(p[2]) + ' ' + b[parseInt(p[1]) - 1] + ' ' + p[0];
+            },
+            get sigRows() {
+                const n = this.signers.length;
+                if (!n) return [];
+                const per = n === 4 ? 2 : Math.min(n, 3);
+                const rows = [];
+                for (let i = 0; i < n; i += per) rows.push(this.signers.slice(i, i + per));
+                return rows;
             }
         }">
 
@@ -130,22 +141,45 @@
                                 class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan Penandatangan</label>
-                            <input type="text" wire:model="ttd_jabatan" placeholder="Kepala Madrasah"
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Teks di atas TTD (opsional)</label>
+                            <input type="text" wire:model="ttd_atas" placeholder='Contoh: Mengetahui,'
                                 class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Penandatangan</label>
-                            <input type="text" wire:model="ttd_nama"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+
+                    {{-- Penandatangan (repeater) --}}
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">Penandatangan</label>
+                            <button type="button" wire:click="addSigner"
+                                class="inline-flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 font-medium">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                Tambah
+                            </button>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">NIP (opsional)</label>
-                            <input type="text" wire:model="ttd_nip"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                        <div class="space-y-3">
+                            @foreach ($signers as $i => $signer)
+                                <div wire:key="signer-{{ $i }}" class="rounded-xl border border-gray-200 p-3 bg-gray-50/50">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-medium text-gray-500">Penandatangan {{ $i + 1 }}</span>
+                                        @if (count($signers) > 1)
+                                            <button type="button" wire:click="removeSigner({{ $i }})" class="text-gray-400 hover:text-red-600" title="Hapus">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            </button>
+                                        @endif
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <input type="text" wire:model="signers.{{ $i }}.jabatan" placeholder="Jabatan (mis. Kepala Madrasah)"
+                                            class="px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        <input type="text" wire:model="signers.{{ $i }}.nama" placeholder="Nama"
+                                            class="px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        <input type="text" wire:model="signers.{{ $i }}.nip" placeholder="NIP (opsional)"
+                                            class="px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm col-span-2">
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
+                        <p class="mt-2 text-xs text-gray-400">1-3 ttd sebaris; 4 jadi 2&times;2; 5-6 jadi 3 per baris (otomatis).</p>
                     </div>
                 </div>
 
@@ -200,12 +234,21 @@
                             <p>Nomor : <span x-text="nomor_surat"></span></p>
                         </div>
                         <div class="sp-isi" x-html="isi"></div>
-                        <div class="sp-ttd">
-                            <p><span x-text="tempat"></span><span x-show="tempat">, </span><span x-text="tglFormatted"></span></p>
-                            <p x-text="ttd_jabatan" x-show="ttd_jabatan"></p>
-                            <div class="sp-spasi"></div>
-                            <p class="sp-nama" x-text="ttd_nama"></p>
-                            <p x-show="ttd_nip">NIP. <span x-text="ttd_nip"></span></p>
+                        <div class="sp-ttd" x-show="signers.length">
+                            <p class="sp-atas" x-show="ttd_atas" x-text="ttd_atas"></p>
+                            <p class="sp-tempat"><span x-text="tempat"></span><span x-show="tempat">, </span><span x-text="tglFormatted"></span></p>
+                            <template x-for="(row, ri) in sigRows" :key="ri">
+                                <table class="sp-sign"><tbody><tr>
+                                    <template x-for="(s, ci) in row" :key="ci">
+                                        <td>
+                                            <p x-text="s.jabatan"></p>
+                                            <div class="sp-spasi"></div>
+                                            <p class="sp-nama" x-text="s.nama"></p>
+                                            <p x-show="s.nip">NIP. <span x-text="s.nip"></span></p>
+                                        </td>
+                                    </template>
+                                </tr></tbody></table>
+                            </template>
                         </div>
                     </div>
                 </div>

@@ -21,9 +21,8 @@ class SuratUniversalForm extends Component
     public string $jenjang = 'MI';
     public string $isi = '';
     public string $tempat = '';
-    public string $ttd_jabatan = '';
-    public string $ttd_nama = '';
-    public string $ttd_nip = '';
+    public string $ttd_atas = '';
+    public array $signers = [];
 
     public $kopFile = null;
     public ?string $existingKopPath = null;
@@ -41,9 +40,8 @@ class SuratUniversalForm extends Component
             $this->jenjang = $surat->jenjang ?? 'MI';
             $this->isi = $surat->isi ?? '';
             $this->tempat = $surat->tempat ?? '';
-            $this->ttd_jabatan = $surat->ttd_jabatan ?? '';
-            $this->ttd_nama = $surat->ttd_nama ?? '';
-            $this->ttd_nip = $surat->ttd_nip ?? '';
+            $this->ttd_atas = $surat->ttd_atas ?? '';
+            $this->signers = $surat->signers ?: [$this->blankSigner()];
             $this->existingKopPath = $surat->kop_path;
             return;
         }
@@ -51,8 +49,27 @@ class SuratUniversalForm extends Component
         $this->nomor_surat = SuratUniversal::generateNomorSurat();
         $this->tanggal_surat = date('Y-m-d');
         $this->tempat = SchoolSetting::get('kuitansi_kabupaten', '') ?? '';
-        $this->ttd_jabatan = 'Kepala Madrasah';
-        $this->ttd_nama = SchoolSetting::get('kuitansi_kepala_madrasah', '') ?? '';
+        $this->signers = [[
+            'jabatan' => 'Kepala Madrasah',
+            'nama' => SchoolSetting::get('kuitansi_kepala_madrasah', '') ?? '',
+            'nip' => '',
+        ]];
+    }
+
+    private function blankSigner(): array
+    {
+        return ['jabatan' => '', 'nama' => '', 'nip' => ''];
+    }
+
+    public function addSigner(): void
+    {
+        $this->signers[] = $this->blankSigner();
+    }
+
+    public function removeSigner(int $i): void
+    {
+        unset($this->signers[$i]);
+        $this->signers = array_values($this->signers);
     }
 
     protected function rules(): array
@@ -65,9 +82,11 @@ class SuratUniversalForm extends Component
             'jenjang' => 'required|string|max:50',
             'isi' => 'required|string',
             'tempat' => 'nullable|string|max:255',
-            'ttd_jabatan' => 'nullable|string|max:255',
-            'ttd_nama' => 'nullable|string|max:255',
-            'ttd_nip' => 'nullable|string|max:100',
+            'ttd_atas' => 'nullable|string|max:255',
+            'signers' => 'array',
+            'signers.*.jabatan' => 'nullable|string|max:255',
+            'signers.*.nama' => 'nullable|string|max:255',
+            'signers.*.nip' => 'nullable|string|max:100',
             'kopFile' => 'nullable|image|max:4096',
         ];
     }
@@ -86,6 +105,12 @@ class SuratUniversalForm extends Component
     {
         $validated = $this->validate();
         $data = collect($validated)->except('kopFile')->toArray();
+
+        // buang baris penandatangan yang kosong total
+        $data['signers'] = array_values(array_filter(
+            $this->signers,
+            fn($s) => trim(($s['jabatan'] ?? '') . ($s['nama'] ?? '') . ($s['nip'] ?? '')) !== ''
+        ));
 
         if ($this->kopFile) {
             $data['kop_path'] = $this->kopFile->store('kop-surat', 'public');
