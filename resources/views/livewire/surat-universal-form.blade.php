@@ -166,7 +166,7 @@
                             toolbar_mode: 'wrap',
                             table_default_attributes: { border: '1' },
                             table_default_styles: { 'border-collapse': 'collapse', width: '100%' },
-                            content_style: &quot;body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.4} p{margin:6px 0}&quot;,
+                            content_style: &quot;body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.4} p{margin:6px 0} table{border-collapse:collapse;width:100%} table td,table th{border:1px solid #000;padding:4px 6px}&quot;,
                             setup: (ed) => {
                                 ed.on('init', () => ed.setContent($wire.isi || ''));
                                 ed.on('change keyup input undo redo SetContent', () => { $wire.isi = ed.getContent(); });
