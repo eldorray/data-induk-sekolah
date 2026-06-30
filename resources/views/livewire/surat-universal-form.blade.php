@@ -17,6 +17,7 @@
             .surat-preview .sp-isi ol { list-style: decimal; }
             .surat-preview .sp-isi table { border-collapse: collapse; width: 100%; margin: 8px 0; }
             .surat-preview .sp-isi table td, .surat-preview .sp-isi table th { border: 1px solid #000; padding: 4px 6px; }
+            .surat-preview .sp-isi table.no-border td, .surat-preview .sp-isi table.no-border th { border: 0; }
             .surat-preview .sp-isi h1 { font-size: 14pt; margin: 10px 0; }
             .surat-preview .sp-isi blockquote { border-left: 3px solid #ccc; margin: 8px 0; padding-left: 12px; }
             .surat-preview .sp-ttd { margin-top: 24px; width: 260px; margin-left: auto; text-align: center; }
@@ -162,11 +163,11 @@
                             statusbar: false,
                             height: 520,
                             plugins: 'lists advlist autolink link table',
-                            toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | table | link removeformat',
+                            toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | table tableprops | link removeformat',
                             toolbar_mode: 'wrap',
-                            table_default_attributes: { border: '1' },
                             table_default_styles: { 'border-collapse': 'collapse', width: '100%' },
-                            content_style: &quot;body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.4} p{margin:6px 0} table{border-collapse:collapse;width:100%} table td,table th{border:1px solid #000;padding:4px 6px}&quot;,
+                            table_class_list: [{ title: 'Dengan garis', value: '' }, { title: 'Tanpa garis', value: 'no-border' }],
+                            content_style: &quot;body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.4} p{margin:6px 0} table{border-collapse:collapse;width:100%} table td,table th{border:1px solid #000;padding:4px 6px} table.no-border td,table.no-border th{border:0}&quot;,
                             setup: (ed) => {
                                 ed.on('init', () => ed.setContent($wire.isi || ''));
                                 ed.on('change keyup input undo redo SetContent', () => { $wire.isi = ed.getContent(); });
