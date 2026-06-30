@@ -10,6 +10,8 @@ use App\Http\Controllers\SuratTerimaPindahanController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
 use App\Http\Controllers\SuratPernyataanTangcerController;
 use App\Http\Controllers\SuratRekapPkhController;
+use App\Http\Controllers\SuratUniversalController;
+use App\Livewire\SuratUniversalManagement;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\ResetPassword;
@@ -210,6 +212,15 @@ Route::get('surat-pernyataan-tangcer/{id}/print', [SuratPernyataanTangcerControl
 Route::get('surat-pernyataan-tangcer-export-all', [SuratPernyataanTangcerController::class, 'exportAllPdf'])
     ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-tangcer.export-all');
+
+// Surat Universal
+Route::get('surat-universal', SuratUniversalManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-universal.index');
+
+Route::get('surat-universal/{id}/print', [SuratUniversalController::class, 'printPdf'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-universal.print');
 
 // License Management
 Route::get('licenses', LicenseManagement::class)
