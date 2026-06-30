@@ -29,7 +29,7 @@
         .isi-surat pre { font-family: monospace; white-space: pre-wrap; }
         .ttd-block { margin-top: 24px; }
         .ttd-atas { text-align: center; margin: 0 0 2px; }
-        .ttd-tempat { text-align: right; margin: 0 0 2px; }
+        .ttd-tgl { margin: 0 0 2px; }
         .ttd-sign { width: 100%; border-collapse: collapse; }
         .ttd-sign td { text-align: center; vertical-align: top; padding: 0 8px; }
         .ttd-spasi { height: 70px; }
@@ -73,12 +73,14 @@
             @if ($surat->ttd_atas)
                 <p class="ttd-atas">{{ $surat->ttd_atas }}</p>
             @endif
-            <p class="ttd-tempat">{{ $surat->tempat ? $surat->tempat . ', ' : '' }}{{ $surat->tanggal_surat->translatedFormat('d F Y') }}</p>
-            @foreach ($rows as $row)
+            @foreach ($rows as $ri => $row)
                 <table class="ttd-sign">
                     <tr>
-                        @foreach ($row as $s)
+                        @foreach ($row as $ci => $s)
                             <td>
+                                @if ($ri === 0 && $ci === count($row) - 1)
+                                    <p class="ttd-tgl">{{ $surat->tempat ? $surat->tempat . ', ' : '' }}{{ $surat->tanggal_surat->translatedFormat('d F Y') }}</p>
+                                @endif
                                 <p>{{ $s['jabatan'] ?? '' }}</p>
                                 <div class="ttd-spasi"></div>
                                 <p class="ttd-nama">{{ $s['nama'] ?? '' }}</p>

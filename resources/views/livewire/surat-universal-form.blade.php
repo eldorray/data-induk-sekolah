@@ -22,7 +22,7 @@
             .surat-preview .sp-isi blockquote { border-left: 3px solid #ccc; margin: 8px 0; padding-left: 12px; }
             .surat-preview .sp-ttd { margin-top: 24px; }
             .surat-preview .sp-ttd .sp-atas { text-align: center; margin: 0 0 2px; }
-            .surat-preview .sp-ttd .sp-tempat { text-align: right; margin: 0 0 2px; }
+            .surat-preview .sp-ttd .sp-tgl { margin: 0 0 2px; }
             .surat-preview .sp-ttd .sp-sign { width: 100%; border-collapse: collapse; }
             .surat-preview .sp-ttd .sp-sign td { text-align: center; vertical-align: top; padding: 0 8px; }
             .surat-preview .sp-ttd .sp-spasi { height: 64px; }
@@ -236,11 +236,12 @@
                         <div class="sp-isi" x-html="isi"></div>
                         <div class="sp-ttd" x-show="signers.length">
                             <p class="sp-atas" x-show="ttd_atas" x-text="ttd_atas"></p>
-                            <p class="sp-tempat"><span x-text="tempat"></span><span x-show="tempat">, </span><span x-text="tglFormatted"></span></p>
                             <template x-for="(row, ri) in sigRows" :key="ri">
                                 <table class="sp-sign"><tbody><tr>
                                     <template x-for="(s, ci) in row" :key="ci">
                                         <td>
+                                            <p class="sp-tgl" x-show="ri === 0 && ci === row.length - 1"
+                                                x-text="(tempat ? tempat + ', ' : '') + tglFormatted"></p>
                                             <p x-text="s.jabatan"></p>
                                             <div class="sp-spasi"></div>
                                             <p class="sp-nama" x-text="s.nama"></p>
