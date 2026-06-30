@@ -15,10 +15,14 @@
         .judul-surat h2 { font-size: 13pt; font-weight: bold; text-decoration: underline; margin: 0; text-transform: uppercase; }
         .judul-surat p { font-size: 12pt; margin: 3px 0 0 0; }
         .isi-surat { text-align: justify; }
-        /* Trix output */
+        /* HTML editor output */
+        .isi-surat p { margin: 6px 0; }
         .isi-surat h1 { font-size: 14pt; margin: 10px 0; }
         .isi-surat blockquote { border-left: 3px solid #ccc; margin: 8px 0; padding-left: 12px; }
-        .isi-surat ul, .isi-surat ol { margin: 8px 0; padding-left: 30px; }
+        .isi-surat ul, .isi-surat ol { margin: 8px 0; padding-left: 40px; }
+        .isi-surat ul { list-style-type: disc; }
+        .isi-surat ol { list-style-type: decimal; }
+        .isi-surat li { margin: 2px 0; }
         .isi-surat pre { font-family: monospace; white-space: pre-wrap; }
         .ttd-container { margin-top: 24px; float: right; width: 260px; text-align: center; }
         .ttd-tempat { margin-bottom: 2px; }

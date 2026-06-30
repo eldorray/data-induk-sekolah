@@ -163,9 +163,12 @@ class SuratUniversalManagement extends Component
             ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
 
+        $kop = SchoolSetting::get('kop_surat_path');
+
         return view('livewire.surat-universal-management', [
             'surats' => $surats,
             'jenjangOptions' => SuratUniversal::JENJANG_OPTIONS,
+            'defaultKopUrl' => $kop ? asset('storage/' . $kop) : null,
         ])->layout('layouts.admin', ['header' => 'Surat']);
     }
 }

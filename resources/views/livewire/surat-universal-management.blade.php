@@ -1,10 +1,30 @@
 <div class="animate-fade-up">
     @assets
-        <link rel="stylesheet" href="https://unpkg.com/trix@2.1.15/dist/trix.css">
-        <script src="https://unpkg.com/trix@2.1.15/dist/trix.umd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tinymce@7/tinymce.min.js" referrerpolicy="origin"></script>
         <style>
-            trix-editor { min-height: 240px; border-radius: 0.75rem; border-color: #e5e7eb; }
-            trix-editor:empty:not(:focus)::before { color: #9ca3af; }
+            /* Live preview — tiru tampilan print (Times, justify, kertas putih) */
+            .surat-preview {
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 12pt;
+                line-height: 1.4;
+                color: #000;
+                background: #fff;
+                padding: 28px 32px;
+            }
+            .surat-preview .sp-garis { border-top: 3px solid #000; border-bottom: 1px solid #000; margin: 5px 0 12px; padding: 1px 0; }
+            .surat-preview .sp-judul { text-align: center; margin-bottom: 14px; }
+            .surat-preview .sp-judul h2 { font-size: 13pt; font-weight: bold; text-decoration: underline; margin: 0; text-transform: uppercase; }
+            .surat-preview .sp-judul p { margin: 3px 0 0; }
+            .surat-preview .sp-isi { text-align: justify; }
+            .surat-preview .sp-isi ul, .surat-preview .sp-isi ol { margin: 8px 0; padding-left: 30px; }
+            .surat-preview .sp-isi ul { list-style: disc; }
+            .surat-preview .sp-isi ol { list-style: decimal; }
+            .surat-preview .sp-isi h1 { font-size: 14pt; margin: 10px 0; }
+            .surat-preview .sp-isi blockquote { border-left: 3px solid #ccc; margin: 8px 0; padding-left: 12px; }
+            .surat-preview .sp-ttd { margin-top: 24px; width: 260px; margin-left: auto; text-align: center; }
+            .surat-preview .sp-ttd .sp-spasi { height: 64px; }
+            .surat-preview .sp-ttd .sp-nama { font-weight: bold; text-decoration: underline; }
+            .surat-preview .sp-kop img { width: 100%; height: auto; }
         </style>
     @endassets
 
@@ -116,12 +136,27 @@
             <div class="fixed inset-0 z-[9999] overflow-y-auto">
                 <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
                 <div class="fixed inset-0 flex items-center justify-center p-4">
-                    <div class="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+                    <div class="relative w-full max-w-5xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
                         <form wire:submit="save">
                             <div class="border-b border-gray-200 px-6 py-4 sticky top-0 bg-white z-10">
                                 <h3 class="text-lg font-semibold text-gray-900">{{ $isEditing ? 'Edit Surat' : 'Buat Surat' }}</h3>
                             </div>
-                            <div class="px-6 py-4 space-y-4">
+                            <div class="px-6 py-4 space-y-4" x-data="{
+                                judul: $wire.entangle('judul'),
+                                nomor_surat: $wire.entangle('nomor_surat'),
+                                tempat: $wire.entangle('tempat'),
+                                ttd_jabatan: $wire.entangle('ttd_jabatan'),
+                                ttd_nama: $wire.entangle('ttd_nama'),
+                                ttd_nip: $wire.entangle('ttd_nip'),
+                                tanggal_surat: $wire.entangle('tanggal_surat'),
+                                isi: $wire.entangle('isi'),
+                                get tglFormatted() {
+                                    if (!this.tanggal_surat) return '';
+                                    const b = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+                                    const p = this.tanggal_surat.split('-');
+                                    return parseInt(p[2]) + ' ' + b[parseInt(p[1]) - 1] + ' ' + p[0];
+                                }
+                            }">
                                 <div class="grid grid-cols-2 gap-4">
                                     {{-- Jenis --}}
                                     <div>
@@ -183,19 +218,62 @@
                                     <p class="mt-1 text-xs text-gray-400">Kosongkan untuk pakai kop sekolah default.</p>
                                 </div>
 
-                                {{-- Isi (Trix) --}}
+                                {{-- Isi + Live Preview --}}
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Isi Surat <span class="text-red-500">*</span></label>
-                                    <div wire:ignore x-data x-init="
-                                        const el = $refs.trix;
-                                        const load = () => { if (el.editor) el.editor.loadHTML($wire.isi || ''); };
-                                        el.addEventListener('trix-initialize', load);
-                                        el.addEventListener('trix-change', () => $wire.isi = el.value);
-                                        el.addEventListener('trix-file-accept', (e) => e.preventDefault());
-                                        if (el.editor) load();
-                                    ">
-                                        <input id="trix-isi-input" type="hidden">
-                                        <trix-editor x-ref="trix" input="trix-isi-input"></trix-editor>
+                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        {{-- Editor TinyMCE --}}
+                                        <div wire:ignore x-init="
+                                            if (tinymce.get('su-editor')) tinymce.remove('#su-editor');
+                                            tinymce.init({
+                                                selector: '#su-editor',
+                                                license_key: 'gpl',
+                                                menubar: false,
+                                                branding: false,
+                                                promotion: false,
+                                                statusbar: false,
+                                                height: 360,
+                                                plugins: 'lists advlist autolink link',
+                                                toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent | link removeformat',
+                                                content_style: &quot;body{font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.4} p{margin:6px 0}&quot;,
+                                                setup: (ed) => {
+                                                    ed.on('init', () => ed.setContent($wire.isi || ''));
+                                                    ed.on('change keyup input undo redo SetContent', () => { $wire.isi = ed.getContent(); });
+                                                }
+                                            });
+                                        ">
+                                            <textarea id="su-editor"></textarea>
+                                        </div>
+                                        {{-- Live preview mirip print --}}
+                                        <div>
+                                            <div class="text-xs font-medium text-gray-500 mb-1">Pratinjau (tampilan print)</div>
+                                            <div class="border border-gray-200 rounded-xl overflow-y-auto max-h-[400px]">
+                                                <div class="surat-preview">
+                                                    <div class="sp-kop">
+                                                        @if ($kopFile)
+                                                            <img src="{{ $kopFile->temporaryUrl() }}" alt="">
+                                                        @elseif ($existingKopPath)
+                                                            <img src="{{ asset('storage/' . $existingKopPath) }}" alt="">
+                                                        @elseif (!empty($defaultKopUrl))
+                                                            <img src="{{ $defaultKopUrl }}" alt="">
+                                                        @endif
+                                                    </div>
+                                                    <div class="sp-garis"></div>
+                                                    <div class="sp-judul">
+                                                        <h2 x-text="judul || 'JUDUL SURAT'"></h2>
+                                                        <p>Nomor : <span x-text="nomor_surat"></span></p>
+                                                    </div>
+                                                    <div class="sp-isi" x-html="isi"></div>
+                                                    <div class="sp-ttd">
+                                                        <p><span x-text="tempat"></span><span x-show="tempat">, </span><span x-text="tglFormatted"></span></p>
+                                                        <p x-text="ttd_jabatan" x-show="ttd_jabatan"></p>
+                                                        <div class="sp-spasi"></div>
+                                                        <p class="sp-nama" x-text="ttd_nama"></p>
+                                                        <p x-show="ttd_nip">NIP. <span x-text="ttd_nip"></span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     @error('isi') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                                 </div>
