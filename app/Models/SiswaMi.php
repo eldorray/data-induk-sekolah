@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class SiswaMi extends Model
 {
@@ -44,6 +44,7 @@ class SiswaMi extends Model
         if ($this->tanggal_lahir) {
             return Carbon::parse($this->tanggal_lahir)->age;
         }
+
         return $this->umur;
     }
 
@@ -57,6 +58,11 @@ class SiswaMi extends Model
         static::saving(function ($siswa) {
             if ($siswa->tanggal_lahir) {
                 $siswa->umur = Carbon::parse($siswa->tanggal_lahir)->age;
+            }
+
+            // Kolom enum('L','P') tidak bisa menyimpan '' (strict mode); form kirim '' bukan null
+            if ($siswa->jenis_kelamin === '') {
+                $siswa->jenis_kelamin = null;
             }
         });
     }

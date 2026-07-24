@@ -76,4 +76,16 @@ class MutasiSiswaTest extends TestCase
 
         $this->assertSame('Pindah', $siswa->fresh()->status);
     }
+
+    public function test_menyimpan_siswa_dengan_jenis_kelamin_kosong_jadi_null(): void
+    {
+        // enum('L','P') tidak boleh '' — harus dikonversi ke null saat save
+        $siswa = SiswaMi::create([
+            'nama_lengkap' => 'Ani',
+            'jenis_kelamin' => '',
+            'status' => 'Aktif',
+        ]);
+
+        $this->assertNull($siswa->fresh()->jenis_kelamin);
+    }
 }
