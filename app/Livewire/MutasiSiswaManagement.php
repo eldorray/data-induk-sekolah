@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\MutasiSiswa;
 use App\Models\SiswaMi;
 use App\Models\SiswaSmp;
-use App\Models\SchoolSetting;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,32 +14,50 @@ class MutasiSiswaManagement extends Component
 
     // Search and filter
     public string $search = '';
+
     public string $filterStatus = '';
+
     public int $perPage = 10;
 
     // Modal states
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public bool $isEditing = false;
 
     // Form data
     public ?int $mutasiId = null;
+
     public ?int $siswa_id = null;
+
     public string $siswa_type = 'siswa_mi';
+
     public string $nomor_surat = '';
+
     public ?string $tanggal_surat = null;
+
     public ?string $tanggal_mutasi = null;
+
     public string $jenis_mutasi = 'pindah';
+
     public string $alasan_mutasi = '';
+
     public string $sekolah_tujuan = '';
+
     public string $npsn_tujuan = '';
+
     public string $alamat_tujuan = '';
+
     public string $status = 'draft';
 
     // Siswa search
     public string $searchSiswa = '';
+
     public string $filterJenjang = 'mi';
+
     public array $siswaResults = [];
+
     public ?array $selectedSiswa = null;
 
     protected function rules(): array
@@ -48,7 +65,7 @@ class MutasiSiswaManagement extends Component
         $siswaTable = $this->siswa_type === 'siswa_mi' ? 'siswa_mis' : 'siswa_smps';
 
         return [
-            'siswa_id' => 'required|exists:' . $siswaTable . ',id',
+            'siswa_id' => 'required|exists:'.$siswaTable.',id',
             'siswa_type' => 'required|in:siswa_mi,siswa_smp',
             'nomor_surat' => 'required|string|max:100',
             'tanggal_surat' => 'required|date',
@@ -88,13 +105,13 @@ class MutasiSiswaManagement extends Component
 
             $this->siswaResults = $model::where('status', 'Aktif')
                 ->where(function ($query) {
-                    $query->where('nama_lengkap', 'like', '%' . $this->searchSiswa . '%')
-                        ->orWhere('nisn', 'like', '%' . $this->searchSiswa . '%')
-                        ->orWhere('nik', 'like', '%' . $this->searchSiswa . '%');
+                    $query->where('nama_lengkap', 'like', '%'.$this->searchSiswa.'%')
+                        ->orWhere('nisn', 'like', '%'.$this->searchSiswa.'%')
+                        ->orWhere('nik', 'like', '%'.$this->searchSiswa.'%');
                 })
                 ->limit(10)
                 ->get()
-                ->map(fn($s) => [
+                ->map(fn ($s) => [
                     'id' => $s->id,
                     'nama' => $s->nama_lengkap,
                     'nisn' => $s->nisn,
@@ -180,31 +197,13 @@ class MutasiSiswaManagement extends Component
             $mutasi = MutasiSiswa::findOrFail($this->mutasiId);
             $mutasi->update($validated);
 
-            // Update status siswa jika disetujui
-            if ($validated['status'] === 'disetujui') {
-                $model = $validated['siswa_type'] === 'siswa_mi' ? SiswaMi::class : SiswaSmp::class;
-                $siswa = $model::find($validated['siswa_id']);
-                if ($siswa) {
-                    $siswa->update([
-                        'status' => $validated['jenis_mutasi'] === 'pindah' ? 'Pindah' : 'Keluar'
-                    ]);
-                }
-            }
+            $this->syncSiswaStatus($validated);
 
             session()->flash('success', 'Data mutasi berhasil diperbarui.');
         } else {
             $mutasi = MutasiSiswa::create($validated);
 
-            // Update status siswa jika langsung disetujui
-            if ($validated['status'] === 'disetujui') {
-                $model = $validated['siswa_type'] === 'siswa_mi' ? SiswaMi::class : SiswaSmp::class;
-                $siswa = $model::find($validated['siswa_id']);
-                if ($siswa) {
-                    $siswa->update([
-                        'status' => $validated['jenis_mutasi'] === 'pindah' ? 'Pindah' : 'Keluar'
-                    ]);
-                }
-            }
+            $this->syncSiswaStatus($validated);
 
             session()->flash('success', 'Data mutasi berhasil ditambahkan.');
         }
@@ -221,10 +220,42 @@ class MutasiSiswaManagement extends Component
     public function delete(): void
     {
         $mutasi = MutasiSiswa::findOrFail($this->mutasiId);
+
+        // Mutasi disetujui bikin siswa non-aktif; hapus mutasi harus kembalikan siswa Aktif
+        if ($mutasi->status === 'disetujui') {
+            $this->setSiswaStatus($mutasi->siswa_type, $mutasi->siswa_id, 'Aktif');
+        }
+
         $mutasi->delete();
         $this->showDeleteModal = false;
         $this->mutasiId = null;
         session()->flash('success', 'Data mutasi berhasil dihapus.');
+    }
+
+    /**
+     * Selaraskan status siswa dengan status mutasi.
+     * disetujui -> Pindah/Keluar; draft atau dibatalkan -> Aktif (terindeks lagi).
+     */
+    private function syncSiswaStatus(array $data): void
+    {
+        $status = match (true) {
+            $data['status'] === 'disetujui' && $data['jenis_mutasi'] === 'pindah' => 'Pindah',
+            $data['status'] === 'disetujui' => 'Keluar',
+            default => 'Aktif',
+        };
+
+        $this->setSiswaStatus($data['siswa_type'], $data['siswa_id'], $status);
+    }
+
+    private function setSiswaStatus(string $siswaType, ?int $siswaId, string $status): void
+    {
+        if (! $siswaId) {
+            return;
+        }
+
+        // ponytail: siswa terpilih selalu Aktif saat dipilih, jadi revert ke Aktif aman
+        $model = $siswaType === 'siswa_mi' ? SiswaMi::class : SiswaSmp::class;
+        $model::where('id', $siswaId)->update(['status' => $status]);
     }
 
     public function closeModal(): void
@@ -260,10 +291,10 @@ class MutasiSiswaManagement extends Component
         $mutasis = MutasiSiswa::with('siswa')
             ->when($this->search, function ($query) {
                 $query->whereHas('siswa', function ($q) {
-                    $q->where('nama_lengkap', 'like', '%' . $this->search . '%')
-                        ->orWhere('nisn', 'like', '%' . $this->search . '%');
+                    $q->where('nama_lengkap', 'like', '%'.$this->search.'%')
+                        ->orWhere('nisn', 'like', '%'.$this->search.'%');
                 })
-                ->orWhere('nomor_surat', 'like', '%' . $this->search . '%');
+                    ->orWhere('nomor_surat', 'like', '%'.$this->search.'%');
             })
             ->when($this->filterStatus, function ($query) {
                 $query->where('status', $this->filterStatus);
