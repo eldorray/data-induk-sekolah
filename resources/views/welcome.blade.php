@@ -13,11 +13,11 @@
                 <!-- Right Side -->
                 <div class="flex items-center gap-4">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="btn btn-primary btn-sm" wire:navigate>
+                        <a href="{{ route('dashboard') }}" class="btn-dark-pill" wire:navigate>
                             Dashboard
                         </a>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-primary btn-sm" wire:navigate>
+                        <a href="{{ route('login') }}" class="btn-dark-pill" wire:navigate>
                             Masuk
                         </a>
                     @endauth
@@ -27,10 +27,14 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero gradient-mesh">
-        <div class="hero-content animate-fade-up">
+    <section class="hero" style="background: #fbfbfd;">
+        <!-- Glow blobs -->
+        <div class="glow-blob bg-blue-200" style="width: 420px; height: 420px; top: -140px; left: 8%;"></div>
+        <div class="glow-blob bg-blue-100" style="width: 360px; height: 360px; bottom: -160px; right: 10%;"></div>
+
+        <div class="hero-content relative animate-fade-up">
             <div
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-sm font-medium text-emerald-800 mb-6">
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-sm font-medium text-blue-800 mb-6">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -38,8 +42,8 @@
                 Sistem Informasi Sekolah
             </div>
 
-            <h1 class="hero-title text-balance mb-6">
-                Data Induk Sekolah<br>MI & SMP
+            <h1 class="text-balance mb-6 font-extrabold tracking-tight text-gray-900">
+                Data Induk Sekolah<br><span class="text-gradient-blue">MI &amp; SMP</span>
             </h1>
 
             <p class="text-lg md:text-xl text-[hsl(var(--muted-foreground))] max-w-2xl mx-auto mb-8">
@@ -49,7 +53,7 @@
 
             <div class="flex flex-wrap items-center justify-center gap-4">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="btn btn-primary btn-lg" wire:navigate>
+                    <a href="{{ route('dashboard') }}" class="btn-accent btn-accent-lg" wire:navigate>
                         Buka Dashboard
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,7 +61,7 @@
                         </svg>
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-primary btn-lg" wire:navigate>
+                    <a href="{{ route('login') }}" class="btn-accent btn-accent-lg" wire:navigate>
                         Masuk ke Sistem
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -66,8 +70,7 @@
                     </a>
                 @endauth
 
-                <a href="{{ route('tracer-alumni.form') }}"
-                    class="btn btn-lg inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-semibold transition-all">
+                <a href="{{ route('tracer-alumni.form') }}" class="btn-accent-outline btn-accent-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -77,25 +80,24 @@
             </div>
 
             <p class="text-sm text-[hsl(var(--muted-foreground))] mt-4">
-                Alumni MI & SMP, yuk bantu sekolah dengan mengisi form tracer alumni
+                Alumni MI &amp; SMP, yuk bantu sekolah dengan mengisi form tracer alumni
             </p>
         </div>
     </section>
 
     <!-- Tracer Alumni Callout Section -->
-    <section class="py-16 bg-emerald-50">
+    <section class="py-16 bg-blue-50">
         <div class="container-tight">
             <div class="max-w-3xl mx-auto text-center animate-fade-up">
                 <div class="mb-6">
                     <x-app-logo size="lg" />
                 </div>
-                <h2 class="text-2xl md:text-3xl font-bold mb-4">Tracer Alumni MI & SMP</h2>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Tracer Alumni MI &amp; SMP</h2>
                 <p class="text-[hsl(var(--muted-foreground))] mb-6">
-                    Bagi alumni MI & SMP, bantu kami mengetahui perkembangan Anda setelah lulus. Data yang Anda
+                    Bagi alumni MI &amp; SMP, bantu kami mengetahui perkembangan Anda setelah lulus. Data yang Anda
                     isi akan digunakan untuk analisa dan peningkatan kualitas pendidikan di sekolah.
                 </p>
-                <a href="{{ route('tracer-alumni.form') }}"
-                    class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-all shadow-sm">
+                <a href="{{ route('tracer-alumni.form') }}" class="btn-accent">
                     Isi Form Sekarang
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -119,7 +121,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Feature 1 -->
                 <div class="card p-6 animate-fade-up delay-100">
-                    <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z">
@@ -134,8 +136,8 @@
 
                 <!-- Feature 2 -->
                 <div class="card p-6 animate-fade-up delay-200">
-                    <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
@@ -148,27 +150,27 @@
 
                 <!-- Feature 3 -->
                 <div class="card p-6 animate-fade-up delay-300">
-                    <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
                     </div>
                     <h3 class="text-lg font-semibold mb-2">Mata Pelajaran</h3>
                     <p class="text-[hsl(var(--muted-foreground))] text-sm">
-                        Atur daftar mata pelajaran dengan kelompok PAI dan Umum, dilengkapi drag & drop reorder.
+                        Atur daftar mata pelajaran dengan kelompok PAI dan Umum, dilengkapi drag &amp; drop reorder.
                     </p>
                 </div>
 
                 <!-- Feature 4 -->
                 <div class="card p-6 animate-fade-up delay-100">
-                    <div class="w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">Import & Export</h3>
+                    <h3 class="text-lg font-semibold mb-2">Import &amp; Export</h3>
                     <p class="text-[hsl(var(--muted-foreground))] text-sm">
                         Import dan export data melalui file Excel untuk kemudahan migrasi dan backup data.
                     </p>
@@ -176,8 +178,8 @@
 
                 <!-- Feature 5 -->
                 <div class="card p-6 animate-fade-up delay-200">
-                    <div class="w-12 h-12 rounded-lg bg-red-100 flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                         </svg>
@@ -190,8 +192,8 @@
 
                 <!-- Feature 6 -->
                 <div class="card p-6 animate-fade-up delay-300">
-                    <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center mb-4">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor"
+                    <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />

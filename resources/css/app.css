@@ -541,3 +541,45 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
+/*
+|--------------------------------------------------------------------------
+| Public Pages - Modern SaaS (blue accent)
+| Landing, Tracer Alumni, Auth. Tidak dipakai oleh admin.
+|--------------------------------------------------------------------------
+*/
+
+@layer components {
+    .btn-accent {
+        @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-blue-600 text-white text-sm font-semibold px-6 h-11 transition-all duration-200 hover:bg-blue-700 shadow-lg shadow-blue-600/25 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-accent-outline {
+        @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border-2 border-blue-600 bg-white text-blue-600 text-sm font-semibold px-6 h-11 transition-all duration-200 hover:bg-blue-50 cursor-pointer;
+    }
+
+    .btn-accent-lg {
+        @apply h-12 px-8 text-base;
+    }
+
+    .btn-accent-sm {
+        @apply h-9 px-4 text-xs;
+    }
+
+    .btn-dark-pill {
+        @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gray-900 text-white text-sm font-semibold px-5 h-9 transition-all duration-200 hover:bg-gray-700 cursor-pointer;
+    }
+
+    .input-public {
+        @apply flex h-10 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm transition-colors placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-50;
+    }
+}
+
+.glow-blob {
+    @apply absolute rounded-full pointer-events-none;
+    filter: blur(70px);
+}
+
+.text-gradient-blue {
+    @apply bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent;
+}

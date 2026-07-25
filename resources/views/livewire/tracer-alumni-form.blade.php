@@ -8,7 +8,7 @@
                     <x-app-logo size="sm" />
                     <span class="hidden sm:inline">Data Induk Sekolah</span>
                 </a>
-                <a href="/" class="btn btn-primary btn-sm">
+                <a href="/" class="btn-dark-pill">
                     ← Kembali
                 </a>
             </div>
@@ -21,7 +21,7 @@
                 <!-- Success State -->
                 <div class="card p-8 text-center animate-fade-up">
                     <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M5 13l4 4L19 7" />
                         </svg>
@@ -31,7 +31,7 @@
                         Data tracer alumni Anda telah berhasil dikirim. Informasi ini sangat berharga bagi kami untuk
                         meningkatkan kualitas pendidikan.
                     </p>
-                    <button wire:click="resetForm" class="btn btn-primary">
+                    <button wire:click="resetForm" class="btn-accent">
                         Isi Form Lagi
                     </button>
                 </div>
@@ -39,7 +39,7 @@
                 <!-- Form Header -->
                 <div class="text-center mb-8 animate-fade-up">
                     <div
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-sm font-medium text-emerald-800 mb-4">
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-sm font-medium text-blue-800 mb-4">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -58,7 +58,7 @@
                     <!-- Section: Data Pribadi -->
                     <div class="card p-6">
                         <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -73,7 +73,7 @@
                                     Nama Lengkap <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" id="nama_lengkap" wire:model="nama_lengkap"
-                                    class="input w-full" placeholder="Masukkan nama lengkap">
+                                    class="input-public w-full" placeholder="Masukkan nama lengkap">
                                 @error('nama_lengkap')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -84,7 +84,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     NISN
                                 </label>
-                                <input type="text" id="nisn" wire:model="nisn" class="input w-full"
+                                <input type="text" id="nisn" wire:model="nisn" class="input-public w-full"
                                     placeholder="Nomor Induk Siswa Nasional">
                                 @error('nisn')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -96,7 +96,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Jenjang <span class="text-red-500">*</span>
                                 </label>
-                                <select id="jenjang" wire:model="jenjang" class="input w-full">
+                                <select id="jenjang" wire:model="jenjang" class="input-public w-full">
                                     <option value="">Pilih Jenjang</option>
                                     <option value="MI">MI (Madrasah Ibtidaiyah)</option>
                                     <option value="SMP">SMP (Sekolah Menengah Pertama)</option>
@@ -111,7 +111,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Tahun Lulus <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="tahun_lulus" wire:model="tahun_lulus" class="input w-full"
+                                <input type="text" id="tahun_lulus" wire:model="tahun_lulus" class="input-public w-full"
                                     placeholder="Contoh: 2020" maxlength="4">
                                 @error('tahun_lulus')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -123,7 +123,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Jenis Kelamin <span class="text-red-500">*</span>
                                 </label>
-                                <select id="jenis_kelamin" wire:model="jenis_kelamin" class="input w-full">
+                                <select id="jenis_kelamin" wire:model="jenis_kelamin" class="input-public w-full">
                                     <option value="">Pilih Jenis Kelamin</option>
                                     <option value="L">Laki-laki</option>
                                     <option value="P">Perempuan</option>
@@ -139,7 +139,7 @@
                                     Tempat Lahir
                                 </label>
                                 <input type="text" id="tempat_lahir" wire:model="tempat_lahir"
-                                    class="input w-full" placeholder="Kota/Kabupaten">
+                                    class="input-public w-full" placeholder="Kota/Kabupaten">
                                 @error('tempat_lahir')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -151,7 +151,7 @@
                                     Tanggal Lahir
                                 </label>
                                 <input type="date" id="tanggal_lahir" wire:model="tanggal_lahir"
-                                    class="input w-full">
+                                    class="input-public w-full">
                                 @error('tanggal_lahir')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -162,7 +162,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Alamat
                                 </label>
-                                <textarea id="alamat" wire:model="alamat" class="input w-full" rows="2"
+                                <textarea id="alamat" wire:model="alamat" class="input-public w-full" rows="2"
                                     placeholder="Alamat lengkap saat ini"></textarea>
                                 @error('alamat')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -174,7 +174,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     No. Telepon / WhatsApp
                                 </label>
-                                <input type="text" id="no_telepon" wire:model="no_telepon" class="input w-full"
+                                <input type="text" id="no_telepon" wire:model="no_telepon" class="input-public w-full"
                                     placeholder="08xxxxxxxxxx">
                                 @error('no_telepon')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -186,7 +186,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Email
                                 </label>
-                                <input type="email" id="email" wire:model="email" class="input w-full"
+                                <input type="email" id="email" wire:model="email" class="input-public w-full"
                                     placeholder="email@contoh.com">
                                 @error('email')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -212,7 +212,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Status Saat Ini <span class="text-red-500">*</span>
                                 </label>
-                                <select id="status_sekarang" wire:model="status_sekarang" class="input w-full">
+                                <select id="status_sekarang" wire:model="status_sekarang" class="input-public w-full">
                                     <option value="">Pilih Status</option>
                                     <option value="Kuliah">Kuliah</option>
                                     <option value="Bekerja">Bekerja</option>
@@ -231,7 +231,7 @@
                                     Nama Institusi / Perusahaan / Usaha
                                 </label>
                                 <input type="text" id="nama_institusi" wire:model="nama_institusi"
-                                    class="input w-full" placeholder="Nama tempat kuliah/kerja/usaha">
+                                    class="input-public w-full" placeholder="Nama tempat kuliah/kerja/usaha">
                                 @error('nama_institusi')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -243,7 +243,7 @@
                                     Jurusan / Bidang
                                 </label>
                                 <input type="text" id="jurusan_bidang" wire:model="jurusan_bidang"
-                                    class="input w-full" placeholder="Jurusan kuliah / bidang pekerjaan">
+                                    class="input-public w-full" placeholder="Jurusan kuliah / bidang pekerjaan">
                                 @error('jurusan_bidang')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -255,7 +255,7 @@
                                     Tahun Masuk
                                 </label>
                                 <input type="text" id="tahun_masuk" wire:model="tahun_masuk"
-                                    class="input w-full" placeholder="Contoh: 2021" maxlength="4">
+                                    class="input-public w-full" placeholder="Contoh: 2021" maxlength="4">
                                 @error('tahun_masuk')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -266,7 +266,7 @@
                     <!-- Section: Feedback -->
                     <div class="card p-6">
                         <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor"
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
@@ -284,7 +284,7 @@
                                     @for ($i = 1; $i <= 5; $i++)
                                         <button type="button"
                                             wire:click="$set('kepuasan_pendidikan', {{ $i }})"
-                                            class="w-10 h-10 rounded-lg border-2 flex items-center justify-center text-sm font-semibold transition-all {{ $kepuasan_pendidikan === $i ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-[hsl(var(--border))] hover:border-emerald-300' }}">
+                                            class="w-10 h-10 rounded-lg border-2 flex items-center justify-center text-sm font-semibold transition-all {{ $kepuasan_pendidikan === $i ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-[hsl(var(--border))] hover:border-blue-300' }}">
                                             {{ $i }}
                                         </button>
                                     @endfor
@@ -302,7 +302,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Kesan & Pesan untuk Sekolah
                                 </label>
-                                <textarea id="kesan_pesan" wire:model="kesan_pesan" class="input w-full" rows="4"
+                                <textarea id="kesan_pesan" wire:model="kesan_pesan" class="input-public w-full" rows="4"
                                     placeholder="Tuliskan kesan, pesan, atau saran Anda untuk sekolah..."></textarea>
                                 @error('kesan_pesan')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -314,7 +314,7 @@
                                     class="block text-sm font-medium text-[hsl(var(--foreground))] mb-1">
                                     Dari mana Anda mengetahui form ini?
                                 </label>
-                                <select id="sumber_info" wire:model="sumber_info" class="input w-full">
+                                <select id="sumber_info" wire:model="sumber_info" class="input-public w-full">
                                     <option value="">Pilih Sumber</option>
                                     <option value="Website Sekolah">Website Sekolah</option>
                                     <option value="WhatsApp">WhatsApp</option>
@@ -330,7 +330,7 @@
 
                             <div class="flex items-center gap-3">
                                 <input type="checkbox" id="bersedia_dihubungi" wire:model="bersedia_dihubungi"
-                                    class="w-4 h-4 rounded border-[hsl(var(--border))] text-emerald-600 focus:ring-emerald-500">
+                                    class="w-4 h-4 rounded border-[hsl(var(--border))] text-blue-600 focus:ring-blue-500">
                                 <label for="bersedia_dihubungi"
                                     class="text-sm text-[hsl(var(--foreground))]">
                                     Saya bersedia dihubungi oleh pihak sekolah
@@ -341,7 +341,7 @@
 
                     <!-- Submit Button -->
                     <div class="flex justify-end">
-                        <button type="submit" class="btn btn-primary btn-lg" wire:loading.attr="disabled">
+                        <button type="submit" class="btn-accent btn-accent-lg" wire:loading.attr="disabled">
                             <span wire:loading.remove>Kirim Data</span>
                             <span wire:loading>Mengirim...</span>
                         </button>
