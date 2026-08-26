@@ -260,7 +260,8 @@
             <td>
                 <ol start="3">
                     <li>Anggaran Dasar dan Anggaran Rumah Tangga Yayasan Daarul Hikmah Al Madani</li>
-                    <li>Keputusan musyawarah pengurus yayasan tanggal 02 Juli 2025;</li>
+                    <li>Keputusan musyawarah pengurus yayasan tanggal
+                        {{ $sk->tanggal_musyawarah?->locale('id')->translatedFormat('d F Y') ?? '-' }};</li>
                 </ol>
             </td>
         </tr>
@@ -292,7 +293,7 @@
                             <td>Tempat, Tanggal lahir</td>
                             <td>:</td>
                             <td>{{ strtoupper($sk->tempat_lahir ?? '-') }},
-                                {{ $sk->tanggal_lahir ? $sk->tanggal_lahir->translatedFormat('d F Y') : '-' }}</td>
+                                {{ $sk->tanggal_lahir ? $sk->tanggal_lahir->locale('id')->translatedFormat('d F Y') : '-' }}</td>
                         </tr>
                         <tr>
                             <td>Pendidikan Terakhir</td>
@@ -311,8 +312,8 @@
         <tr>
             <td>Kedua</td>
             <td>:</td>
-            <td>Surat Keputusan ini berlaku mulai {{ $sk->berlaku_mulai->translatedFormat('d F Y') }} sampai dengan
-                {{ $sk->berlaku_sampai->translatedFormat('d F Y') }}.</td>
+            <td>Surat Keputusan ini berlaku mulai {{ $sk->berlaku_mulai->locale('id')->translatedFormat('d F Y') }} sampai dengan
+                {{ $sk->berlaku_sampai->locale('id')->translatedFormat('d F Y') }}.</td>
         </tr>
         <tr>
             <td>Ketiga</td>
@@ -336,7 +337,7 @@
     {{-- Tanda Tangan --}}
     <div class="ttd-container">
         <p class="ttd-tempat">Ditetapkan di : {{ $sk->tempat_penetapan }}</p>
-        <p class="ttd-tempat">Pada tanggal : {{ $sk->tanggal_penetapan->translatedFormat('d F Y') }}</p>
+        <p class="ttd-tempat">Pada tanggal : {{ $sk->tanggal_penetapan->locale('id')->translatedFormat('d F Y') }}</p>
         <p class="ttd-jabatan">{{ $sk->penandatangan_jabatan }},</p>
 
         <div class="stempel-ttd">

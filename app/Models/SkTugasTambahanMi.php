@@ -13,6 +13,7 @@ class SkTugasTambahanMi extends Model
         'guru_mi_id',
         'nomor_sk',
         'tanggal_sk',
+        'tanggal_musyawarah',
         'tempat_lahir',
         'tanggal_lahir',
         'pendidikan_terakhir',
@@ -28,6 +29,7 @@ class SkTugasTambahanMi extends Model
 
     protected $casts = [
         'tanggal_sk' => 'date',
+        'tanggal_musyawarah' => 'date',
         'tanggal_lahir' => 'date',
         'berlaku_mulai' => 'date',
         'berlaku_sampai' => 'date',

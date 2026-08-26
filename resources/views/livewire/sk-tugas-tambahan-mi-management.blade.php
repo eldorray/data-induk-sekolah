@@ -252,6 +252,16 @@
                                     </div>
                                 </div>
 
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Musyawarah Pengurus Yayasan <span
+                                            class="text-red-500">*</span></label>
+                                    <input type="date" wire:model="tanggal_musyawarah"
+                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                    @error('tanggal_musyawarah')
+                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
                                 <div class="grid grid-cols-2 gap-4">
                                     {{-- Tempat Lahir --}}
                                     <div>
