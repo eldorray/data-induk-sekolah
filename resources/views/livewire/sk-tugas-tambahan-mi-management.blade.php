@@ -112,6 +112,13 @@
                                             </svg>
                                         </a>
                                     @endif
+                                    <button wire:click="openCopyModal({{ $sk->id }})"
+                                        class="p-2 rounded-lg hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 transition-colors"
+                                        title="Copy SK" aria-label="Copy SK {{ $sk->nomor_sk }}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v10a2 2 0 002 2h7m-9-4H6a2 2 0 01-2-2V6a2 2 0 012-2h7a2 2 0 012 2v2m-3 7h7a2 2 0 002-2V8a2 2 0 00-2-2h-7a2 2 0 00-2 2v5a2 2 0 002 2z"></path>
+                                        </svg>
+                                    </button>
                                     <button wire:click="openEditModal({{ $sk->id }})"
                                         class="p-2 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors"
                                         title="Edit">
@@ -168,7 +175,7 @@
                         {{-- Header --}}
                         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
                             <h3 class="text-lg font-semibold">
-                                {{ $isEditing ? 'Edit SK Tugas Tambahan' : 'Buat SK Tugas Tambahan Baru' }}</h3>
+                                {{ $isCopying ? 'Copy SK Tugas Tambahan MI' : ($isEditing ? 'Edit SK Tugas Tambahan' : 'Buat SK Tugas Tambahan Baru') }}</h3>
                             <button wire:click="closeModal"
                                 class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -180,6 +187,9 @@
 
                         {{-- Body --}}
                         <div class="px-6 py-4 overflow-y-auto flex-1">
+                            @if ($isCopying)
+                                <p class="mb-4 text-sm text-gray-600">Salinan dari SK {{ $copiedFromNomorSk }}. Pilih guru baru dan periksa tugas tambahan sebelum menyimpan.</p>
+                            @endif
                             <form wire:submit="save" class="space-y-4">
                                 {{-- Pilih Guru --}}
                                 <div>
@@ -383,12 +393,15 @@
                                 {{-- Status --}}
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                    <select wire:model="status"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
-                                        <option value="draft">Draft</option>
-                                        <option value="aktif">Aktif</option>
-                                        <option value="tidak_aktif">Tidak Aktif</option>
-                                    </select>
+                                    @if ($isCopying)
+                                        <div class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700">Draft</div>
+                                    @else
+                                        <select wire:model="status" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            <option value="draft">Draft</option>
+                                            <option value="aktif">Aktif</option>
+                                            <option value="tidak_aktif">Tidak Aktif</option>
+                                        </select>
+                                    @endif
                                 </div>
                             </form>
                         </div>
@@ -401,7 +414,7 @@
                             </button>
                             <button type="button" wire:click="save"
                                 class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
-                                {{ $isEditing ? 'Perbarui' : 'Simpan' }}
+                                {{ $isCopying ? 'Simpan sebagai SK Baru' : ($isEditing ? 'Perbarui' : 'Simpan') }}
                             </button>
                         </div>
                     </div>

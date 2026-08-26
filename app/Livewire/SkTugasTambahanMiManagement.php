@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\SkTugasTambahanMi;
 use App\Models\GuruMi;
 use App\Models\SchoolSetting;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -21,6 +22,8 @@ class SkTugasTambahanMiManagement extends Component
     public bool $showModal = false;
     public bool $showDeleteModal = false;
     public bool $isEditing = false;
+    public bool $isCopying = false;
+    public ?string $copiedFromNomorSk = null;
 
     // Form data
     public ?int $skId = null;
@@ -49,7 +52,10 @@ class SkTugasTambahanMiManagement extends Component
     {
         return [
             'guru_mi_id' => 'required|exists:guru_mis,id',
-            'nomor_sk' => 'required|string|max:100',
+            'nomor_sk' => [
+                'required', 'string', 'max:100',
+                Rule::unique('sk_tugas_tambahan_mis', 'nomor_sk')->ignore($this->isEditing ? $this->skId : null),
+            ],
             'tanggal_sk' => 'required|date',
             'tanggal_musyawarah' => 'required|date',
             'tempat_lahir' => 'nullable|string|max:100',
@@ -151,6 +157,7 @@ class SkTugasTambahanMiManagement extends Component
     public function openEditModal(int $id): void
     {
         $sk = SkTugasTambahanMi::with('guru')->findOrFail($id);
+        $this->resetForm();
         $this->skId = $sk->id;
         $this->guru_mi_id = $sk->guru_mi_id;
         $this->selectedGuru = [
@@ -177,9 +184,35 @@ class SkTugasTambahanMiManagement extends Component
         $this->showModal = true;
     }
 
+    public function openCopyModal(int $id): void
+    {
+        $sk = SkTugasTambahanMi::findOrFail($id);
+        $this->resetForm();
+
+        $this->nomor_sk = SkTugasTambahanMi::generateNomorSk();
+        $this->tanggal_sk = $sk->tanggal_sk?->format('Y-m-d');
+        $this->tanggal_musyawarah = $sk->tanggal_musyawarah?->format('Y-m-d');
+        $this->pendidikan_terakhir = $sk->pendidikan_terakhir;
+        $this->tugas_tambahan = $sk->tugas_tambahan;
+        $this->berlaku_mulai = $sk->berlaku_mulai?->format('Y-m-d');
+        $this->berlaku_sampai = $sk->berlaku_sampai?->format('Y-m-d');
+        $this->penandatangan_nama = $sk->penandatangan_nama;
+        $this->penandatangan_jabatan = $sk->penandatangan_jabatan;
+        $this->tempat_penetapan = $sk->tempat_penetapan;
+        $this->tanggal_penetapan = $sk->tanggal_penetapan?->format('Y-m-d');
+        $this->status = 'draft';
+        $this->isCopying = true;
+        $this->copiedFromNomorSk = $sk->nomor_sk;
+        $this->showModal = true;
+    }
+
     public function save(): void
     {
         $validated = $this->validate();
+
+        if ($this->isCopying) {
+            $validated['status'] = 'draft';
+        }
 
         if ($this->isEditing) {
             $sk = SkTugasTambahanMi::findOrFail($this->skId);
@@ -236,6 +269,9 @@ class SkTugasTambahanMiManagement extends Component
         $this->searchGuru = '';
         $this->guruResults = [];
         $this->selectedGuru = null;
+        $this->isEditing = false;
+        $this->isCopying = false;
+        $this->copiedFromNomorSk = null;
         $this->resetValidation();
     }
 
