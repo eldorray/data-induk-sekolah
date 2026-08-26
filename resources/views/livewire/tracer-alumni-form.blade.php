@@ -19,9 +19,9 @@
         <div class="container-tight max-w-3xl mx-auto">
             @if ($submitted)
                 <!-- Success State -->
-                <div class="card p-8 text-center animate-fade-up">
+                <div class="public-card p-8 text-center animate-fade-up">
                     <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M5 13l4 4L19 7" />
                         </svg>
@@ -46,7 +46,7 @@
                         </svg>
                         Tracer Alumni
                     </div>
-                    <h1 class="text-3xl font-bold mb-3">Form Tracer Alumni</h1>
+                    <h1 class="text-3xl font-bold tracking-tighter mb-3">Form Tracer Alumni</h1>
                     <p class="text-[hsl(var(--muted-foreground))] max-w-xl mx-auto">
                         Bantu kami mengetahui perkembangan alumni MI & SMP. Data ini digunakan untuk evaluasi dan
                         peningkatan kualitas pendidikan.
@@ -56,13 +56,15 @@
                 <!-- Form -->
                 <form wire:submit="submit" class="space-y-8 animate-fade-up">
                     <!-- Section: Data Pribadi -->
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                    <div class="public-card p-6">
+                        <h3 class="text-lg font-semibold mb-5 flex items-center gap-3">
+                            <span class="section-icon">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
+                            </span>
                             Data Pribadi
                         </h3>
 
@@ -196,13 +198,15 @@
                     </div>
 
                     <!-- Section: Status Setelah Lulus -->
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                    <div class="public-card p-6">
+                        <h3 class="text-lg font-semibold mb-5 flex items-center gap-3">
+                            <span class="section-icon">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
+                            </span>
                             Status Setelah Lulus
                         </h3>
 
@@ -264,13 +268,15 @@
                     </div>
 
                     <!-- Section: Feedback -->
-                    <div class="card p-6">
-                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                    <div class="public-card p-6">
+                        <h3 class="text-lg font-semibold mb-5 flex items-center gap-3">
+                            <span class="section-icon">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                             </svg>
+                            </span>
                             Feedback & Kesan
                         </h3>
 

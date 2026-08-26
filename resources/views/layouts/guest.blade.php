@@ -29,7 +29,15 @@
                     <div class="flex justify-center mb-8">
                         <x-app-logo size="lg" class="shadow-lg" />
                     </div>
-                    <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 mb-4">
+                    <div
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-sm font-medium text-blue-800 mb-6">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        Sistem Informasi Sekolah
+                    </div>
+                    <h1 class="text-3xl font-extrabold tracking-tighter text-gray-900 mb-4">
                         Data Induk Sekolah <span class="text-gradient-blue">MI &amp; SMP</span>
                     </h1>
                     <p class="text-[hsl(var(--muted-foreground))] text-lg">
@@ -41,8 +49,9 @@
         </div>
 
         <!-- Right Side - Form -->
-        <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 bg-white">
-            <div class="w-full max-w-md">
+        <div class="relative w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 bg-white overflow-hidden">
+            <div class="glow-blob bg-blue-100 lg:hidden" style="width: 320px; height: 320px; top: -160px; right: -80px;"></div>
+            <div class="relative w-full max-w-md">
                 <!-- Mobile Logo -->
                 <div class="lg:hidden mb-8 text-center">
                     <a href="/" class="inline-flex items-center gap-2">
@@ -51,7 +60,7 @@
                     </a>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
+                <div class="bg-white rounded-3xl border border-gray-200/70 shadow-xl shadow-blue-600/[0.06] p-6 sm:p-8">
                     {{ $slot }}
                 </div>
             </div>
