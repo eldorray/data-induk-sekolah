@@ -27,6 +27,7 @@ class SkGtyMiManagement extends Component
     public ?int $guru_mi_id = null;
     public string $nomor_sk = '';
     public ?string $tanggal_sk = null;
+    public ?string $tanggal_musyawarah = null;
     public ?string $tempat_lahir = null;
     public ?string $tanggal_lahir = null;
     public ?string $nuptk = null;
@@ -51,6 +52,7 @@ class SkGtyMiManagement extends Component
             'guru_mi_id' => 'required|exists:guru_mis,id',
             'nomor_sk' => 'required|string|max:100',
             'tanggal_sk' => 'required|date',
+            'tanggal_musyawarah' => 'required|date',
             'tempat_lahir' => 'nullable|string|max:100',
             'tanggal_lahir' => 'nullable|date',
             'nuptk' => 'nullable|string|max:30',
@@ -70,6 +72,7 @@ class SkGtyMiManagement extends Component
         'guru_mi_id.required' => 'Guru wajib dipilih.',
         'nomor_sk.required' => 'Nomor SK wajib diisi.',
         'tanggal_sk.required' => 'Tanggal SK wajib diisi.',
+        'tanggal_musyawarah.required' => 'Tanggal musyawarah wajib diisi.',
         'berlaku_mulai.required' => 'Tanggal mulai berlaku wajib diisi.',
         'berlaku_sampai.required' => 'Tanggal berakhir wajib diisi.',
         'penandatangan_nama.required' => 'Nama penandatangan wajib diisi.',
@@ -141,6 +144,7 @@ class SkGtyMiManagement extends Component
         $this->resetForm();
         $this->nomor_sk = SkGtyMi::generateNomorSk();
         $this->tanggal_sk = date('Y-m-d');
+        $this->tanggal_musyawarah = date('Y-m-d');
         $this->tanggal_penetapan = date('Y-m-d');
         $this->penandatangan_nama = SchoolSetting::get('nama_kepala', '');
         $this->isEditing = false;
@@ -160,6 +164,7 @@ class SkGtyMiManagement extends Component
         ];
         $this->nomor_sk = $sk->nomor_sk;
         $this->tanggal_sk = $sk->tanggal_sk?->format('Y-m-d');
+        $this->tanggal_musyawarah = $sk->tanggal_musyawarah?->format('Y-m-d');
         $this->tempat_lahir = $sk->tempat_lahir;
         $this->tanggal_lahir = $sk->tanggal_lahir?->format('Y-m-d');
         $this->nuptk = $sk->nuptk;
@@ -220,6 +225,7 @@ class SkGtyMiManagement extends Component
         $this->guru_mi_id = null;
         $this->nomor_sk = '';
         $this->tanggal_sk = null;
+        $this->tanggal_musyawarah = null;
         $this->tempat_lahir = null;
         $this->tanggal_lahir = null;
         $this->nuptk = null;
