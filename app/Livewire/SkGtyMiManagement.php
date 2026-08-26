@@ -5,9 +5,12 @@ namespace App\Livewire;
 use App\Models\GuruMi;
 use App\Models\SchoolSetting;
 use App\Models\SkGtyMi;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SkGtyMiManagement extends Component
 {
@@ -19,6 +22,9 @@ class SkGtyMiManagement extends Component
     public string $filterStatus = '';
 
     public int $perPage = 10;
+
+    // Bulk download selection (SK ids, kept across pages)
+    public array $selected = [];
 
     // Modal states
     public bool $showModal = false;
@@ -305,9 +311,9 @@ class SkGtyMiManagement extends Component
         $this->resetValidation();
     }
 
-    public function render()
+    protected function baseQuery(): Builder
     {
-        $skList = SkGtyMi::query()
+        return SkGtyMi::query()
             ->with('guru')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
@@ -320,8 +326,70 @@ class SkGtyMiManagement extends Component
             ->when($this->filterStatus !== '', function ($query) {
                 $query->where('status', $this->filterStatus);
             })
-            ->orderBy('created_at', 'desc')
-            ->paginate($this->perPage);
+            ->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Select or clear every printable (aktif) SK on the current page.
+     */
+    public function toggleSelectPage(): void
+    {
+        $pageIds = $this->baseQuery()
+            ->where('status', 'aktif')
+            ->paginate($this->perPage, ['*'], 'page', $this->getPage())
+            ->pluck('id')
+            ->map(fn ($id) => (string) $id)
+            ->all();
+
+        $allSelected = $pageIds !== [] && array_diff($pageIds, $this->selected) === [];
+
+        $this->selected = $allSelected
+            ? array_values(array_diff($this->selected, $pageIds))
+            : array_values(array_unique([...$this->selected, ...$pageIds]));
+    }
+
+    public function clearSelection(): void
+    {
+        $this->selected = [];
+    }
+
+    /**
+     * Download the selected SK GTY as one merged PDF.
+     */
+    public function bulkDownload(): ?StreamedResponse
+    {
+        $skList = SkGtyMi::query()
+            ->with('guru')
+            ->whereIn('id', $this->selected)
+            ->where('status', 'aktif')
+            ->orderBy('nomor_sk')
+            ->get();
+
+        if ($skList->isEmpty()) {
+            session()->flash('error', 'Pilih minimal satu SK GTY berstatus aktif untuk diunduh.');
+
+            return null;
+        }
+
+        $pdf = Pdf::loadView('pdf.sk-gty-mi', [
+            'skList' => $skList,
+            'settings' => SchoolSetting::getAll(),
+        ]);
+
+        // F4 paper size: 215.9mm x 330.2mm (8.5" x 13")
+        $pdf->setPaper([0, 0, 612, 936], 'portrait');
+
+        $output = $pdf->output();
+
+        return response()->streamDownload(
+            fn () => print ($output),
+            'sk-gty-mi-'.date('Y-m-d-His').'.pdf',
+        );
+    }
+
+    public function render()
+    {
+        $skList = $this->baseQuery()->paginate($this->perPage);
 
         return view('livewire.sk-gty-mi-management', [
             'skList' => $skList,

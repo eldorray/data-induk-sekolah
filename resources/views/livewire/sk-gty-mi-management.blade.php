@@ -43,12 +43,51 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    {{-- Bulk Action Bar --}}
+    @if (count($selected) > 0)
+        <div class="mb-4 p-4 rounded-xl bg-gray-900 text-white flex items-center justify-between gap-4 flex-wrap">
+            <span class="text-sm font-medium">{{ count($selected) }} SK dipilih</span>
+            <div class="flex items-center gap-2">
+                <button wire:click="clearSelection" type="button"
+                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors">
+                    Batal pilih
+                </button>
+                <button wire:click="bulkDownload" wire:loading.attr="disabled" wire:target="bulkDownload"
+                    type="button"
+                    class="px-4 py-2 rounded-lg bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium flex items-center gap-2 transition-colors disabled:opacity-60">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    <span wire:loading.remove wire:target="bulkDownload">Download PDF (1 file)</span>
+                    <span wire:loading wire:target="bulkDownload">Menyiapkan PDF...</span>
+                </button>
+            </div>
+        </div>
+    @endif
+
     {{-- Table --}}
     <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
+                @php
+                    $pageAktifIds = $skList->where('status', 'aktif')->pluck('id')->map(fn ($id) => (string) $id)->all();
+                    $pageAllSelected = $pageAktifIds !== [] && array_diff($pageAktifIds, $selected) === [];
+                @endphp
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
+                        <th class="px-6 py-4 text-left w-12">
+                            <input type="checkbox" wire:click="toggleSelectPage" @checked($pageAllSelected)
+                                @disabled($pageAktifIds === []) title="Pilih semua SK aktif di halaman ini"
+                                aria-label="Pilih semua SK aktif di halaman ini"
+                                class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900 disabled:opacity-40">
+                        </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No
                         </th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -68,6 +107,13 @@
                 <tbody class="divide-y divide-gray-100">
                     @forelse($skList as $index => $sk)
                         <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4">
+                                @if ($sk->status === 'aktif')
+                                    <input type="checkbox" wire:model.live="selected" value="{{ $sk->id }}"
+                                        aria-label="Pilih SK {{ $sk->nomor_sk }}"
+                                        class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900">
+                                @endif
+                            </td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $skList->firstItem() + $index }}</td>
                             <td class="px-6 py-4">
                                 <div class="text-sm font-medium text-gray-900">{{ $sk->nomor_sk }}</div>
@@ -145,7 +191,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <td colspan="8" class="px-6 py-12 text-center text-gray-500">
                                 <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SkGtyMi;
-use App\Models\SkTugasTambahanMi;
-use App\Models\SkPembagianTugasMi;
 use App\Models\SchoolSetting;
+use App\Models\SkGtyMi;
+use App\Models\SkPembagianTugasMi;
+use App\Models\SkTugasTambahanMi;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
 
 class SkGuruMiController extends Controller
 {
@@ -26,14 +25,14 @@ class SkGuruMiController extends Controller
         $settings = SchoolSetting::getAll();
 
         $pdf = Pdf::loadView('pdf.sk-gty-mi', [
-            'sk' => $sk,
+            'skList' => collect([$sk]),
             'settings' => $settings,
         ]);
 
         // F4 paper size: 215.9mm x 330.2mm (8.5" x 13")
         $pdf->setPaper([0, 0, 612, 936], 'portrait');
 
-        $filename = 'sk-gty-' . str_replace('/', '-', $sk->nomor_sk) . '.pdf';
+        $filename = 'sk-gty-'.str_replace('/', '-', $sk->nomor_sk).'.pdf';
 
         return $pdf->stream($filename);
     }
@@ -60,7 +59,7 @@ class SkGuruMiController extends Controller
         // F4 paper size
         $pdf->setPaper([0, 0, 612, 936], 'portrait');
 
-        $filename = 'sk-tugas-tambahan-' . str_replace('/', '-', $sk->nomor_sk) . '.pdf';
+        $filename = 'sk-tugas-tambahan-'.str_replace('/', '-', $sk->nomor_sk).'.pdf';
 
         return $pdf->stream($filename);
     }
@@ -87,7 +86,7 @@ class SkGuruMiController extends Controller
         // F4 paper size
         $pdf->setPaper([0, 0, 612, 936], 'portrait');
 
-        $filename = 'sk-pembagian-tugas-' . str_replace('/', '-', $sk->nomor_sk) . '.pdf';
+        $filename = 'sk-pembagian-tugas-'.str_replace('/', '-', $sk->nomor_sk).'.pdf';
 
         return $pdf->stream($filename);
     }
