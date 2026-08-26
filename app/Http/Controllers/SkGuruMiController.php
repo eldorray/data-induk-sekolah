@@ -52,7 +52,7 @@ class SkGuruMiController extends Controller
         $settings = SchoolSetting::getAll();
 
         $pdf = Pdf::loadView('pdf.sk-tugas-tambahan-mi', [
-            'sk' => $sk,
+            'skList' => collect([$sk]),
             'settings' => $settings,
         ]);
 

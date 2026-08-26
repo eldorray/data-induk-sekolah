@@ -167,6 +167,10 @@
             clear: both;
         }
 
+        .page-break {
+            page-break-after: always;
+        }
+
         ol {
             margin: 0;
             padding-left: 18px;
@@ -180,6 +184,7 @@
 </head>
 
 <body>
+    @foreach ($skList as $sk)
     {{-- KOP Surat --}}
     <div class="kop-surat">
         @if ($settings['kop_surat_path'])
@@ -354,6 +359,11 @@
     </div>
 
     <div class="clear"></div>
+
+    @if (! $loop->last)
+        <div class="page-break"></div>
+    @endif
+    @endforeach
 </body>
 
 </html>
