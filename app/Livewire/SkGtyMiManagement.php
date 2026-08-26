@@ -2,9 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\SkGtyMi;
 use App\Models\GuruMi;
 use App\Models\SchoolSetting;
+use App\Models\SkGtyMi;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,43 +15,74 @@ class SkGtyMiManagement extends Component
 
     // Search and filter
     public string $search = '';
+
     public string $filterStatus = '';
+
     public int $perPage = 10;
 
     // Modal states
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public bool $isEditing = false;
+
+    public bool $isCopying = false;
+
+    public ?string $copiedFromNomorSk = null;
 
     // Form data
     public ?int $skId = null;
+
     public ?int $guru_mi_id = null;
+
     public string $nomor_sk = '';
+
     public ?string $tanggal_sk = null;
+
     public ?string $tanggal_musyawarah = null;
+
     public ?string $tempat_lahir = null;
+
     public ?string $tanggal_lahir = null;
+
     public ?string $nuptk = null;
+
     public ?string $pendidikan_terakhir = null;
+
     public ?string $jabatan = null;
+
     public ?string $berlaku_mulai = null;
+
     public ?string $berlaku_sampai = null;
+
     public string $penandatangan_nama = '';
+
     public string $penandatangan_jabatan = 'Ketua Yayasan';
+
     public string $tempat_penetapan = 'Tangerang';
+
     public ?string $tanggal_penetapan = null;
+
     public string $status = 'draft';
 
     // Guru search
     public string $searchGuru = '';
+
     public array $guruResults = [];
+
     public ?array $selectedGuru = null;
 
     protected function rules(): array
     {
         return [
             'guru_mi_id' => 'required|exists:guru_mis,id',
-            'nomor_sk' => 'required|string|max:100',
+            'nomor_sk' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('sk_gty_mis', 'nomor_sk')->ignore($this->isEditing ? $this->skId : null),
+            ],
             'tanggal_sk' => 'required|date',
             'tanggal_musyawarah' => 'required|date',
             'tempat_lahir' => 'nullable|string|max:100',
@@ -89,13 +121,13 @@ class SkGtyMiManagement extends Component
             $this->guruResults = GuruMi::query()
                 ->where('is_active', true)
                 ->where(function ($query) {
-                    $query->where('full_name', 'like', '%' . $this->searchGuru . '%')
-                        ->orWhere('nuptk', 'like', '%' . $this->searchGuru . '%')
-                        ->orWhere('nik', 'like', '%' . $this->searchGuru . '%');
+                    $query->where('full_name', 'like', '%'.$this->searchGuru.'%')
+                        ->orWhere('nuptk', 'like', '%'.$this->searchGuru.'%')
+                        ->orWhere('nik', 'like', '%'.$this->searchGuru.'%');
                 })
                 ->limit(10)
                 ->get()
-                ->map(fn($g) => [
+                ->map(fn ($g) => [
                     'id' => $g->id,
                     'nama' => $g->full_name_with_title,
                     'nuptk' => $g->nuptk,
@@ -154,6 +186,7 @@ class SkGtyMiManagement extends Component
     public function openEditModal(int $id): void
     {
         $sk = SkGtyMi::with('guru')->findOrFail($id);
+        $this->resetForm();
         $this->skId = $sk->id;
         $this->guru_mi_id = $sk->guru_mi_id;
         $this->selectedGuru = [
@@ -181,9 +214,34 @@ class SkGtyMiManagement extends Component
         $this->showModal = true;
     }
 
+    public function openCopyModal(int $id): void
+    {
+        $sk = SkGtyMi::findOrFail($id);
+        $this->resetForm();
+
+        $this->nomor_sk = SkGtyMi::generateNomorSk();
+        $this->tanggal_sk = $sk->tanggal_sk?->format('Y-m-d');
+        $this->tanggal_musyawarah = $sk->tanggal_musyawarah?->format('Y-m-d');
+        $this->pendidikan_terakhir = $sk->pendidikan_terakhir;
+        $this->berlaku_mulai = $sk->berlaku_mulai?->format('Y-m-d');
+        $this->berlaku_sampai = $sk->berlaku_sampai?->format('Y-m-d');
+        $this->penandatangan_nama = $sk->penandatangan_nama;
+        $this->penandatangan_jabatan = $sk->penandatangan_jabatan;
+        $this->tempat_penetapan = $sk->tempat_penetapan;
+        $this->tanggal_penetapan = $sk->tanggal_penetapan?->format('Y-m-d');
+        $this->status = 'draft';
+        $this->isCopying = true;
+        $this->copiedFromNomorSk = $sk->nomor_sk;
+        $this->showModal = true;
+    }
+
     public function save(): void
     {
         $validated = $this->validate();
+
+        if ($this->isCopying) {
+            $validated['status'] = 'draft';
+        }
 
         if ($this->isEditing) {
             $sk = SkGtyMi::findOrFail($this->skId);
@@ -241,6 +299,9 @@ class SkGtyMiManagement extends Component
         $this->searchGuru = '';
         $this->guruResults = [];
         $this->selectedGuru = null;
+        $this->isEditing = false;
+        $this->isCopying = false;
+        $this->copiedFromNomorSk = null;
         $this->resetValidation();
     }
 
@@ -250,9 +311,9 @@ class SkGtyMiManagement extends Component
             ->with('guru')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('nomor_sk', 'like', '%' . $this->search . '%')
+                    $q->where('nomor_sk', 'like', '%'.$this->search.'%')
                         ->orWhereHas('guru', function ($q2) {
-                            $q2->where('full_name', 'like', '%' . $this->search . '%');
+                            $q2->where('full_name', 'like', '%'.$this->search.'%');
                         });
                 });
             })
