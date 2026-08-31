@@ -165,28 +165,28 @@
                 <tr>
                     <td>Nama</td>
                     <td>:</td>
-                    <td><strong>{{ $mutasi->siswa->nama_lengkap }}</strong></td>
+                    <td><strong>{{ $siswaData['nama_lengkap'] }}</strong></td>
                 </tr>
                 <tr>
                     <td>Jenis Kelamin</td>
                     <td>:</td>
-                    <td>{{ $mutasi->siswa->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+                    <td>{{ $siswaData['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
                 </tr>
                 <tr>
                     <td>Tempat, tanggal lahir</td>
                     <td>:</td>
-                    <td>{{ $mutasi->siswa->tempat_lahir ?? '-' }},
-                        {{ $mutasi->siswa->tanggal_lahir ? $mutasi->siswa->tanggal_lahir->format('d-m-Y') : '-' }}</td>
+                    <td>{{ $siswaData['tempat_lahir'] ?? '-' }},
+                        {{ $siswaData['tanggal_lahir'] ? $siswaData['tanggal_lahir']->format('d-m-Y') : '-' }}</td>
                 </tr>
                 <tr>
                     <td>NISN</td>
                     <td>:</td>
-                    <td>{{ $mutasi->siswa->nisn ?? '-' }}</td>
+                    <td>{{ $siswaData['nisn'] ?? '-' }}</td>
                 </tr>
                 <tr>
                     <td>Tingkat/Kelas</td>
                     <td>:</td>
-                    <td>{{ $mutasi->siswa->tingkat_rombel ?? '-' }}</td>
+                    <td>{{ $siswaData['tingkat_rombel'] ?? '-' }}</td>
                 </tr>
             </table>
         </div>

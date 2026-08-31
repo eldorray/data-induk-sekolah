@@ -2,54 +2,78 @@
 
 namespace App\Livewire;
 
-use App\Models\SiswaSmp;
 use App\Exports\SiswaSmpExport;
 use App\Exports\SiswaSmpTemplateExport;
 use App\Imports\SiswaSmpImport;
-use Livewire\Component;
-use Livewire\WithPagination;
-use Livewire\WithFileUploads;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Models\SiswaSmp;
 use Illuminate\Validation\Rule;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaSmpManagement extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     // Search and filter
     public string $search = '';
+
     public string $sortField = 'nama_lengkap';
+
     public string $sortDirection = 'asc';
+
     public int $perPage = 10;
 
     // Modal states
     public bool $showModal = false;
+
     public bool $showDeleteModal = false;
+
     public bool $showDeleteAllModal = false;
+
     public bool $showImportModal = false;
+
     public bool $isEditing = false;
 
     // Form data
     public ?int $siswaId = null;
+
     public string $nama_lengkap = '';
+
     public string $nisn = '';
+
     public string $nik = '';
+
     public string $tempat_lahir = '';
+
     public ?string $tanggal_lahir = null;
+
     public string $tingkat_rombel = '';
+
     public string $status = 'Aktif';
+
     public string $jenis_kelamin = '';
+
     public string $alamat = '';
+
     public string $no_telepon = '';
+
     public string $kebutuhan_khusus = '';
+
     public string $disabilitas = '';
+
     public string $nomor_kip_pip = '';
+
     public string $nama_ayah_kandung = '';
+
     public string $nama_ibu_kandung = '';
+
     public string $nama_wali = '';
 
     // Import
     public $importFile;
+
     public array $importErrors = [];
 
     protected function rules(): array
@@ -167,7 +191,10 @@ class SiswaSmpManagement extends Component
     public function deleteAll(): void
     {
         $count = SiswaSmp::count();
-        SiswaSmp::truncate();
+        // Bukan truncate(): truncate mereset auto-increment sehingga id siswa
+        // dipakai ulang dan referensi di aplikasi lain (surat mutasi, sync
+        // eksternal) menunjuk ke siswa yang salah.
+        SiswaSmp::query()->delete();
         $this->showDeleteAllModal = false;
         session()->flash('success', "Semua data siswa SMP ($count data) berhasil dihapus.");
     }
@@ -228,29 +255,29 @@ class SiswaSmpManagement extends Component
         ]);
 
         try {
-            $import = new SiswaSmpImport();
+            $import = new SiswaSmpImport;
             Excel::import($import, $this->importFile);
 
             if ($import->getErrors()) {
                 $this->importErrors = $import->getErrors();
                 session()->flash('warning', 'Import selesai dengan beberapa error. Silakan periksa detail error.');
             } else {
-                session()->flash('success', 'Data siswa SMP berhasil diimport. Total: ' . $import->getRowCount() . ' data.');
+                session()->flash('success', 'Data siswa SMP berhasil diimport. Total: '.$import->getRowCount().' data.');
                 $this->closeImportModal();
             }
         } catch (\Exception $e) {
-            session()->flash('error', 'Gagal import data: ' . $e->getMessage());
+            session()->flash('error', 'Gagal import data: '.$e->getMessage());
         }
     }
 
     public function export()
     {
-        return Excel::download(new SiswaSmpExport(), 'data-siswa-smp-' . date('Y-m-d-His') . '.xlsx');
+        return Excel::download(new SiswaSmpExport, 'data-siswa-smp-'.date('Y-m-d-His').'.xlsx');
     }
 
     public function downloadTemplate()
     {
-        return Excel::download(new SiswaSmpTemplateExport(), 'template-import-siswa-smp.xlsx');
+        return Excel::download(new SiswaSmpTemplateExport, 'template-import-siswa-smp.xlsx');
     }
 
     public function render()
@@ -258,10 +285,10 @@ class SiswaSmpManagement extends Component
         $siswas = SiswaSmp::query()
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
-                    $q->where('nama_lengkap', 'like', '%' . $this->search . '%')
-                        ->orWhere('nisn', 'like', '%' . $this->search . '%')
-                        ->orWhere('nik', 'like', '%' . $this->search . '%')
-                        ->orWhere('tingkat_rombel', 'like', '%' . $this->search . '%');
+                    $q->where('nama_lengkap', 'like', '%'.$this->search.'%')
+                        ->orWhere('nisn', 'like', '%'.$this->search.'%')
+                        ->orWhere('nik', 'like', '%'.$this->search.'%')
+                        ->orWhere('tingkat_rombel', 'like', '%'.$this->search.'%');
                 });
             })
             ->orderBy($this->sortField, $this->sortDirection)

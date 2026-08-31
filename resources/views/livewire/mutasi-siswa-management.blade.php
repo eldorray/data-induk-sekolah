@@ -63,8 +63,14 @@
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $mutasis->firstItem() + $index }}</td>
                             <td class="px-6 py-4 text-sm font-mono text-gray-900">{{ $mutasi->nomor_surat }}</td>
                             <td class="px-6 py-4">
-                                <div class="text-sm font-medium text-gray-900">{{ $mutasi->siswa->nama_lengkap }}</div>
-                                <div class="text-xs text-gray-500">NISN: {{ $mutasi->siswa->nisn ?? '-' }}</div>
+                                @php($siswaData = $mutasi->siswa_data)
+                                <div class="text-sm font-medium {{ $siswaData ? 'text-gray-900' : 'text-red-600' }}">
+                                    {{ $siswaData['nama_lengkap'] ?? 'Data siswa sudah dihapus' }}
+                                    @unless ($mutasi->siswa)
+                                        <span class="ml-1 text-xs font-normal text-gray-400">(arsip)</span>
+                                    @endunless
+                                </div>
+                                <div class="text-xs text-gray-500">NISN: {{ $siswaData['nisn'] ?? '-' }}</div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $mutasi->tanggal_mutasi->format('d/m/Y') }}
                             </td>

@@ -169,11 +169,14 @@ class MutasiSiswaManagement extends Component
         $this->siswa_id = $mutasi->siswa_id;
         $this->siswa_type = $mutasi->siswa_type ?? 'siswa_mi';
         $this->filterJenjang = in_array($mutasi->siswa_type, ['siswa_mi', 'App\\Models\\SiswaMi']) ? 'mi' : 'smp';
-        $this->selectedSiswa = [
-            'id' => $mutasi->siswa->id,
-            'nama' => $mutasi->siswa->nama_lengkap,
-            'nisn' => $mutasi->siswa->nisn,
-            'kelas' => $mutasi->siswa->tingkat_rombel,
+        // Data siswa bisa sudah dihapus: mutasi_siswas tidak punya foreign key,
+        // jadi jatuh ke snapshot dan form tetap harus bisa dibuka.
+        $siswaData = $mutasi->siswa_data;
+        $this->selectedSiswa = $siswaData === null ? null : [
+            'id' => $mutasi->siswa_id,
+            'nama' => $siswaData['nama_lengkap'],
+            'nisn' => $siswaData['nisn'],
+            'kelas' => $siswaData['tingkat_rombel'],
             'jenjang' => strtoupper($this->filterJenjang),
         ];
         $this->nomor_surat = $mutasi->nomor_surat;
@@ -196,12 +199,14 @@ class MutasiSiswaManagement extends Component
         if ($this->isEditing) {
             $mutasi = MutasiSiswa::findOrFail($this->mutasiId);
             $mutasi->update($validated);
+            $mutasi->captureSiswaSnapshot();
 
             $this->syncSiswaStatus($validated);
 
             session()->flash('success', 'Data mutasi berhasil diperbarui.');
         } else {
             $mutasi = MutasiSiswa::create($validated);
+            $mutasi->captureSiswaSnapshot();
 
             $this->syncSiswaStatus($validated);
 
