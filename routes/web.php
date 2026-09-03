@@ -6,13 +6,12 @@ use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\NilaiIjazahController;
 use App\Http\Controllers\SkGuruMiController;
 use App\Http\Controllers\SuratKeteranganAktifController;
-use App\Http\Controllers\SuratTerimaPindahanController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
+use App\Http\Controllers\SuratPernyataanRombelController;
 use App\Http\Controllers\SuratPernyataanTangcerController;
 use App\Http\Controllers\SuratRekapPkhController;
+use App\Http\Controllers\SuratTerimaPindahanController;
 use App\Http\Controllers\SuratUniversalController;
-use App\Livewire\SuratUniversalManagement;
-use App\Livewire\SuratUniversalForm;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\ResetPassword;
@@ -33,11 +32,14 @@ use App\Livewire\SkGtyMiManagement;
 use App\Livewire\SkPembagianTugasMiManagement;
 use App\Livewire\SkTugasTambahanMiManagement;
 use App\Livewire\SuratKeteranganAktifManagement;
-use App\Livewire\SuratTerimaPindahanManagement;
-use App\Livewire\SyaratPindahanManagement;
 use App\Livewire\SuratPernyataanInsentifManagement;
+use App\Livewire\SuratPernyataanRombelManagement;
 use App\Livewire\SuratPernyataanTangcerManagement;
 use App\Livewire\SuratRekapPkhManagement;
+use App\Livewire\SuratTerimaPindahanManagement;
+use App\Livewire\SuratUniversalForm;
+use App\Livewire\SuratUniversalManagement;
+use App\Livewire\SyaratPindahanManagement;
 use App\Livewire\TracerAlumniForm;
 use App\Livewire\TracerAlumniManagement;
 use App\Livewire\UserManagement;
@@ -200,6 +202,15 @@ Route::get('surat-pernyataan-insentif/{id}/print', [SuratPernyataanInsentifContr
 Route::get('surat-pernyataan-insentif-export-all', [SuratPernyataanInsentifController::class, 'exportAllPdf'])
     ->middleware(['auth', 'role:admin'])
     ->name('surat-pernyataan-insentif.export-all');
+
+// Surat Pernyataan Rombel (rekap rombongan belajar MI)
+Route::get('surat-pernyataan-rombel', SuratPernyataanRombelManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-pernyataan-rombel.index');
+
+Route::get('surat-pernyataan-rombel/print', [SuratPernyataanRombelController::class, 'printPdf'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('surat-pernyataan-rombel.print');
 
 // Surat Pernyataan Tangcer
 Route::get('surat-pernyataan-tangcer', SuratPernyataanTangcerManagement::class)

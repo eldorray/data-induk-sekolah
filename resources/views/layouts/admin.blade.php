@@ -436,6 +436,7 @@
                     @php
                         $suratPernyataanActive =
                             request()->routeIs('surat-pernyataan-insentif.*') ||
+                            request()->routeIs('surat-pernyataan-rombel.*') ||
                             request()->routeIs('surat-pernyataan-tangcer.*');
                     @endphp
                     <div x-data="{ open: {{ $suratPernyataanActive ? 'true' : 'false' }} }" class="space-y-0.5">
@@ -475,6 +476,14 @@
                                     class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ request()->routeIs('surat-pernyataan-tangcer.*') ? 'bg-white' : 'bg-gray-300' }}">
                                 </div>
                                 <span class="whitespace-nowrap">Surat Pernyataan Tangcer</span>
+                            </a>
+                            <a href="{{ route('surat-pernyataan-rombel.index') }}"
+                                class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('surat-pernyataan-rombel.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900' }}"
+                                wire:navigate>
+                                <div
+                                    class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ request()->routeIs('surat-pernyataan-rombel.*') ? 'bg-white' : 'bg-gray-300' }}">
+                                </div>
+                                <span class="whitespace-nowrap">Surat Pernyataan Rombel</span>
                             </a>
                         </div>
                     </div>
