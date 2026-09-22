@@ -48,7 +48,10 @@
                     </a>
                     <a href="#keunggulan" class="text-gray-600 hover:text-blue-600 transition-colors">Keunggulan</a>
                     <a href="#alur" class="text-gray-600 hover:text-blue-600 transition-colors">Alur Kerja</a>
-                    <a href="#faq" class="text-gray-600 hover:text-blue-600 transition-colors">FAQ</a>
+                    <a href="#data-siswa" class="inline-flex items-center gap-1.5 text-gray-600 hover:text-blue-600 transition-colors">
+                        Data Siswa
+                        <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-100 text-emerald-700 rounded-full">Wali Kelas</span>
+                    </a>
                 </div>
 
                 <!-- Right Action / Auth CTA -->
@@ -108,8 +111,9 @@
                 <a href="#alur" @click="mobileOpen = false" class="text-sm font-medium text-gray-700 hover:text-blue-600 py-1">
                     Alur Kerja
                 </a>
-                <a href="#faq" @click="mobileOpen = false" class="text-sm font-medium text-gray-700 hover:text-blue-600 py-1">
-                    Pertanyaan Umum (FAQ)
+                <a href="#data-siswa" @click="mobileOpen = false" class="flex items-center justify-between text-sm font-medium text-gray-700 hover:text-blue-600 py-1">
+                    <span>Data Siswa</span>
+                    <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-100 text-emerald-700 rounded-full">Wali Kelas</span>
                 </a>
                 <div class="pt-3 border-t border-gray-100 flex flex-col gap-2">
                     @auth
@@ -858,93 +862,9 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section id="faq" class="py-24 bg-gray-50/70 border-t border-gray-200/70" x-data="{ openFaq: 1 }">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 animate-fade-up">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-xs font-semibold text-blue-800 mb-3">
-                    Bantuan &amp; Panduan
-                </div>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-950 tracking-tight mb-4">
-                    Pertanyaan yang Sering Diajukan
-                </h2>
-                <p class="text-base text-gray-600">
-                    Informasi penting seputar akses sistem, data, dan modul tracer alumni.
-                </p>
-            </div>
-
-            <div class="space-y-4">
-                <!-- FAQ 1 -->
-                <div class="rounded-2xl border border-gray-200/80 bg-white overflow-hidden shadow-xs transition-all">
-                    <button type="button" @click="openFaq = openFaq === 1 ? null : 1"
-                        class="w-full px-6 py-5 text-left font-bold text-gray-900 flex items-center justify-between gap-4">
-                        <span class="text-base sm:text-lg">Siapa saja yang dapat mengakses sistem Data Induk ini?</span>
-                        <svg class="w-5 h-5 text-blue-600 transition-transform duration-200 shrink-0" :class="{ 'rotate-180': openFaq === 1 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div x-show="openFaq === 1" x-collapse class="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-                        Sistem ini dapat diakses oleh Administrator sekolah/tata usaha serta Bapak/Ibu Guru melalui akun login masing-masing. Khusus untuk formulir <strong>Tracer Alumni</strong>, halaman dapat diakses secara publik dan terbuka tanpa memerlukan login.
-                    </div>
-                </div>
-
-                <!-- FAQ 2 -->
-                <div class="rounded-2xl border border-gray-200/80 bg-white overflow-hidden shadow-xs transition-all">
-                    <button type="button" @click="openFaq = openFaq === 2 ? null : 2"
-                        class="w-full px-6 py-5 text-left font-bold text-gray-900 flex items-center justify-between gap-4">
-                        <span class="text-base sm:text-lg">Apakah data siswa dan guru MI dan SMP terpisah?</span>
-                        <svg class="w-5 h-5 text-blue-600 transition-transform duration-200 shrink-0" :class="{ 'rotate-180': openFaq === 2 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div x-show="openFaq === 2" x-collapse class="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-                        Ya, sistem memiliki modul terpisah antara jenjang MI (Madrasah Ibtidaiyah) dan jenjang SMP untuk menjamin akurasi data NISN, NIK, kurikulum mapel, dan pembagian tugas mengajar guru sesuai tingkatan pendidikannya.
-                    </div>
-                </div>
-
-                <!-- FAQ 3 -->
-                <div class="rounded-2xl border border-gray-200/80 bg-white overflow-hidden shadow-xs transition-all">
-                    <button type="button" @click="openFaq = openFaq === 3 ? null : 3"
-                        class="w-full px-6 py-5 text-left font-bold text-gray-900 flex items-center justify-between gap-4">
-                        <span class="text-base sm:text-lg">Bagaimana cara alumni mengisi survei Tracer Alumni?</span>
-                        <svg class="w-5 h-5 text-blue-600 transition-transform duration-200 shrink-0" :class="{ 'rotate-180': openFaq === 3 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div x-show="openFaq === 3" x-collapse class="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-                        Alumni cukup mengklik tombol <a href="{{ route('tracer-alumni.form') }}" class="text-blue-600 font-semibold hover:underline">Form Tracer Alumni</a> di halaman ini, memilih jenjang kelulusan (MI atau SMP), mengisi tahun kelulusan, kontak, serta jejak studi lanjut / pekerjaan saat ini.
-                    </div>
-                </div>
-
-                <!-- FAQ 4 -->
-                <div class="rounded-2xl border border-gray-200/80 bg-white overflow-hidden shadow-xs transition-all">
-                    <button type="button" @click="openFaq = openFaq === 4 ? null : 4"
-                        class="w-full px-6 py-5 text-left font-bold text-gray-900 flex items-center justify-between gap-4">
-                        <span class="text-base sm:text-lg">Bagaimana cara mencetak surat keterangan dan SK resmi?</span>
-                        <svg class="w-5 h-5 text-blue-600 transition-transform duration-200 shrink-0" :class="{ 'rotate-180': openFaq === 4 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div x-show="openFaq === 4" x-collapse class="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-                        Setelah masuk ke Dashboard Admin, pilih menu surat yang diinginkan (misalnya Surat Aktif, Surat Mutasi, SK Pembagian Tugas, atau Kuitansi BOS). Klik tombol <strong>Cetak PDF</strong> untuk mengunduh dokumen dengan tata letak siap print lengkap ber-kop madrasah.
-                    </div>
-                </div>
-
-                <!-- FAQ 5 -->
-                <div class="rounded-2xl border border-gray-200/80 bg-white overflow-hidden shadow-xs transition-all">
-                    <button type="button" @click="openFaq = openFaq === 5 ? null : 5"
-                        class="w-full px-6 py-5 text-left font-bold text-gray-900 flex items-center justify-between gap-4">
-                        <span class="text-base sm:text-lg">Apakah data dapat diekspor ke Excel untuk backup?</span>
-                        <svg class="w-5 h-5 text-blue-600 transition-transform duration-200 shrink-0" :class="{ 'rotate-180': openFaq === 5 }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
-                    <div x-show="openFaq === 5" x-collapse class="px-6 pb-5 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
-                        Tentu saja. Tersedia fitur ekspor ke format Excel (.xlsx) untuk seluruh data siswa, data guru, rekap nilai ijazah, dan data tracer alumni sehingga sekolah memiliki salinan backup data yang aman dan fleksibel.
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Validasi Data Siswa Section (wali kelas, publik + PIN) -->
+    <section id="data-siswa" class="py-24 bg-gray-50/70 border-t border-gray-200/70">
+        @livewire('validasi-data-siswa-form')
     </section>
 
     <!-- Bottom Call-to-Action Section -->
@@ -1052,7 +972,7 @@
                         <li><a href="#fitur" class="hover:text-white transition-colors">Modul &amp; Fitur</a></li>
                         <li><a href="#keunggulan" class="hover:text-white transition-colors">Keunggulan Sistem</a></li>
                         <li><a href="#alur" class="hover:text-white transition-colors">Alur Pengelolaan</a></li>
-                        <li><a href="#faq" class="hover:text-white transition-colors">Pertanyaan Umum</a></li>
+                        <li><a href="#data-siswa" class="hover:text-white transition-colors">Cek Data Siswa</a></li>
                     </ul>
                 </div>
 

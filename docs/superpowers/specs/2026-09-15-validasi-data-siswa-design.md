@@ -58,6 +58,29 @@ unique(sekolah, tingkat_rombel)
 - Penyimpanan pakai `updateOrCreate(['sekolah' => ..., 'tingkat_rombel' => ...], [...])` — satu kombinasi sekolah+kelas selalu satu baris, submit ulang menimpa baris lama (bukan riwayat).
 - **Tidak ada kolom `yayasan_id`.** Dicek: tidak ada satupun tabel di proyek ini (`siswa_mis`, `siswa_smps`, `tracer_alumnis`, dll) yang punya kolom `yayasan_id` atau trait `BelongsToYayasan` — infrastruktur multi-tenancy di CLAUDE.md §3.1 belum diimplementasikan sama sekali di codebase ini. Tabel baru ini mengikuti konvensi yang sudah ada (single-tenant, tanpa scoping) agar konsisten; mengaktifkan tenancy adalah pekerjaan lintas-tabel terpisah, di luar lingkup fitur ini.
 
+## Unduh Data Lengkap (Excel)
+
+Setelah kelas ditandai **Lengkap**, wali kelas bisa mengunduh data siswa kelas itu sebagai `.xlsx` lewat `App\Exports\SiswaKelasPublikExport` (memakai `maatwebsite/excel` yang sudah terpasang).
+
+- Tombol hanya muncul saat kelas berstatus `lengkap`, dan `unduhExcel()` **mengecek ulang status itu di server** — menyembunyikan tombol saja tidak dianggap kontrol akses.
+- Berkas hanya berisi siswa berstatus Aktif di kelas yang dipilih, bukan seluruh sekolah.
+- **Kolom sensitif sengaja dibuang**: `nik`, `no_telepon`, dan `nomor_kip_pip` tidak ikut, karena berkas ini keluar lewat halaman publik yang hanya dijaga PIN bersama, bukan akun per orang. Kolom yang ikut: No, Nama Lengkap, NISN, Tempat Lahir, Tanggal Lahir, Tingkat - Rombel, Umur, Jenis Kelamin, Alamat, Kebutuhan Khusus, Disabilitas, Nama Ayah/Ibu Kandung, Nama Wali, Status.
+- Tiap unduhan dicatat ke tabel `unduhan_data_siswas` (sekolah, tingkat_rombel, nama_pengisi, ip_address, waktu) dan tampil sebagai panel **Riwayat Unduhan** (50 terakhir) di halaman admin — supaya ada jejak siapa yang menarik data bila terjadi penyalahgunaan.
+- Unduhan tetap butuh `pinOk`; pemanggilan langsung tanpa PIN menghasilkan 403.
+
+```
+unduhan_data_siswas
+- id
+- sekolah        enum('MI','SMP')
+- tingkat_rombel string
+- nama_pengisi   string
+- ip_address     string(45) nullable
+- timestamps
+index(sekolah, tingkat_rombel)
+```
+
+**Risiko yang diterima sadar:** PIN bersifat global, jadi siapa pun yang pernah menerima PIN dapat mengunduh data kelas manapun yang sudah ditandai lengkap. Mitigasinya adalah pembatasan kolom + log unduhan, bukan isolasi antar-kelas. Bila kebutuhan privasi meningkat, langkah berikutnya adalah PIN per kelas atau login wali kelas.
+
 ## Halaman Admin
 
 `App\Livewire\ValidasiDataSiswaManagement`, route `validasi-data-siswa` (`middleware(['auth', 'role:admin'])`, `name('validasi-data-siswa.index')`), layout `layouts.admin`.
@@ -105,6 +128,8 @@ Tidak termasuk:
 - Notifikasi otomatis (email/WhatsApp) ke admin saat ada catatan baru — admin mengecek manual lewat halaman admin.
 - Kolom `yayasan_id` / multi-tenancy — mengikuti kondisi codebase saat ini yang belum menerapkannya di tabel manapun.
 - Update massal data siswa dari catatan (admin tetap menambahkan siswa manual lewat halaman Siswa MI/SMP yang sudah ada).
+- Unduhan seluruh kelas sekaligus dari halaman publik (hanya kelas terpilih yang sudah lengkap).
+- Kolom `nik`, `no_telepon`, `nomor_kip_pip` pada berkas unduhan publik — tetap hanya tersedia lewat export admin yang sudah ada.
 
 ## Keputusan dan Alasan
 

@@ -43,6 +43,7 @@ use App\Livewire\SyaratPindahanManagement;
 use App\Livewire\TracerAlumniForm;
 use App\Livewire\TracerAlumniManagement;
 use App\Livewire\UserManagement;
+use App\Livewire\ValidasiDataSiswaManagement;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -256,6 +257,11 @@ Route::get('users', UserManagement::class)
 Route::get('tracer-alumni-management', TracerAlumniManagement::class)
     ->middleware(['auth', 'role:admin'])
     ->name('tracer-alumni.index');
+
+// Validasi Data Siswa dari wali kelas (admin only)
+Route::get('validasi-data-siswa', ValidasiDataSiswaManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('validasi-data-siswa.index');
 
 // Nilai Ijazah Kelas 6 (admin + guru)
 Route::middleware(['auth', 'role:admin,guru'])->group(function () {

@@ -176,6 +176,19 @@
                         class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                 </div>
 
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">PIN Akses Data Siswa</label>
+                    <input type="text" wire:model="validasi_data_siswa_pin" placeholder="minimal 4 karakter, contoh: 2468"
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                    <p class="mt-1.5 text-xs text-gray-500">
+                        Dipakai wali kelas untuk membuka menu <span class="font-semibold">Data Siswa</span> di halaman depan.
+                        Beri tahu PIN ini hanya ke wali kelas. Dikosongkan = fitur tertutup.
+                    </p>
+                    @error('validasi_data_siswa_pin')
+                        <p class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <div class="grid grid-cols-4 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Kelurahan</label>

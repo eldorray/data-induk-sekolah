@@ -3,9 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\SchoolSetting;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 
 class SchoolSettingsManagement extends Component
 {
@@ -13,39 +13,63 @@ class SchoolSettingsManagement extends Component
 
     // Text settings
     public string $nama_sekolah = '';
+
     public string $nama_yayasan = '';
+
     public string $npsn = '';
+
     public string $nsm = '';
+
     public string $alamat = '';
+
     public string $kelurahan = '';
+
     public string $kecamatan = '';
+
     public string $kota = '';
+
     public string $provinsi = '';
+
     public string $kode_pos = '';
+
     public string $telepon = '';
+
     public string $email = '';
+
     public string $nama_kepala = '';
+
     public string $nip_kepala = '';
+
     public string $kode_surat = '';
+
+    public string $validasi_data_siswa_pin = '';
 
     // File uploads
     public $kop_surat;
+
     public $stempel;
+
     public $ttd_kepala;
+
     public $app_logo;
+
     public $favicon;
 
     // Current file paths
     public string $current_kop_surat = '';
+
     public string $current_stempel = '';
+
     public string $current_ttd_kepala = '';
+
     public string $current_app_logo = '';
+
     public string $current_favicon = '';
 
     public function mount(): void
     {
         $settings = SchoolSetting::getAll();
-        
+
         $this->nama_sekolah = $settings['nama_sekolah'] ?? '';
         $this->nama_yayasan = $settings['nama_yayasan'] ?? '';
         $this->npsn = $settings['npsn'] ?? '';
@@ -61,7 +85,8 @@ class SchoolSettingsManagement extends Component
         $this->nama_kepala = $settings['nama_kepala'] ?? '';
         $this->nip_kepala = $settings['nip_kepala'] ?? '';
         $this->kode_surat = $settings['kode_surat'] ?? 'MIDH';
-        
+        $this->validasi_data_siswa_pin = $settings['validasi_data_siswa_pin'] ?? '';
+
         $this->current_kop_surat = $settings['kop_surat_path'] ?? '';
         $this->current_stempel = $settings['stempel_path'] ?? '';
         $this->current_ttd_kepala = $settings['ttd_kepala_path'] ?? '';
@@ -73,6 +98,7 @@ class SchoolSettingsManagement extends Component
     {
         $this->validate([
             'nama_sekolah' => 'required|string|max:255',
+            'validasi_data_siswa_pin' => 'nullable|string|min:4|max:20',
             'kop_surat' => 'nullable|image|max:2048',
             'stempel' => 'nullable|image|max:1024',
             'ttd_kepala' => 'nullable|image|max:1024',
@@ -96,6 +122,7 @@ class SchoolSettingsManagement extends Component
         SchoolSetting::set('nama_kepala', $this->nama_kepala);
         SchoolSetting::set('nip_kepala', $this->nip_kepala);
         SchoolSetting::set('kode_surat', $this->kode_surat);
+        SchoolSetting::set('validasi_data_siswa_pin', $this->validasi_data_siswa_pin);
 
         // Handle file uploads
         if ($this->kop_surat) {
