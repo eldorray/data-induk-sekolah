@@ -525,6 +525,43 @@
                         </div>
                     </div>
 
+                    {{-- ========== DROPDOWN: LPJ ========== --}}
+                    @php
+                        $lpjActive = request()->routeIs('lpj-insentif.*') || request()->routeIs('absensi-insentif.*');
+                    @endphp
+                    <div x-data="{ open: {{ $lpjActive ? 'true' : 'false' }} }" class="space-y-0.5">
+                        <button @click="open = !open"
+                            class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm w-full {{ $lpjActive ? 'text-gray-900 bg-gray-100 font-semibold' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"
+                            :class="{ 'justify-center px-0': sidebarCollapsed }" title="LPJ">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 {{ $lpjActive ? 'bg-gray-200' : 'bg-gray-100' }}">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <span x-show="!sidebarCollapsed" x-transition.opacity.duration.300ms class="whitespace-nowrap flex-1 text-left">LPJ</span>
+                            <svg x-show="!sidebarCollapsed" class="w-4 h-4 flex-shrink-0 apple-ease"
+                                :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="open && !sidebarCollapsed" x-collapse x-cloak class="pl-4 space-y-0.5">
+                            <a href="{{ route('lpj-insentif.index') }}"
+                                class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('lpj-insentif.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900' }}"
+                                wire:navigate>
+                                <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ request()->routeIs('lpj-insentif.*') ? 'bg-white' : 'bg-gray-300' }}"></div>
+                                <span class="whitespace-nowrap">LPJ Insentif</span>
+                            </a>
+                            <a href="{{ route('absensi-insentif.index') }}"
+                                class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('absensi-insentif.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900' }}"
+                                wire:navigate>
+                                <div class="w-1.5 h-1.5 rounded-full flex-shrink-0 {{ request()->routeIs('absensi-insentif.*') ? 'bg-white' : 'bg-gray-300' }}"></div>
+                                <span class="whitespace-nowrap">Absensi Insentif</span>
+                            </a>
+                        </div>
+                    </div>
+
                     {{-- Lisensi --}}
                     <a href="{{ route('licenses.index') }}"
                         class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-xl text-sm {{ request()->routeIs('licenses.*') ? 'bg-gray-900 text-white nav-active' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900' }}"

@@ -5,6 +5,8 @@ use App\Http\Controllers\LpjBosController;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\NilaiIjazahController;
 use App\Http\Controllers\SkGuruMiController;
+use App\Http\Controllers\AbsensiInsentifController;
+use App\Http\Controllers\LpjInsentifController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
 use App\Http\Controllers\SuratPernyataanRombelController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\SuratPernyataanTangcerController;
 use App\Http\Controllers\SuratRekapPkhController;
 use App\Http\Controllers\SuratTerimaPindahanController;
 use App\Http\Controllers\SuratUniversalController;
+use App\Livewire\AbsensiInsentif;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\ResetPassword;
@@ -21,6 +24,8 @@ use App\Livewire\KuitansiBosManagement;
 use App\Livewire\LicenseManagement;
 use App\Livewire\LpjBosDetail;
 use App\Livewire\LpjBosManagement;
+use App\Livewire\LpjInsentifDetail;
+use App\Livewire\LpjInsentifManagement;
 use App\Livewire\MapelMiManagement;
 use App\Livewire\MapelSmpManagement;
 use App\Livewire\MutasiSiswaManagement;
@@ -161,6 +166,30 @@ Route::get('lpj-bos/{id}/print', [LpjBosController::class, 'printPdf'])
     ->whereNumber('id')
     ->middleware(['auth', 'role:admin'])
     ->name('lpj-bos.print');
+
+// LPJ Insentif
+Route::get('lpj-insentif', LpjInsentifManagement::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('lpj-insentif.index');
+
+Route::get('lpj-insentif/{lpj}', LpjInsentifDetail::class)
+    ->whereNumber('lpj')
+    ->middleware(['auth', 'role:admin'])
+    ->name('lpj-insentif.show');
+
+Route::get('lpj-insentif/{id}/print', [LpjInsentifController::class, 'printPdf'])
+    ->whereNumber('id')
+    ->middleware(['auth', 'role:admin'])
+    ->name('lpj-insentif.print');
+
+// Absensi Insentif
+Route::get('absensi-insentif', AbsensiInsentif::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('absensi-insentif.index');
+
+Route::get('absensi-insentif/print', [AbsensiInsentifController::class, 'printPdf'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('absensi-insentif.print');
 
 Route::get('settings', \App\Livewire\SchoolSettingsManagement::class)
     ->middleware(['auth', 'role:admin'])
