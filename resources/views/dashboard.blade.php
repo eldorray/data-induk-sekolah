@@ -1,176 +1,162 @@
+@use('App\Models\GuruMi')
+@use('App\Models\GuruSmp')
+@use('App\Models\SiswaMi')
+@use('App\Models\SiswaSmp')
+@use('App\Models\ValidasiDataSiswa')
+@php
+    $perRombel = fn (string $model) => $model::query()
+        ->where('status', 'Aktif')
+        ->whereNotNull('tingkat_rombel')
+        ->where('tingkat_rombel', '!=', '')
+        ->selectRaw('tingkat_rombel, count(*) as jumlah')
+        ->groupBy('tingkat_rombel')
+        ->orderBy('tingkat_rombel')
+        ->pluck('jumlah', 'tingkat_rombel');
+
+    // "Kelas 1 - KELAS 1A" -> "1A"
+    $singkat = fn (string $rombel): string => (string) str($rombel)->afterLast('-')->trim()->replaceMatches('/^kelas\s*/i', '');
+
+    $rombelMi = $perRombel(SiswaMi::class);
+    $rombelSmp = $perRombel(SiswaSmp::class);
+
+    $siswaMi = SiswaMi::where('status', 'Aktif')->count();
+    $siswaSmp = SiswaSmp::where('status', 'Aktif')->count();
+
+    $bars = collect($rombelMi)->map(fn ($n, $k) => ['kelas' => $singkat($k), 'n' => $n, 'mi' => true])->values()
+        ->concat(collect($rombelSmp)->map(fn ($n, $k) => ['kelas' => $singkat($k), 'n' => $n, 'mi' => false])->values());
+    $barMax = max(1, (int) $bars->max('n'));
+
+    // Status validasi wali kelas per rombel aktif
+    $validasi = ValidasiDataSiswa::all()->keyBy(fn ($v) => $v->sekolah . '|' . $v->tingkat_rombel);
+    $kelasValidasi = collect(['MI', 'SMP'])->flatMap(fn ($s) => collect(ValidasiDataSiswa::kelasAktif($s))
+        ->map(fn ($k) => [
+            'label' => $s . ' ' . $singkat($k),
+            'status' => $validasi->get($s . '|' . $k)?->status ?? ValidasiDataSiswa::STATUS_BELUM,
+        ]));
+    $kelasLengkap = $kelasValidasi->where('status', ValidasiDataSiswa::STATUS_LENGKAP)->count();
+
+    $statusStyle = [
+        ValidasiDataSiswa::STATUS_LENGKAP => 'bg-madrasah-600',
+        ValidasiDataSiswa::STATUS_ADA_CATATAN => 'bg-amber-600',
+        ValidasiDataSiswa::STATUS_BELUM => 'bg-gray-300',
+    ];
+
+    $aksiCepat = [
+        ['label' => 'Siswa MI', 'route' => 'siswa-mi.index'],
+        ['label' => 'Siswa SMP', 'route' => 'siswa-smp.index'],
+        ['label' => 'Surat keterangan aktif', 'route' => 'surat-aktif.index'],
+        ['label' => 'Mutasi siswa', 'route' => 'mutasi.index'],
+        ['label' => 'Kuitansi BOS', 'route' => 'kuitansi-bos.index'],
+        ['label' => 'Surat universal', 'route' => 'surat-universal.index'],
+    ];
+@endphp
+
 <x-layouts.admin>
-    <x-slot name="header">
-        Dashboard
-    </x-slot>
+    <x-slot name="header">Dashboard</x-slot>
 
-    <div class="animate-fade-up">
-        <!-- Welcome Card -->
-        <div class="card p-8 mb-8">
-            <h2 class="text-2xl font-bold text-[hsl(var(--foreground))] mb-2">
-                Selamat Datang, {{ auth()->user()->name }}! 👋
-            </h2>
-            <p class="text-[hsl(var(--muted-foreground))]">
-                Dashboard Data Induk Sekolah. Kelola data siswa, guru, dan mata pelajaran dari sini.
-            </p>
+    <div class="flex flex-col gap-6 animate-fade-up">
+        <div class="flex flex-col gap-1">
+            <h2 class="text-[28px] leading-tight font-medium text-gray-900">Ringkasan data induk</h2>
+            <p class="text-sm text-gray-600">Siswa aktif dan guru di MI dan SMP</p>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <!-- Stat Card 1 - Siswa MI -->
-            <div class="card p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z">
-                            </path>
-                        </svg>
-                    </div>
+        {{-- Angka --}}
+        <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
+            @foreach ([
+                ['Siswa MI', $siswaMi, 'aktif'],
+                ['Siswa SMP', $siswaSmp, 'aktif'],
+                ['Guru MI', GuruMi::count(), 'terdata'],
+                ['Guru SMP', GuruSmp::count(), 'terdata'],
+            ] as [$label, $value, $note])
+                <div class="bg-white rounded-xl border border-gray-900/[0.08] p-5 flex flex-col gap-3">
+                    <span class="text-[13px] text-gray-600">{{ $label }}</span>
+                    <span class="text-[32px] leading-none font-medium tabular-nums text-gray-900">{{ number_format($value, 0, ',', '.') }}</span>
+                    <span class="text-xs text-gray-500">{{ $note }}</span>
                 </div>
-                <h3 class="text-3xl font-bold text-[hsl(var(--foreground))]">{{ \App\Models\SiswaMi::count() }}</h3>
-                <p class="text-sm text-[hsl(var(--muted-foreground))]">Siswa MI</p>
-            </div>
-
-            <!-- Stat Card 2 - Siswa SMP -->
-            <div class="card p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z">
-                            </path>
-                        </svg>
-                    </div>
-                </div>
-                <h3 class="text-3xl font-bold text-[hsl(var(--foreground))]">{{ \App\Models\SiswaSmp::count() }}</h3>
-                <p class="text-sm text-[hsl(var(--muted-foreground))]">Siswa SMP</p>
-            </div>
-
-            <!-- Stat Card 3 - Guru MI -->
-            <div class="card p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                    </div>
-                </div>
-                <h3 class="text-3xl font-bold text-[hsl(var(--foreground))]">{{ \App\Models\GuruMi::count() }}</h3>
-                <p class="text-sm text-[hsl(var(--muted-foreground))]">Guru MI</p>
-            </div>
-
-            <!-- Stat Card 4 - Guru SMP -->
-            <div class="card p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 rounded-lg bg-yellow-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                    </div>
-                </div>
-                <h3 class="text-3xl font-bold text-[hsl(var(--foreground))]">{{ \App\Models\GuruSmp::count() }}</h3>
-                <p class="text-sm text-[hsl(var(--muted-foreground))]">Guru SMP</p>
-            </div>
+            @endforeach
         </div>
 
-        <!-- Quick Actions -->
-        <div class="card p-6">
-            <h3 class="text-lg font-semibold text-[hsl(var(--foreground))] mb-4">Aksi Cepat</h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="{{ route('siswa-mi.index') }}"
-                    class="flex flex-col items-center justify-center p-4 rounded-lg bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--accent))] transition-colors"
-                    wire:navigate>
-                    <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z">
-                        </path>
-                    </svg>
-                    <span class="text-sm font-medium text-[hsl(var(--foreground))]">Siswa MI</span>
-                </a>
-                <a href="{{ route('siswa-smp.index') }}"
-                    class="flex flex-col items-center justify-center p-4 rounded-lg bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--accent))] transition-colors"
-                    wire:navigate>
-                    <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z">
-                        </path>
-                    </svg>
-                    <span class="text-sm font-medium text-[hsl(var(--foreground))]">Siswa SMP</span>
-                </a>
-                <a href="{{ route('guru-mi.index') }}"
-                    class="flex flex-col items-center justify-center p-4 rounded-lg bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--accent))] transition-colors"
-                    wire:navigate>
-                    <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span class="text-sm font-medium text-[hsl(var(--foreground))]">Guru MI</span>
-                </a>
-                <a href="{{ route('guru-smp.index') }}"
-                    class="flex flex-col items-center justify-center p-4 rounded-lg bg-[hsl(var(--secondary))] hover:bg-[hsl(var(--accent))] transition-colors"
-                    wire:navigate>
-                    <svg class="w-8 h-8 text-yellow-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span class="text-sm font-medium text-[hsl(var(--foreground))]">Guru SMP</span>
-                </a>
-            </div>
+        <div class="grid xl:grid-cols-3 gap-4">
+            {{-- Grafik siswa per rombel --}}
+            <section class="xl:col-span-2 bg-white rounded-xl border border-gray-900/[0.08] p-6 flex flex-col gap-6 min-w-0">
+                <div class="flex flex-wrap items-baseline justify-between gap-3">
+                    <div class="flex flex-col gap-1">
+                        <h3 class="text-base font-medium text-gray-900">Siswa per rombel</h3>
+                        <span class="text-[13px] text-gray-600">{{ number_format($siswaMi + $siswaSmp, 0, ',', '.') }} siswa aktif di dua jenjang</span>
+                    </div>
+                    <div class="flex gap-4 text-xs text-gray-600">
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-madrasah-600"></span>MI</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-gray-400"></span>SMP</span>
+                    </div>
+                </div>
+
+                @if ($bars->isEmpty())
+                    <p class="py-16 text-center text-sm text-gray-500">Belum ada siswa aktif dengan rombel.</p>
+                @else
+                    <div class="overflow-x-auto">
+                        <div class="flex items-end gap-3 h-64 border-b border-gray-900/[0.16]"
+                            style="min-width: {{ $bars->count() * 44 }}px"
+                            role="img" aria-label="Grafik jumlah siswa aktif per rombel">
+                            @foreach ($bars as $bar)
+                                <div class="flex-1 h-full flex flex-col items-center justify-end gap-2 min-w-[32px]">
+                                    <span class="text-xs text-gray-600 tabular-nums">{{ $bar['n'] }}</span>
+                                    <div class="w-full max-w-[44px] rounded-t {{ $bar['mi'] ? 'bg-madrasah-600' : 'bg-gray-400' }}"
+                                        style="height: {{ round($bar['n'] / $barMax * 85, 1) }}%"></div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="flex gap-3 pt-2" style="min-width: {{ $bars->count() * 44 }}px">
+                            @foreach ($bars as $bar)
+                                <span class="flex-1 min-w-[32px] text-center font-mono text-[11px] text-gray-500 truncate">{{ $bar['kelas'] }}</span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </section>
+
+            {{-- Validasi wali kelas --}}
+            <section class="bg-white rounded-xl border border-gray-900/[0.08] p-6 flex flex-col gap-4 min-w-0">
+                <div class="flex items-baseline justify-between gap-3">
+                    <h3 class="text-base font-medium text-gray-900">Validasi wali kelas</h3>
+                    <a href="{{ route('validasi-data-siswa.index') }}" wire:navigate class="text-[13px] text-madrasah-700 hover:text-madrasah-800">Lihat</a>
+                </div>
+                <p class="-mt-2 text-[13px] text-gray-600">
+                    {{ $kelasLengkap }} dari {{ $kelasValidasi->count() }} rombel sudah lengkap
+                </p>
+                <div class="h-1 rounded-full bg-gray-100">
+                    <div class="h-1 rounded-full bg-madrasah-600"
+                        style="width: {{ $kelasValidasi->count() ? round($kelasLengkap / $kelasValidasi->count() * 100) : 0 }}%"></div>
+                </div>
+                <ul class="flex flex-col max-h-64 overflow-y-auto -mx-2">
+                    @forelse ($kelasValidasi as $kelas)
+                        <li class="flex items-center justify-between h-9 px-2 text-sm">
+                            <span class="text-gray-900">{{ $kelas['label'] }}</span>
+                            <span class="flex items-center gap-2 text-[13px] text-gray-600">
+                                <span class="w-1.5 h-1.5 rounded-full {{ $statusStyle[$kelas['status']] ?? 'bg-gray-300' }}"></span>
+                                {{ ValidasiDataSiswa::STATUS_LABEL[$kelas['status']] ?? $kelas['status'] }}
+                            </span>
+                        </li>
+                    @empty
+                        <li class="px-2 py-8 text-center text-sm text-gray-500">Belum ada rombel aktif.</li>
+                    @endforelse
+                </ul>
+            </section>
         </div>
 
-        <!-- Secondary Quick Actions -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-            <a href="{{ route('mapel-mi.index') }}" class="card p-6 hover:shadow-lg transition-shadow" wire:navigate>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-lg bg-indigo-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        {{-- Aksi cepat --}}
+        <section class="bg-white rounded-xl border border-gray-900/[0.08] overflow-hidden">
+            <h3 class="px-6 pt-5 pb-3 text-base font-medium text-gray-900">Buka cepat</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3">
+                @foreach ($aksiCepat as $aksi)
+                    <a href="{{ route($aksi['route']) }}" wire:navigate
+                        class="flex items-center justify-between h-12 px-6 border-t border-gray-900/[0.06] text-sm text-gray-900 transition-colors duration-150 hover:bg-gray-50">
+                        {{ $aksi['label'] }}
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m9 6 6 6-6 6" />
                         </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-[hsl(var(--foreground))]">Mapel MI</h3>
-                        <p class="text-sm text-[hsl(var(--muted-foreground))]">{{ \App\Models\MapelMi::count() }} mata
-                            pelajaran</p>
-                    </div>
-                </div>
-            </a>
-            <a href="{{ route('mapel-smp.index') }}" class="card p-6 hover:shadow-lg transition-shadow"
-                wire:navigate>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-lg bg-pink-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-[hsl(var(--foreground))]">Mapel SMP</h3>
-                        <p class="text-sm text-[hsl(var(--muted-foreground))]">{{ \App\Models\MapelSmp::count() }}
-                            mata pelajaran</p>
-                    </div>
-                </div>
-            </a>
-            <a href="{{ route('settings.index') }}" class="card p-6 hover:shadow-lg transition-shadow" wire:navigate>
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                            </path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-[hsl(var(--foreground))]">Pengaturan</h3>
-                        <p class="text-sm text-[hsl(var(--muted-foreground))]">Profil sekolah</p>
-                    </div>
-                </div>
-            </a>
-        </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
     </div>
 </x-layouts.admin>

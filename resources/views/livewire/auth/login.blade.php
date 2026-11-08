@@ -1,10 +1,7 @@
 <div class="animate-fade-up">
-    <div class="mb-8 text-center">
-        <div class="flex justify-center mb-4">
-            <x-app-logo size="lg" />
-        </div>
-        <h2 class="text-2xl font-bold text-[hsl(var(--foreground))]">Data Induk Sekolah</h2>
-        <p class="text-[hsl(var(--muted-foreground))] mt-1">Masuk untuk mengelola data sekolah</p>
+    <div class="mb-6">
+        <h2 class="text-2xl font-medium text-[hsl(var(--foreground))]">Masuk</h2>
+        <p class="text-sm text-[hsl(var(--muted-foreground))] mt-1">Gunakan akun yang dibuat oleh admin</p>
     </div>
 
     @if (session('status'))

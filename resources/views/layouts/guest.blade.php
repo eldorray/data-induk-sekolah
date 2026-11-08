@@ -11,56 +11,49 @@
     @include('partials.favicon')
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen flex">
-        <!-- Left Side - Branding -->
-        <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden" style="background: #fbfbfd;">
-            <div class="glow-blob bg-blue-200" style="width: 420px; height: 420px; top: -120px; left: -80px;"></div>
-            <div class="glow-blob bg-blue-100" style="width: 360px; height: 360px; bottom: -140px; right: -60px;"></div>
-            <div class="absolute inset-0 flex flex-col justify-center items-center p-12">
-                <div class="max-w-md text-center animate-fade-up relative">
-                    <div class="flex justify-center mb-8">
-                        <x-app-logo size="lg" class="shadow-lg" />
-                    </div>
-                    <div
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-sm font-medium text-blue-800 mb-6">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-                        </svg>
-                        Sistem Informasi Sekolah
-                    </div>
-                    <h1 class="text-3xl font-extrabold tracking-tighter text-gray-900 mb-4">
-                        Data Induk Sekolah <span class="text-gradient-blue">MI &amp; SMP</span>
-                    </h1>
-                    <p class="text-[hsl(var(--muted-foreground))] text-lg">
-                        Sistem manajemen data sekolah terintegrasi untuk mengelola data Siswa, Guru, dan Mata Pelajaran
-                        MI &amp; SMP.
-                    </p>
-                </div>
+    @php
+        $namaSekolah = \App\Models\SchoolSetting::get('nama_sekolah', 'Data Induk Sekolah');
+        $namaYayasan = \App\Models\SchoolSetting::get('nama_yayasan', 'Yayasan Pendidikan');
+    @endphp
+    <div class="min-h-screen flex bg-[#f7f4ee] text-[#1f1b16]">
+        <!-- Kiri: identitas -->
+        <div class="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 border-r border-[#1f1b16]/[0.08]">
+            <a href="/" class="flex items-center gap-3">
+                <x-app-logo size="sm" />
+                <span class="text-[15px] font-semibold">{{ $namaSekolah }}</span>
+            </a>
+            <div class="max-w-md flex flex-col gap-4">
+                <p class="text-sm text-[#7b7266]">{{ $namaYayasan }}</p>
+                <h1 class="font-serif font-normal text-5xl leading-[1.05] tracking-[-0.02em]">
+                    Data induk MI dan SMP
+                </h1>
+                <p class="text-base leading-7 text-[#5e554a]">
+                    Siswa, guru, surat dinas, SK, dan laporan BOS dalam satu tempat.
+                </p>
             </div>
+            <p class="text-[13px] text-[#7b7266]">Khusus penggunaan internal</p>
         </div>
 
-        <!-- Right Side - Form -->
-        <div class="relative w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12 bg-white overflow-hidden">
-            <div class="glow-blob bg-blue-100 lg:hidden" style="width: 320px; height: 320px; top: -160px; right: -80px;"></div>
-            <div class="relative w-full max-w-md">
-                <!-- Mobile Logo -->
+        <!-- Kanan: form -->
+        <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-6 sm:p-12">
+            <div class="w-full max-w-md">
                 <div class="lg:hidden mb-8 text-center">
-                    <a href="/" class="inline-flex items-center gap-2">
+                    <a href="/" class="inline-flex items-center gap-3">
                         <x-app-logo size="md" />
-                        <span class="font-semibold text-lg text-[hsl(var(--foreground))]">Data Induk Sekolah</span>
+                        <span class="font-semibold text-lg">{{ $namaSekolah }}</span>
                     </a>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-gray-200/70 shadow-xl shadow-blue-600/[0.06] p-6 sm:p-8">
+                <div class="bg-white rounded-2xl border border-[#1f1b16]/[0.08] shadow-[0_8px_24px_rgba(31,27,22,.06)] p-6 sm:p-8">
                     {{ $slot }}
                 </div>
             </div>

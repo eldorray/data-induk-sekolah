@@ -8,7 +8,7 @@
 
     {{-- Generated Key Alert --}}
     @if ($generatedKey)
-        <div class="mb-6 p-6 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200"
+        <div class="mb-6 p-6 rounded-xl bg-madrasah-50 border border-madrasah-200"
             x-data="{ copied: false }">
             <div class="flex items-start justify-between">
                 <div>

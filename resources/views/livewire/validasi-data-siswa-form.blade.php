@@ -1,9 +1,7 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12 animate-fade-up">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-xs font-semibold text-blue-800 mb-3">
-            Khusus Wali Kelas
-        </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-950 tracking-tight mb-4">
+        <p class="text-sm text-gray-500 mb-3">Khusus wali kelas</p>
+        <h2 class="font-serif text-3xl sm:text-4xl font-normal text-gray-950 mb-4">
             Cek Kelengkapan Data Siswa
         </h2>
         <p class="text-base text-gray-600">
