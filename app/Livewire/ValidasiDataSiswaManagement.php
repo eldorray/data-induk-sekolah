@@ -90,6 +90,6 @@ class ValidasiDataSiswaManagement extends Component
             'jumlahBelum' => $baris->where('status', ValidasiDataSiswa::STATUS_BELUM)->count(),
             'jumlahLengkap' => $baris->where('status', ValidasiDataSiswa::STATUS_LENGKAP)->count(),
             'jumlahCatatan' => $baris->where('status', ValidasiDataSiswa::STATUS_ADA_CATATAN)->count(),
-        ])->layout('layouts.admin', ['header' => 'Validasi Data Siswa']);
+        ])->layout('layouts.admin', ['header' => 'Validasi data siswa']);
     }
 }

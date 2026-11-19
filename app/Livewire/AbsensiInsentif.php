@@ -102,6 +102,6 @@ class AbsensiInsentif extends Component
             'hariLibur' => $hariLibur,
             'namaBulan' => HariLibur::namaBulan($this->bulan),
             'tahunAjaran' => HariLibur::tahunAjaran($this->tahun, $this->bulan),
-        ])->layout('layouts.admin', ['header' => 'Absensi Insentif']);
+        ])->layout('layouts.admin', ['header' => 'Absensi insentif']);
     }
 }

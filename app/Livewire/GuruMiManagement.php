@@ -351,6 +351,6 @@ class GuruMiManagement extends Component
 
         return view('livewire.guru-mi-management', [
             'gurus' => $gurus,
-        ])->layout('layouts.admin', ['header' => 'Data Guru MI']);
+        ])->layout('layouts.admin', ['header' => 'Data guru MI']);
     }
 }

@@ -73,6 +73,6 @@ class SuratPernyataanRombelManagement extends Component
     {
         return view('livewire.surat-pernyataan-rombel-management', [
             'rekap' => SiswaMi::rekapRombel(),
-        ])->layout('layouts.admin', ['header' => 'Surat Pernyataan Rombel']);
+        ])->layout('layouts.admin', ['header' => 'Surat pernyataan rombel']);
     }
 }

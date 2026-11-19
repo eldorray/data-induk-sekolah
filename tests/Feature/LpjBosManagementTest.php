@@ -37,7 +37,7 @@ class LpjBosManagementTest extends TestCase
 
         Livewire::test(LpjBosManagement::class)
             ->assertSee('Pengadaan ATK')
-            ->assertSee('Belum Ada LPJ')
+            ->assertSee('Belum ada LPJ')
             ->call('openCreateModal', $kuitansi->id)
             ->set('nama_kegiatan', 'Pengadaan ATK Semester 1')
             ->set('tanggal_kegiatan', '2026-03-02')

@@ -34,6 +34,10 @@ export default {
                 indigo: madrasah,
                 madrasah,
             },
+            boxShadow: {
+                // satu bayangan netral untuk modal dan elemen mengambang
+                float: '0 8px 24px rgb(0 0 0 / 0.08)',
+            },
             fontFamily: {
                 sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
                 serif: ['Newsreader', ...defaultTheme.fontFamily.serif],

@@ -403,6 +403,6 @@ class KuitansiBosManagement extends Component
             'kuitansis' => $kuitansis,
             'tahunOptions' => $tahunOptions,
             'settings' => SchoolSetting::getAll(),
-        ])->layout('layouts.admin', ['header' => 'Kuitansi / Bukti Pembayaran BOS']);
+        ])->layout('layouts.admin', ['header' => 'Kuitansi / bukti pembayaran BOS']);
     }
 }

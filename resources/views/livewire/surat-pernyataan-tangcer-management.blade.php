@@ -1,26 +1,26 @@
 <div class="animate-fade-up">
     {{-- Flash Messages --}}
     @if (session('success'))
-        <div class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800">
+        <div class="mb-4 p-4 rounded-lg bg-madrasah-50 border border-madrasah-200 text-madrasah-800">
             {{ session('success') }}
         </div>
     @endif
 
     @if (session('error'))
-        <div class="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800">
+        <div class="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800">
             {{ session('error') }}
         </div>
     @endif
 
     {{-- Tab Navigation --}}
-    <div class="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 w-fit">
+    <div class="flex gap-1 mb-6 bg-gray-100 rounded-lg p-1 w-fit">
         <button wire:click="$set('activeTab', 'buat')"
             class="px-5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ $activeTab === 'buat' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
-            Buat Surat
+            Buat surat
         </button>
         <button wire:click="$set('activeTab', 'riwayat')"
             class="px-5 py-2.5 rounded-lg text-sm font-medium transition-colors {{ $activeTab === 'riwayat' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
-            Riwayat Surat
+            Riwayat surat
         </button>
     </div>
 
@@ -29,30 +29,30 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {{-- Left: Form Settings --}}
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden sticky top-6">
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden sticky top-6">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h3 class="text-sm font-semibold text-gray-900">Pengaturan Surat</h3>
+                        <h3 class="text-sm font-medium text-gray-900">Pengaturan surat</h3>
                     </div>
                     <div class="px-6 py-4 space-y-4">
                         {{-- Nomor Surat --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor surat</label>
                             <input type="text" wire:model="nomor_surat" placeholder="512/MIDH/III/2026"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         </div>
 
                         {{-- Tahun Anggaran --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tahun Anggaran</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tahun anggaran</label>
                             <input type="text" wire:model="tahun_anggaran"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         </div>
 
                         {{-- Semester --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Semester</label>
                             <select wire:model="semester"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                 <option value="Ganjil">Ganjil</option>
                                 <option value="Genap">Genap</option>
                             </select>
@@ -60,33 +60,33 @@
 
                         {{-- Isi Surat --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Isi Surat (Paragraf
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Isi surat (paragraf
                                 Keterangan)</label>
                             <textarea wire:model="isi_surat" rows="5"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
                         </div>
 
                         {{-- Isi Tujuan --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Isi Tujuan (Paragraf
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Isi tujuan (paragraf
                                 Penutup)</label>
                             <textarea wire:model="isi_tujuan" rows="4"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
                         </div>
 
                         {{-- Tanggal Surat --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Surat</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal surat</label>
                             <input type="date" wire:model="tanggal_surat"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         </div>
 
                         {{-- Generate Button --}}
                         <button wire:click="generateSurat" wire:loading.attr="disabled"
-                            class="w-full px-4 py-3 rounded-xl bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+                            class="w-full px-4 py-3 rounded-lg bg-gray-900 hover:bg-gray-800 disabled:bg-gray-400 text-white text-sm font-medium flex items-center justify-center gap-2 transition-colors">
                             <svg wire:loading.remove wire:target="generateSurat" class="w-4 h-4" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <svg wire:loading wire:target="generateSurat" class="w-4 h-4 animate-spin" fill="none"
@@ -104,10 +104,10 @@
 
             {{-- Right: Siswa Checklist --}}
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <h3 class="text-sm font-semibold text-gray-900">Pilih Siswa</h3>
+                            <h3 class="text-sm font-medium text-gray-900">Pilih siswa</h3>
                             <div class="flex items-center gap-3">
                                 {{-- Jenjang Toggle --}}
                                 <div class="flex gap-2">
@@ -123,11 +123,11 @@
                                 {{-- Search --}}
                                 <div class="relative">
                                     <input type="text" wire:model.live.debounce.300ms="searchSiswa"
-                                        placeholder="Cari siswa..."
+                                        placeholder="Cari siswa"
                                         class="pl-8 pr-4 py-1.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-48 text-sm">
                                     <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2"
                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                     </svg>
                                 </div>
@@ -165,12 +165,6 @@
                             </label>
                         @empty
                             <div class="px-6 py-12 text-center text-gray-500">
-                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                                    </path>
-                                </svg>
                                 <p class="text-sm">Tidak ada siswa ditemukan.</p>
                             </div>
                         @endforelse
@@ -182,15 +176,15 @@
 
     {{-- TAB: RIWAYAT --}}
     @if ($activeTab === 'riwayat')
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div
                 class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <h3 class="text-sm font-semibold text-gray-900">Riwayat Surat Pernyataan TANGCER</h3>
+                <h3 class="text-sm font-medium text-gray-900">Riwayat surat pernyataan TANGCER</h3>
                 <div class="flex items-center gap-3">
                     {{-- Filter Tahun Anggaran --}}
                     <select wire:model.live="filterTahunAnggaran"
                         class="px-3 py-1.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
-                        <option value="">Semua Tahun</option>
+                        <option value="">Semua tahun</option>
                         @foreach ($tahunAnggaranOptions as $opt)
                             <option value="{{ $opt }}">{{ $opt }}</option>
                         @endforeach
@@ -198,11 +192,11 @@
                     {{-- Search --}}
                     <div class="relative">
                         <input type="text" wire:model.live.debounce.300ms="searchRiwayat"
-                            placeholder="Cari no. surat..."
+                            placeholder="Cari no. surat"
                             class="pl-8 pr-4 py-1.5 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-40 text-sm">
                         <svg class="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
@@ -211,20 +205,20 @@
                             target="_blank"
                             class="px-3 py-1.5 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-xs font-medium flex items-center gap-1.5 transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                                 </path>
                             </svg>
-                            Export All PDF
+                            Export all PDF
                         </a>
                         <button wire:click="openDeleteAllModal"
                             class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium flex items-center gap-1.5 transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                 </path>
                             </svg>
-                            Hapus Semua
+                            Hapus semua
                         </button>
                     @endif
                 </div>
@@ -235,44 +229,44 @@
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
                                 No</th>
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Nama Siswa</th>
+                                class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
+                                Nama siswa</th>
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                No. Surat</th>
+                                class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
+                                No. surat</th>
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Tahun Anggaran</th>
+                                class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
+                                Tahun anggaran</th>
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
                                 Semester</th>
                             <th
-                                class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
                                 Tanggal</th>
                             <th
-                                class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                class="px-4 py-2.5 text-right text-xs font-medium text-gray-600">
                                 Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse ($riwayat as $i => $surat)
                             <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $i + 1 }}</td>
-                                <td class="px-6 py-4">
+                                <td class="px-4 py-3 text-sm text-gray-600">{{ $i + 1 }}</td>
+                                <td class="px-4 py-3">
                                     <div class="text-sm font-medium text-gray-900">{{ $surat->siswa_nama }}</div>
                                     <div class="text-xs text-gray-500">
                                         {{ strtoupper(str_replace('siswa_', '', $surat->siswa_type)) }}</div>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $surat->nomor_surat }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $surat->tahun_anggaran }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">{{ $surat->semester }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-600">
+                                <td class="px-4 py-3 text-sm text-gray-600 font-mono text-[13px] tabular-nums">{{ $surat->nomor_surat }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">{{ $surat->tahun_anggaran }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">{{ $surat->semester }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">
                                     {{ $surat->tanggal_surat?->format('d/m/Y') ?? '-' }}
                                 </td>
-                                <td class="px-6 py-4 text-right">
+                                <td class="px-4 py-3 text-right">
                                     <div class="flex items-center justify-end gap-2">
                                         <a href="{{ route('surat-pernyataan-tangcer.print', $surat->id) }}"
                                             target="_blank"
@@ -280,7 +274,7 @@
                                             title="Print PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
                                                 </path>
                                             </svg>
@@ -290,7 +284,7 @@
                                             title="Edit">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                                 </path>
                                             </svg>
@@ -300,7 +294,7 @@
                                             title="Hapus">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                                 </path>
                                             </svg>
@@ -310,13 +304,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                    <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                        </path>
-                                    </svg>
+                                <td colspan="7" class="px-4 py-12 text-center text-gray-500">
                                     <p class="text-sm">Belum ada surat pernyataan TANGCER.</p>
                                 </td>
                             </tr>
@@ -331,27 +319,27 @@
     @if ($showDeleteModal)
         <template x-teleport="#modal-portal">
             <div class="fixed inset-0 z-[9999] overflow-y-auto">
-                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
+                <div class="fixed inset-0 bg-gray-900/40" wire:click="closeModal"></div>
                 <div class="fixed inset-0 flex items-center justify-center p-4">
-                    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl">
+                    <div class="relative w-full max-w-md bg-white rounded-xl shadow-float">
                         <div class="p-6 text-center">
-                            <svg class="w-16 h-16 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor"
+                            <svg class="w-5 h-5 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
                                 </path>
                             </svg>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Hapus Surat Pernyataan TANGCER?
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Hapus Surat Pernyataan TANGCER?
                             </h3>
                             <p class="text-gray-500 mb-6">Tindakan ini tidak dapat dibatalkan. Data surat pernyataan
                                 akan dihapus secara permanen.</p>
                             <div class="flex justify-center gap-3">
                                 <button wire:click="closeModal"
-                                    class="px-4 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">
+                                    class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">
                                     Batal
                                 </button>
                                 <button wire:click="delete"
-                                    class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors">
+                                    class="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors">
                                     Ya, Hapus
                                 </button>
                             </div>
@@ -366,28 +354,28 @@
     @if ($showDeleteAllModal)
         <template x-teleport="#modal-portal">
             <div class="fixed inset-0 z-[9999] overflow-y-auto">
-                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
+                <div class="fixed inset-0 bg-gray-900/40" wire:click="closeModal"></div>
                 <div class="fixed inset-0 flex items-center justify-center p-4">
-                    <div class="relative w-full max-w-md bg-white rounded-2xl shadow-2xl">
+                    <div class="relative w-full max-w-md bg-white rounded-xl shadow-float">
                         <div class="p-6 text-center">
-                            <svg class="w-16 h-16 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor"
+                            <svg class="w-5 h-5 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
                                 </path>
                             </svg>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Hapus Semua Surat Pernyataan?</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Hapus Semua Surat Pernyataan?</h3>
                             <p class="text-gray-500 mb-6">Tindakan ini tidak dapat dibatalkan. Semua data surat
                                 pernyataan
                                 TANGCER{{ $filterTahunAnggaran ? ' tahun anggaran ' . $filterTahunAnggaran : '' }}
                                 akan dihapus secara permanen.</p>
                             <div class="flex justify-center gap-3">
                                 <button wire:click="closeModal"
-                                    class="px-4 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">
+                                    class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">
                                     Batal
                                 </button>
                                 <button wire:click="deleteAll"
-                                    class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors">
+                                    class="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors">
                                     Ya, Hapus Semua
                                 </button>
                             </div>
@@ -402,18 +390,18 @@
     @if ($showEditModal)
         <template x-teleport="#modal-portal">
             <div class="fixed inset-0 z-[9999] overflow-y-auto">
-                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
+                <div class="fixed inset-0 bg-gray-900/40" wire:click="closeModal"></div>
                 <div class="fixed inset-0 flex items-center justify-center p-4">
                     <div
-                        class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+                        class="relative w-full max-w-2xl bg-white rounded-xl shadow-float max-h-[90vh] overflow-y-auto">
                         <div class="p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Edit Surat Pernyataan TANGCER</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Edit surat pernyataan TANGCER</h3>
                             <div class="space-y-4">
                                 {{-- Nomor Surat --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nomor surat</label>
                                     <input type="text" wire:model="edit_nomor_surat"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     {{-- Tahun Anggaran --}}
@@ -421,13 +409,13 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Tahun
                                             Anggaran</label>
                                         <input type="text" wire:model="edit_tahun_anggaran"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                     </div>
                                     {{-- Semester --}}
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Semester</label>
                                         <select wire:model="edit_semester"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                             <option value="Ganjil">Ganjil</option>
                                             <option value="Genap">Genap</option>
                                         </select>
@@ -435,33 +423,33 @@
                                 </div>
                                 {{-- Isi Surat --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Isi Surat (Paragraf
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Isi surat (paragraf
                                         Keterangan)</label>
                                     <textarea wire:model="edit_isi_surat" rows="4"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
                                 </div>
                                 {{-- Isi Tujuan --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Isi Tujuan (Paragraf
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Isi tujuan (paragraf
                                         Penutup)</label>
                                     <textarea wire:model="edit_isi_tujuan" rows="3"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm"></textarea>
                                 </div>
                                 {{-- Tanggal Surat --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Surat</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal surat</label>
                                     <input type="date" wire:model="edit_tanggal_surat"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                 </div>
                             </div>
                             <div class="flex justify-end gap-3 mt-6">
                                 <button wire:click="closeModal"
-                                    class="px-4 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">
+                                    class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">
                                     Batal
                                 </button>
                                 <button wire:click="updateSurat"
-                                    class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
-                                    Simpan Perubahan
+                                    class="px-3 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
+                                    Simpan perubahan
                                 </button>
                             </div>
                         </div>

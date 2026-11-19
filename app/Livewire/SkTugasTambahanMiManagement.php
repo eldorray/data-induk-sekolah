@@ -410,6 +410,6 @@ class SkTugasTambahanMiManagement extends Component
         return view('livewire.sk-tugas-tambahan-mi-management', [
             'skList' => $skList,
             'tugasTambahanOptions' => self::getTugasTambahanOptions(),
-        ])->layout('layouts.admin', ['header' => 'SK Tugas Tambahan MI']);
+        ])->layout('layouts.admin', ['header' => 'SK tugas tambahan MI']);
     }
 }

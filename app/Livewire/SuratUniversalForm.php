@@ -134,6 +134,6 @@ class SuratUniversalForm extends Component
         return view('livewire.surat-universal-form', [
             'jenjangOptions' => SuratUniversal::JENJANG_OPTIONS,
             'defaultKopUrl' => $kop ? asset('storage/' . $kop) : null,
-        ])->layout('layouts.admin', ['header' => $this->isEditing ? 'Edit Surat' : 'Buat Surat']);
+        ])->layout('layouts.admin', ['header' => $this->isEditing ? 'Edit surat' : 'Buat surat']);
     }
 }

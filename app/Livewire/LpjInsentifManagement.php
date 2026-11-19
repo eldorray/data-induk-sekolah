@@ -173,6 +173,6 @@ class LpjInsentifManagement extends Component
         return view('livewire.lpj-insentif-management', [
             'lpjs' => $lpjs,
             'tahunOptions' => $tahunOptions,
-        ])->layout('layouts.admin', ['header' => 'LPJ Insentif']);
+        ])->layout('layouts.admin', ['header' => 'LPJ insentif']);
     }
 }

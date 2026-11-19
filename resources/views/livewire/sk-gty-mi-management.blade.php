@@ -3,23 +3,23 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div class="flex items-center gap-3 flex-wrap">
             <div class="relative">
-                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari SK atau nama guru..."
-                    class="pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-64 text-sm">
-                <svg class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Cari SK atau nama guru"
+                    class="pl-9 pr-3 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-64 text-sm">
+                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
             <select wire:model.live="perPage"
-                class="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                class="px-3 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                 <option value="10">10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
             </select>
             <select wire:model.live="filterStatus"
-                class="px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
-                <option value="">Semua Status</option>
+                class="px-3 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                <option value="">Semua status</option>
                 <option value="draft">Draft</option>
                 <option value="aktif">Aktif</option>
                 <option value="tidak_aktif">Tidak Aktif</option>
@@ -27,9 +27,9 @@
         </div>
         <div class="flex items-center gap-2 flex-wrap">
             <button wire:click="openCreateModal"
-                class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium flex items-center gap-2 transition-colors">
+                class="px-3 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium flex items-center gap-2 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path>
                 </svg>
                 Buat SK GTY
             </button>
@@ -38,20 +38,20 @@
 
     {{-- Flash Messages --}}
     @if (session('success'))
-        <div class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800">
+        <div class="mb-4 p-4 rounded-lg bg-madrasah-50 border border-madrasah-200 text-madrasah-800">
             {{ session('success') }}
         </div>
     @endif
 
     @if (session('error'))
-        <div class="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800">
+        <div class="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800">
             {{ session('error') }}
         </div>
     @endif
 
     {{-- Bulk Action Bar --}}
     @if (count($selected) > 0)
-        <div class="mb-4 p-4 rounded-xl bg-gray-900 text-white flex items-center justify-between gap-4 flex-wrap">
+        <div class="mb-4 p-4 rounded-lg bg-gray-900 text-white flex items-center justify-between gap-4 flex-wrap">
             <span class="text-sm font-medium">{{ count($selected) }} SK dipilih</span>
             <div class="flex items-center gap-2">
                 <button wire:click="clearSelection" type="button"
@@ -62,7 +62,7 @@
                     type="button"
                     class="px-4 py-2 rounded-lg bg-white text-gray-900 hover:bg-gray-100 text-sm font-medium flex items-center gap-2 transition-colors disabled:opacity-60">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
                     <span wire:loading.remove wire:target="bulkDownload">Download PDF (1 file)</span>
@@ -73,7 +73,7 @@
     @endif
 
     {{-- Table --}}
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
                 @php
@@ -82,70 +82,70 @@
                 @endphp
                 <thead class="bg-gray-50 border-b border-gray-200">
                     <tr>
-                        <th class="px-6 py-4 text-left w-12">
+                        <th class="px-4 py-2.5 text-left w-12">
                             <input type="checkbox" wire:click="toggleSelectPage" @checked($pageAllSelected)
                                 @disabled($pageAktifIds === []) title="Pilih semua SK aktif di halaman ini"
                                 aria-label="Pilih semua SK aktif di halaman ini"
                                 class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900 disabled:opacity-40">
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No
+                        <th class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">No
                         </th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
                             Nomor SK</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Nama Guru</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
+                            Nama guru</th>
+                        <th class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
                             Jabatan</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Masa Berlaku</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
+                            Masa berlaku</th>
+                        <th class="px-4 py-2.5 text-left text-xs font-medium text-gray-600">
                             Status</th>
-                        <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        <th class="px-4 py-2.5 text-right text-xs font-medium text-gray-600">
                             Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($skList as $index => $sk)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3">
                                 @if ($sk->status === 'aktif')
                                     <input type="checkbox" wire:model.live="selected" value="{{ $sk->id }}"
                                         aria-label="Pilih SK {{ $sk->nomor_sk }}"
                                         class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900">
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $skList->firstItem() + $index }}</td>
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ $skList->firstItem() + $index }}</td>
+                            <td class="px-4 py-3">
                                 <div class="text-sm font-medium text-gray-900">{{ $sk->nomor_sk }}</div>
                                 <div class="text-xs text-gray-500">{{ $sk->tanggal_sk?->translatedFormat('d M Y') }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3">
                                 <div class="text-sm font-medium text-gray-900">{{ $sk->guru?->full_name_with_title }}
                                 </div>
-                                <div class="text-xs text-gray-500">NUPTK: {{ $sk->nuptk ?? '-' }}</div>
+                                <div class="text-xs text-gray-500 font-mono tabular-nums">NUPTK: {{ $sk->nuptk ?? '-' }}</div>
                             </td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $sk->jabatan ?? '-' }}</td>
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ $sk->jabatan ?? '-' }}</td>
+                            <td class="px-4 py-3">
                                 <div class="text-sm text-gray-900">{{ $sk->berlaku_mulai?->translatedFormat('d M Y') }}
                                 </div>
                                 <div class="text-xs text-gray-500">s/d
                                     {{ $sk->berlaku_sampai?->translatedFormat('d M Y') }}</div>
                             </td>
-                            <td class="px-6 py-4 text-sm">
+                            <td class="px-4 py-3 text-sm">
                                 @if ($sk->status === 'aktif')
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Aktif</span>
+                                        class="inline-flex items-center gap-1.5 text-[13px] text-gray-700 before:h-1.5 before:w-1.5 before:rounded-full before:bg-madrasah-600">Aktif</span>
                                 @elseif($sk->status === 'draft')
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Draft</span>
+                                        class="inline-flex items-center gap-1.5 text-[13px] text-gray-700 before:h-1.5 before:w-1.5 before:rounded-full before:bg-amber-600">Draft</span>
                                 @else
                                     <span
-                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Tidak
+                                        class="inline-flex items-center gap-1.5 text-[13px] text-gray-700 before:h-1.5 before:w-1.5 before:rounded-full before:bg-red-600">Tidak
                                         Aktif</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-4 py-3 text-right">
                                 <div class="flex items-center justify-end gap-2">
                                     @if ($sk->status === 'aktif')
                                         <a href="{{ route('sk-gty-mi.print', $sk->id) }}" target="_blank"
@@ -153,7 +153,7 @@
                                             title="Cetak PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                     d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
                                                 </path>
                                             </svg>
@@ -163,7 +163,7 @@
                                         class="p-2 rounded-lg hover:bg-indigo-50 text-gray-600 hover:text-indigo-600 transition-colors"
                                         title="Copy SK" aria-label="Copy SK {{ $sk->nomor_sk }}">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                 d="M8 7v10a2 2 0 002 2h7m-9-4H6a2 2 0 01-2-2V6a2 2 0 012-2h7a2 2 0 012 2v2m-3 7h7a2 2 0 002-2V8a2 2 0 00-2-2h-7a2 2 0 00-2 2v5a2 2 0 002 2z">
                                             </path>
                                         </svg>
@@ -172,7 +172,7 @@
                                         class="p-2 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition-colors"
                                         title="Edit">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
                                             </path>
                                         </svg>
@@ -181,7 +181,7 @@
                                         class="p-2 rounded-lg hover:bg-red-50 text-gray-600 hover:text-red-600 transition-colors"
                                         title="Hapus">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                             </path>
                                         </svg>
@@ -191,13 +191,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-12 text-center text-gray-500">
-                                <svg class="w-12 h-12 mx-auto text-gray-300 mb-4" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                    </path>
-                                </svg>
+                            <td colspan="8" class="px-4 py-12 text-center text-gray-500">
                                 <p class="text-sm">Belum ada SK GTY</p>
                             </td>
                         </tr>
@@ -217,18 +211,18 @@
     @if ($showModal)
         <template x-teleport="#modal-portal">
             <div class="fixed inset-0 z-[9999] overflow-y-auto">
-                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
+                <div class="fixed inset-0 bg-gray-900/40" wire:click="closeModal"></div>
                 <div class="fixed inset-0 flex items-center justify-center p-4">
-                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
+                    <div class="bg-white rounded-xl shadow-float w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
                         @click.away="$wire.closeModal()">
                         {{-- Header --}}
                         <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                            <h3 class="text-lg font-semibold">{{ $isCopying ? 'Copy SK GTY MI' : ($isEditing ? 'Edit SK GTY' : 'Buat SK GTY Baru') }}
+                            <h3 class="text-lg font-medium">{{ $isCopying ? 'Copy SK GTY MI' : ($isEditing ? 'Edit SK GTY' : 'Buat SK GTY baru') }}
                             </h3>
                             <button wire:click="closeModal"
                                 class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                         d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
@@ -242,11 +236,11 @@
                             <form wire:submit="save" class="space-y-4">
                                 {{-- Pilih Guru --}}
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Guru <span
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih guru <span
                                             class="text-red-500">*</span></label>
                                     @if ($selectedGuru)
                                         <div
-                                            class="flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-200">
+                                            class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
                                             <div>
                                                 <div class="font-medium text-gray-900">{{ $selectedGuru['nama'] }}
                                                 </div>
@@ -259,18 +253,18 @@
                                                 <svg class="w-4 h-4 text-gray-500" fill="none"
                                                     stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                        stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
                                                 </svg>
                                             </button>
                                         </div>
                                     @else
                                         <div class="relative">
                                             <input type="text" wire:model.live.debounce.300ms="searchGuru"
-                                                placeholder="Cari nama guru atau NUPTK..."
-                                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                                placeholder="Cari nama guru atau NUPTK"
+                                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                             @if (count($guruResults) > 0)
                                                 <div
-                                                    class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                                                    class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-float max-h-48 overflow-y-auto">
                                                     @foreach ($guruResults as $guru)
                                                         <button type="button"
                                                             wire:click="selectGuru({{ $guru['id'] }})"
@@ -296,7 +290,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Nomor SK <span
                                                 class="text-red-500">*</span></label>
                                         <input type="text" wire:model="nomor_sk"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                         @error('nomor_sk')
                                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                         @enderror
@@ -306,7 +300,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal SK <span
                                                 class="text-red-500">*</span></label>
                                         <input type="date" wire:model="tanggal_sk"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                         @error('tanggal_sk')
                                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                         @enderror
@@ -314,10 +308,10 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Musyawarah Pengurus Yayasan <span
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal musyawarah pengurus yayasan <span
                                             class="text-red-500">*</span></label>
                                     <input type="date" wire:model="tanggal_musyawarah"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                     @error('tanggal_musyawarah')
                                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
@@ -329,14 +323,14 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Tempat
                                             Lahir</label>
                                         <input type="text" wire:model="tempat_lahir"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                     </div>
                                     {{-- Tanggal Lahir --}}
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal
                                             Lahir</label>
                                         <input type="date" wire:model="tanggal_lahir"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                     </div>
                                 </div>
 
@@ -345,14 +339,14 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">NUPTK</label>
                                         <input type="text" wire:model="nuptk"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                     </div>
                                     {{-- Pendidikan Terakhir --}}
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Pendidikan
                                             Terakhir</label>
                                         <select wire:model="pendidikan_terakhir"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                             <option value="">Pilih</option>
                                             <option value="SMA/SMK">SMA/SMK</option>
                                             <option value="D1">D1</option>
@@ -371,26 +365,26 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan</label>
                                     <input type="text" wire:model="jabatan"
                                         placeholder="contoh: INSTRUKTUR, GURU, dll"
-                                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-4">
                                     {{-- Berlaku Mulai --}}
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Berlaku Mulai <span
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Berlaku mulai <span
                                                 class="text-red-500">*</span></label>
                                         <input type="date" wire:model="berlaku_mulai"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                         @error('berlaku_mulai')
                                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     {{-- Berlaku Sampai --}}
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Berlaku Sampai
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Berlaku sampai
                                             <span class="text-red-500">*</span></label>
                                         <input type="date" wire:model="berlaku_sampai"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                         @error('berlaku_sampai')
                                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                         @enderror
@@ -403,10 +397,10 @@
                                 <div class="grid grid-cols-2 gap-4">
                                     {{-- Nama Penandatangan --}}
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Penandatangan
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama penandatangan
                                             <span class="text-red-500">*</span></label>
                                         <input type="text" wire:model="penandatangan_nama"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                         @error('penandatangan_nama')
                                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                         @enderror
@@ -416,7 +410,7 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan
                                             Penandatangan</label>
                                         <input type="text" wire:model="penandatangan_jabatan"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                     </div>
                                 </div>
 
@@ -426,14 +420,14 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Tempat
                                             Penetapan</label>
                                         <input type="text" wire:model="tempat_penetapan"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                     </div>
                                     {{-- Tanggal Penetapan --}}
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Penetapan
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal penetapan
                                             <span class="text-red-500">*</span></label>
                                         <input type="date" wire:model="tanggal_penetapan"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                         @error('tanggal_penetapan')
                                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                         @enderror
@@ -444,10 +438,10 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                                     @if ($isCopying)
-                                        <div class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700">Draft</div>
+                                        <div class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-700">Draft</div>
                                     @else
                                         <select wire:model="status"
-                                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                             <option value="draft">Draft</option>
                                             <option value="aktif">Aktif</option>
                                             <option value="tidak_aktif">Tidak Aktif</option>
@@ -460,11 +454,11 @@
                         {{-- Footer --}}
                         <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
                             <button type="button" wire:click="closeModal"
-                                class="px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
+                                class="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
                                 Batal
                             </button>
                             <button type="button" wire:click="save"
-                                class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
+                                class="px-3 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
                                 {{ $isCopying ? 'Simpan sebagai SK Baru' : ($isEditing ? 'Perbarui' : 'Simpan') }}
                             </button>
                         </div>
@@ -478,29 +472,29 @@
     @if ($showDeleteModal)
         <template x-teleport="#modal-portal">
             <div class="fixed inset-0 z-[9999] overflow-y-auto">
-                <div class="fixed inset-0 bg-black/60 backdrop-blur-sm" wire:click="closeModal"></div>
+                <div class="fixed inset-0 bg-gray-900/40" wire:click="closeModal"></div>
                 <div class="fixed inset-0 flex items-center justify-center p-4">
-                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+                    <div class="bg-white rounded-xl shadow-float w-full max-w-md p-6">
                         <div class="text-center">
                             <div
-                                class="w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor"
+                                class="w-10 h-10 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
                                     </path>
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Hapus SK GTY</h3>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Hapus SK GTY</h3>
                             <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus SK GTY ini? Tindakan ini
                                 tidak dapat dibatalkan.</p>
                             <div class="flex gap-3 justify-center">
                                 <button wire:click="closeModal"
-                                    class="px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
+                                    class="px-3 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
                                     Batal
                                 </button>
                                 <button wire:click="delete"
-                                    class="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors">
+                                    class="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors">
                                     Hapus
                                 </button>
                             </div>

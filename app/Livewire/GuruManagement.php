@@ -351,6 +351,6 @@ class GuruManagement extends Component
 
         return view('livewire.guru-management', [
             'gurus' => $gurus,
-        ])->layout('layouts.admin', ['header' => 'Data Guru']);
+        ])->layout('layouts.admin', ['header' => 'Data guru']);
     }
 }

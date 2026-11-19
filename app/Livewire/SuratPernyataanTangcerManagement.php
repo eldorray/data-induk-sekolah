@@ -247,6 +247,6 @@ class SuratPernyataanTangcerManagement extends Component
             'siswas' => $siswas,
             'riwayat' => $riwayat,
             'tahunAnggaranOptions' => $tahunAnggaranOptions,
-        ])->layout('layouts.admin', ['header' => 'Surat Pernyataan TANGCER']);
+        ])->layout('layouts.admin', ['header' => 'Surat pernyataan TANGCER']);
     }
 }

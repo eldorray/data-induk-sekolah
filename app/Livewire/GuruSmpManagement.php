@@ -351,6 +351,6 @@ class GuruSmpManagement extends Component
 
         return view('livewire.guru-smp-management', [
             'gurus' => $gurus,
-        ])->layout('layouts.admin', ['header' => 'Data Guru SMP']);
+        ])->layout('layouts.admin', ['header' => 'Data guru SMP']);
     }
 }

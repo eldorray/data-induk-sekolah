@@ -393,6 +393,6 @@ class SkGtyMiManagement extends Component
 
         return view('livewire.sk-gty-mi-management', [
             'skList' => $skList,
-        ])->layout('layouts.admin', ['header' => 'SK Guru Tetap Yayasan (GTY) MI']);
+        ])->layout('layouts.admin', ['header' => 'SK guru tetap yayasan (GTY) MI']);
     }
 }

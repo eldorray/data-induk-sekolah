@@ -196,6 +196,6 @@ class SuratPernyataanInsentifManagement extends Component
             'gurus' => $gurus,
             'riwayat' => $riwayat,
             'bulanTahunOptions' => $bulanTahunOptions,
-        ])->layout('layouts.admin', ['header' => 'Surat Pernyataan Insentif']);
+        ])->layout('layouts.admin', ['header' => 'Surat pernyataan insentif']);
     }
 }

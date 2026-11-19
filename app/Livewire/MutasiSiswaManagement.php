@@ -309,6 +309,6 @@ class MutasiSiswaManagement extends Component
 
         return view('livewire.mutasi-siswa-management', [
             'mutasis' => $mutasis,
-        ])->layout('layouts.admin', ['header' => 'Mutasi Siswa']);
+        ])->layout('layouts.admin', ['header' => 'Mutasi siswa']);
     }
 }

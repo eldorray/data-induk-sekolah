@@ -126,6 +126,6 @@ class LicenseManagement extends Component
 
         return view('livewire.license-management', [
             'licenses' => $licenses,
-        ])->layout('layouts.admin', ['header' => 'Manajemen Lisensi']);
+        ])->layout('layouts.admin', ['header' => 'Manajemen lisensi']);
     }
 }

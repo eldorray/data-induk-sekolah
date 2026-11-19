@@ -263,6 +263,6 @@ class MapelSmpManagement extends Component
 
         return view('livewire.mapel-smp-management', [
             'mapels' => $mapels,
-        ])->layout('layouts.admin', ['header' => 'Data Mata Pelajaran SMP']);
+        ])->layout('layouts.admin', ['header' => 'Data mata pelajaran SMP']);
     }
 }

@@ -62,16 +62,16 @@
             <a href="{{ route('surat-universal.index') }}" wire:navigate
                 class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path>
                 </svg>
                 Kembali ke daftar surat
             </a>
             <div class="flex gap-3">
                 <a href="{{ route('surat-universal.index') }}" wire:navigate
-                    class="px-4 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">Batal</a>
+                    class="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium transition-colors">Batal</a>
                 <button type="submit"
-                    class="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
-                    {{ $isEditing ? 'Simpan Perubahan' : 'Simpan' }}
+                    class="px-3 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
+                    {{ $isEditing ? 'Simpan perubahan' : 'Simpan' }}
                 </button>
             </div>
         </div>
@@ -79,18 +79,18 @@
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
             {{-- Kolom kiri: field + editor --}}
             <div class="space-y-4">
-                <div class="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">
+                <div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Surat <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Jenis surat <span class="text-red-500">*</span></label>
                             <input type="text" wire:model="jenis" placeholder="Contoh: Surat Tugas, Surat Izin"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                             @error('jenis') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jenjang <span class="text-red-500">*</span></label>
                             <select wire:model="jenjang"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                                 @foreach ($jenjangOptions as $opt)
                                     <option value="{{ $opt }}">{{ $opt }}</option>
                                 @endforeach
@@ -100,23 +100,23 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul Surat <span class="text-red-500">*</span></label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Judul surat <span class="text-red-500">*</span></label>
                         <input type="text" wire:model="judul" placeholder="Contoh: SURAT KETERANGAN"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         @error('judul') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor surat <span class="text-red-500">*</span></label>
                             <input type="text" wire:model="nomor_surat"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                             @error('nomor_surat') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Surat <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal surat <span class="text-red-500">*</span></label>
                             <input type="date" wire:model="tanggal_surat"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                             @error('tanggal_surat') <p class="mt-1 text-sm text-red-500">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -139,12 +139,12 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tempat</label>
                             <input type="text" wire:model="tempat" placeholder="Kota/Kabupaten"
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Teks di atas TTD (opsional)</label>
                             <input type="text" wire:model="ttd_atas" placeholder='Contoh: Mengetahui,'
-                                class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
+                                class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent text-sm">
                         </div>
                     </div>
 
@@ -154,18 +154,18 @@
                             <label class="block text-sm font-medium text-gray-700">Penandatangan</label>
                             <button type="button" wire:click="addSigner"
                                 class="inline-flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 font-medium">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"></path></svg>
                                 Tambah
                             </button>
                         </div>
                         <div class="space-y-3">
                             @foreach ($signers as $i => $signer)
-                                <div wire:key="signer-{{ $i }}" class="rounded-xl border border-gray-200 p-3 bg-gray-50/50">
+                                <div wire:key="signer-{{ $i }}" class="rounded-lg border border-gray-200 p-3 bg-gray-50/50">
                                     <div class="flex items-center justify-between mb-2">
                                         <span class="text-xs font-medium text-gray-500">Penandatangan {{ $i + 1 }}</span>
                                         @if (count($signers) > 1)
                                             <button type="button" wire:click="removeSigner({{ $i }})" class="text-gray-400 hover:text-red-600" title="Hapus">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </button>
                                         @endif
                                     </div>
@@ -185,8 +185,8 @@
                 </div>
 
                 {{-- Editor --}}
-                <div class="bg-white rounded-2xl border border-gray-200 p-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Isi Surat <span class="text-red-500">*</span></label>
+                <div class="bg-white rounded-xl border border-gray-200 p-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Isi surat <span class="text-red-500">*</span></label>
                     <div wire:ignore x-init="
                         if (tinymce.get('su-editor')) tinymce.remove('#su-editor');
                         tinymce.init({
@@ -218,7 +218,7 @@
             {{-- Kolom kanan: live preview --}}
             <div class="xl:sticky xl:top-6 self-start w-full">
                 <div class="text-xs font-medium text-gray-500 mb-2">Pratinjau (tampilan print)</div>
-                <div class="bg-white rounded-2xl border border-gray-200 overflow-y-auto max-h-[80vh]">
+                <div class="bg-white rounded-xl border border-gray-200 overflow-y-auto max-h-[80vh]">
                     <div class="surat-preview">
                         <div class="sp-kop">
                             @if ($kopFile)

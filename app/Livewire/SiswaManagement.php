@@ -296,6 +296,6 @@ class SiswaManagement extends Component
 
         return view('livewire.siswa-management', [
             'siswas' => $siswas,
-        ])->layout('layouts.admin', ['header' => 'Data Siswa']);
+        ])->layout('layouts.admin', ['header' => 'Data siswa']);
     }
 }

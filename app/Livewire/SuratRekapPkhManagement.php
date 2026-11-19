@@ -313,6 +313,6 @@ class SuratRekapPkhManagement extends Component
 
         return view('livewire.surat-rekap-pkh-management', [
             'surats' => $surats,
-        ])->layout('layouts.admin', ['header' => 'Surat Rekap PKH']);
+        ])->layout('layouts.admin', ['header' => 'Surat rekap PKH']);
     }
 }

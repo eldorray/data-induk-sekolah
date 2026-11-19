@@ -263,7 +263,7 @@ class MapelMiManagement extends Component
 
         return view('livewire.mapel-mi-management', [
             'mapels' => $mapels,
-        ])->layout('layouts.admin', ['header' => 'Data Mata Pelajaran MI']);
+        ])->layout('layouts.admin', ['header' => 'Data mata pelajaran MI']);
     }
 }
 

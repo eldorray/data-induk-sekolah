@@ -390,6 +390,6 @@ class SkPembagianTugasMiManagement extends Component
             'detailSk' => $detailSk,
             'jabatanOptions' => self::getJabatanOptions(),
             'jenisGuruOptions' => self::getJenisGuruOptions(),
-        ])->layout('layouts.admin', ['header' => 'SK Pembagian Tugas Mengajar MI']);
+        ])->layout('layouts.admin', ['header' => 'SK pembagian tugas mengajar MI']);
     }
 }

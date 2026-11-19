@@ -234,6 +234,6 @@ class SuratKeteranganAktifManagement extends Component
 
         return view('livewire.surat-keterangan-aktif-management', [
             'surats' => $surats,
-        ])->layout('layouts.admin', ['header' => 'Surat Keterangan Aktif']);
+        ])->layout('layouts.admin', ['header' => 'Surat keterangan aktif']);
     }
 }

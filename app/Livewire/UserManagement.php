@@ -9,7 +9,7 @@ use Livewire\Attributes\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.admin', ['header' => 'Manajemen User'])]
+#[Layout('layouts.admin', ['header' => 'Manajemen user'])]
 class UserManagement extends Component
 {
     use WithPagination;

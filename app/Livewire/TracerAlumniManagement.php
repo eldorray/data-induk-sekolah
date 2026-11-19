@@ -200,6 +200,6 @@ class TracerAlumniManagement extends Component
             'statusDistribution' => $statusDistribution,
             'avgKepuasan' => $avgKepuasan,
             'tahunLulusOptions' => $tahunLulusOptions,
-        ])->layout('layouts.admin', ['header' => 'Tracer Alumni']);
+        ])->layout('layouts.admin', ['header' => 'Tracer alumni']);
     }
 }

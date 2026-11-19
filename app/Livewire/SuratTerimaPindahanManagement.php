@@ -215,6 +215,6 @@ class SuratTerimaPindahanManagement extends Component
         return view('livewire.surat-terima-pindahan-management', [
             'surats' => $surats,
             'disetujuiSurats' => $disetujuiSurats,
-        ])->layout('layouts.admin', ['header' => 'Surat Menerima Siswa Pindahan']);
+        ])->layout('layouts.admin', ['header' => 'Surat menerima siswa pindahan']);
     }
 }

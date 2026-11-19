@@ -116,7 +116,7 @@ class ValidasiDataSiswaManagementTest extends TestCase
 
         Livewire::actingAs($admin)
             ->test(ValidasiDataSiswaManagement::class)
-            ->assertSee('Riwayat Unduhan')
+            ->assertSee('Riwayat unduhan')
             ->assertSee('Bu Siti')
             ->assertSee('203.0.113.9');
     }

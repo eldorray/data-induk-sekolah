@@ -120,6 +120,6 @@ class SyaratPindahanManagement extends Component
 
         return view('livewire.syarat-pindahan-management', [
             'syarats' => $syarats,
-        ])->layout('layouts.admin', ['header' => 'Manajemen Syarat Pindahan']);
+        ])->layout('layouts.admin', ['header' => 'Manajemen syarat pindahan']);
     }
 }

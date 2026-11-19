@@ -4,18 +4,18 @@
         <nav class="flex items-center gap-2 text-sm text-gray-500 mb-3">
             <a href="{{ route('nilai-ijazah.index') }}" wire:navigate class="hover:text-gray-900">Nilai Ijazah Kelas 6</a>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path>
             </svg>
             <span class="text-gray-900 font-medium">{{ $tahunAjaran->nama_tahun_ajaran }}</span>
         </nav>
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-                <h2 class="text-xl font-semibold text-gray-900">Tahun Ajaran {{ $tahunAjaran->nama_tahun_ajaran }}</h2>
+                <h2 class="text-xl font-medium text-gray-900">Tahun Ajaran {{ $tahunAjaran->nama_tahun_ajaran }}</h2>
                 <p class="text-sm text-gray-500">
                     Status:
                     @if ($tahunAjaran->status)
                         <span
-                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Aktif</span>
+                            class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-madrasah-100 text-madrasah-800">Aktif</span>
                     @else
                         <span
                             class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">Nonaktif</span>
@@ -26,9 +26,9 @@
                 </p>
             </div>
             <a href="{{ route('nilai-ijazah.index') }}" wire:navigate
-                class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-gray-100">
+                class="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path>
                 </svg>
                 Kembali
             </a>
@@ -37,12 +37,12 @@
 
     {{-- Flash Messages --}}
     @if (session('success'))
-        <div class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800">
+        <div class="mb-4 p-4 rounded-lg bg-madrasah-50 border border-madrasah-200 text-madrasah-800">
             {{ session('success') }}
         </div>
     @endif
     @if (session('error'))
-        <div class="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-red-800">
+        <div class="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800">
             {{ session('error') }}
         </div>
     @endif
@@ -72,7 +72,7 @@
         <div class="flex flex-wrap items-center gap-2 mb-4">
             @foreach ($semesterOptions as $key => $label)
                 <button type="button" wire:click="selectSemester('{{ $key }}')"
-                    class="px-4 py-2 rounded-xl text-sm font-medium border transition-colors
+                    class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors
                         {{ $semesterTab === $key
                             ? 'bg-gray-900 text-white border-gray-900'
                             : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50' }}">
@@ -84,11 +84,11 @@
         {{-- Toolbar search --}}
         <div class="flex flex-col sm:flex-row justify-between gap-3 mb-4">
             <div class="relative">
-                <input type="text" wire:model.live.debounce.300ms="searchSiswa" placeholder="Cari nama/NISN siswa..."
-                    class="pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-72 text-sm">
+                <input type="text" wire:model.live.debounce.300ms="searchSiswa" placeholder="Cari nama/NISN siswa"
+                    class="pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-72 text-sm">
                 <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
@@ -99,22 +99,22 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm border-collapse">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase sticky left-0 bg-gray-50 z-10">
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 sticky left-0 bg-gray-50 z-10">
                                 No</th>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase sticky left-10 bg-gray-50 z-10">
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 sticky left-10 bg-gray-50 z-10">
                                 NISN</th>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase min-w-[200px] sticky left-36 bg-gray-50 z-10">
-                                Nama Siswa</th>
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 min-w-[200px] sticky left-36 bg-gray-50 z-10">
+                                Nama siswa</th>
                             @foreach ($mapels as $mapel)
-                                <th class="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase whitespace-nowrap min-w-[80px]"
+                                <th class="px-2 py-3 text-center text-xs font-medium text-gray-600 whitespace-nowrap min-w-[80px]"
                                     title="{{ $mapel->nama_mapel }}">
                                     {{ $mapel->short_name }}
                                 </th>
@@ -141,7 +141,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ 3 + $mapels->count() }}" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="{{ 3 + $mapels->count() }}" class="px-4 py-12 text-center text-gray-500">
                                     Tidak ada siswa kelas 6 aktif ditemukan.
                                 </td>
                             </tr>
@@ -160,7 +160,7 @@
                         untuk melihat nama mapel lengkap.
                     </div>
                     <button wire:click="saveRaport" wire:loading.attr="disabled"
-                        class="px-4 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium disabled:opacity-60 whitespace-nowrap">
+                        class="px-4 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium disabled:opacity-60 whitespace-nowrap">
                         <span wire:loading.remove wire:target="saveRaport">Simpan
                             {{ $semesterOptions[$semesterTab] ?? '' }}</span>
                         <span wire:loading wire:target="saveRaport">Menyimpan...</span>
@@ -171,10 +171,10 @@
 
         {{-- Ringkasan kelengkapan per siswa --}}
         @if ($siswas->count() > 0 && $mapels->count() > 0)
-            <div class="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-sm">
+            <div class="mt-4 p-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-sm">
                 <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <div>
@@ -191,11 +191,11 @@
         {{-- Toolbar search --}}
         <div class="flex flex-col sm:flex-row justify-between gap-3 mb-4">
             <div class="relative">
-                <input type="text" wire:model.live.debounce.300ms="searchSiswa" placeholder="Cari nama/NISN siswa..."
-                    class="pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-72 text-sm">
+                <input type="text" wire:model.live.debounce.300ms="searchSiswa" placeholder="Cari nama/NISN siswa"
+                    class="pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-72 text-sm">
                 <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
@@ -204,22 +204,22 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm border-collapse">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase sticky left-0 bg-gray-50 z-10">
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 sticky left-0 bg-gray-50 z-10">
                                 No</th>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase sticky left-10 bg-gray-50 z-10">
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 sticky left-10 bg-gray-50 z-10">
                                 NISN</th>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase min-w-[200px] sticky left-36 bg-gray-50 z-10">
-                                Nama Siswa</th>
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 min-w-[200px] sticky left-36 bg-gray-50 z-10">
+                                Nama siswa</th>
                             @foreach ($mapels as $mapel)
-                                <th class="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase whitespace-nowrap min-w-[80px]"
+                                <th class="px-2 py-3 text-center text-xs font-medium text-gray-600 whitespace-nowrap min-w-[80px]"
                                     title="{{ $mapel->nama_mapel }}">
                                     {{ $mapel->short_name }}
                                 </th>
@@ -247,7 +247,7 @@
                         @empty
                             <tr>
                                 <td colspan="{{ 3 + $mapels->count() }}"
-                                    class="px-6 py-12 text-center text-gray-500">
+                                    class="px-4 py-12 text-center text-gray-500">
                                     Tidak ada siswa kelas 6 aktif ditemukan.
                                 </td>
                             </tr>
@@ -261,8 +261,8 @@
                     <div class="text-xs text-gray-500">Nilai UM: 0 - 100, boleh desimal. Kosongkan jika belum ada
                         nilai.</div>
                     <button wire:click="saveUm" wire:loading.attr="disabled"
-                        class="px-4 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium disabled:opacity-60 whitespace-nowrap">
-                        <span wire:loading.remove wire:target="saveUm">Simpan Nilai UM</span>
+                        class="px-4 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium disabled:opacity-60 whitespace-nowrap">
+                        <span wire:loading.remove wire:target="saveUm">Simpan nilai UM</span>
                         <span wire:loading wire:target="saveUm">Menyimpan...</span>
                     </button>
                 </div>
@@ -279,11 +279,11 @@
         <div class="flex flex-col sm:flex-row justify-between gap-3 mb-4">
             <div class="relative">
                 <input type="text" wire:model.live.debounce.300ms="searchSiswa"
-                    placeholder="Cari nama/NISN siswa..."
-                    class="pl-10 pr-4 py-2 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-72 text-sm">
+                    placeholder="Cari nama/NISN siswa"
+                    class="pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent w-72 text-sm">
                 <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
@@ -292,18 +292,18 @@
                     Nilai Akhir = (Raport &times; 70%) + (UM &times; 30%)
                 </div>
                 <a href="{{ route('nilai-ijazah.print-rekap', $tahunAjaran->id) }}" target="_blank"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors whitespace-nowrap">
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors whitespace-nowrap">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
                         </path>
                     </svg>
                     Print PDF
                 </a>
                 <a href="{{ route('nilai-ijazah.export-rekap', $tahunAjaran->id) }}"
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors whitespace-nowrap">
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-madrasah-600 hover:bg-madrasah-700 text-white text-sm font-medium transition-colors whitespace-nowrap">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                             d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"></path>
                     </svg>
                     Download Excel
@@ -311,37 +311,37 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm border-collapse">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase sticky left-0 bg-gray-50 z-10">
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 sticky left-0 bg-gray-50 z-10">
                                 No</th>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase sticky left-10 bg-gray-50 z-10">
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 sticky left-10 bg-gray-50 z-10">
                                 NISN</th>
                             <th
-                                class="px-3 py-3 text-left text-xs font-semibold text-gray-600 uppercase min-w-[200px] sticky left-36 bg-gray-50 z-10">
-                                Nama Siswa</th>
+                                class="px-3 py-3 text-left text-xs font-medium text-gray-600 min-w-[200px] sticky left-36 bg-gray-50 z-10">
+                                Nama siswa</th>
                             @foreach ($mapels as $mapel)
-                                <th class="px-2 py-3 text-center text-xs font-semibold text-gray-600 uppercase whitespace-nowrap min-w-[90px]"
+                                <th class="px-2 py-3 text-center text-xs font-medium text-gray-600 whitespace-nowrap min-w-[90px]"
                                     title="{{ $mapel->nama_mapel }} — Nilai Akhir Ijazah">
                                     {{ $mapel->short_name }}
                                 </th>
                             @endforeach
                             <th
-                                class="px-2 py-3 text-center text-xs font-semibold text-blue-700 uppercase whitespace-nowrap min-w-[100px] bg-blue-50">
-                                Rata-rata Raport
+                                class="px-2 py-3 text-center text-xs font-medium text-blue-700 whitespace-nowrap min-w-[100px] bg-blue-50">
+                                Rata-rata raport
                             </th>
                             <th
-                                class="px-2 py-3 text-center text-xs font-semibold text-purple-700 uppercase whitespace-nowrap min-w-[90px] bg-purple-50">
+                                class="px-2 py-3 text-center text-xs font-medium text-gray-700 whitespace-nowrap min-w-[90px] bg-gray-50">
                                 Rata-rata UM
                             </th>
                             <th
-                                class="px-2 py-3 text-center text-xs font-semibold text-green-800 uppercase whitespace-nowrap min-w-[110px] bg-green-50">
-                                Rata-rata Akhir
+                                class="px-2 py-3 text-center text-xs font-medium text-madrasah-800 whitespace-nowrap min-w-[110px] bg-madrasah-50">
+                                Rata-rata akhir
                             </th>
                         </tr>
                     </thead>
@@ -399,11 +399,11 @@
                                         title="{{ $mapel->nama_mapel }} — Raport: {{ $rata !== null ? number_format($rata, 2) : '-' }}, UM: {{ $um !== null ? number_format($um, 2) : '-' }}">
                                         @if ($rata !== null)
                                             <span
-                                                class="inline-block px-2 py-1 rounded bg-blue-50 font-semibold text-blue-900">
+                                                class="inline-block px-2 py-1 rounded bg-blue-50 font-medium text-blue-900">
                                                 {{ number_format($rata, 2) }}
                                             </span>
                                         @else
-                                            <span class="text-xs text-gray-400 italic">-</span>
+                                            <span class="text-xs text-gray-400">-</span>
                                         @endif
                                     </td>
                                 @endforeach
@@ -412,42 +412,42 @@
                                 <td class="px-2 py-2 text-center bg-blue-50">
                                     @if ($countRaport > 0)
                                         <span
-                                            class="font-semibold text-blue-900">{{ number_format($sumRaport / $countRaport, 2) }}</span>
+                                            class="font-medium text-blue-900">{{ number_format($sumRaport / $countRaport, 2) }}</span>
                                         <div class="text-[10px] text-blue-700">
                                             {{ $countRaport }}/{{ $mapels->count() }} mapel</div>
                                     @else
-                                        <span class="text-xs text-gray-400 italic">-</span>
+                                        <span class="text-xs text-gray-400">-</span>
                                     @endif
                                 </td>
 
                                 {{-- Rata-rata UM (rata-rata dari nilai UM tiap mapel yang terisi) --}}
-                                <td class="px-2 py-2 text-center bg-purple-50">
+                                <td class="px-2 py-2 text-center bg-gray-50">
                                     @if ($countUm > 0)
                                         <span
-                                            class="font-semibold text-purple-900">{{ number_format($sumUm / $countUm, 2) }}</span>
-                                        <div class="text-[10px] text-purple-700">
+                                            class="font-medium text-gray-900">{{ number_format($sumUm / $countUm, 2) }}</span>
+                                        <div class="text-[10px] text-gray-700">
                                             {{ $countUm }}/{{ $mapels->count() }} mapel</div>
                                     @else
-                                        <span class="text-xs text-gray-400 italic">-</span>
+                                        <span class="text-xs text-gray-400">-</span>
                                     @endif
                                 </td>
 
                                 {{-- Rata-rata Akhir (rata-rata dari nilai akhir 70% raport + 30% UM tiap mapel yang lengkap) --}}
-                                <td class="px-2 py-2 text-center bg-green-50">
+                                <td class="px-2 py-2 text-center bg-madrasah-50">
                                     @if ($countFinal > 0)
                                         <span
-                                            class="font-semibold text-green-900">{{ number_format($sumFinal / $countFinal, 2) }}</span>
-                                        <div class="text-[10px] text-green-700">
+                                            class="font-medium text-madrasah-900">{{ number_format($sumFinal / $countFinal, 2) }}</span>
+                                        <div class="text-[10px] text-madrasah-700">
                                             {{ $countFinal }}/{{ $mapels->count() }} mapel</div>
                                     @else
-                                        <span class="text-xs text-gray-400 italic">-</span>
+                                        <span class="text-xs text-gray-400">-</span>
                                     @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
                                 <td colspan="{{ 6 + $mapels->count() }}"
-                                    class="px-6 py-12 text-center text-gray-500">
+                                    class="px-4 py-12 text-center text-gray-500">
                                     Tidak ada siswa kelas 6 aktif ditemukan.
                                 </td>
                             </tr>
@@ -461,17 +461,17 @@
                     <div>Tabel read-only. Nilai di setiap sel mapel = <strong>(Rata-rata Raport × 70%) + (Nilai UM ×
                             30%)</strong>.</div>
                     <div>
-                        <span class="inline-block px-1.5 rounded bg-blue-50 text-blue-800 font-semibold">Rata-rata
+                        <span class="inline-block px-1.5 rounded bg-blue-50 text-blue-800 font-medium">Rata-rata
                             Raport</span>
                         = rata-rata dari rata-rata raport tiap mapel yang komponennya lengkap (belum pakai bobot).
                     </div>
                     <div>
-                        <span class="inline-block px-1.5 rounded bg-purple-50 text-purple-800 font-semibold">Rata-rata
+                        <span class="inline-block px-1.5 rounded bg-gray-50 text-gray-800 font-medium">Rata-rata
                             UM</span>
                         = rata-rata nilai UM tiap mapel yang sudah terisi.
                     </div>
                     <div>
-                        <span class="inline-block px-1.5 rounded bg-green-50 text-green-800 font-semibold">Rata-rata
+                        <span class="inline-block px-1.5 rounded bg-madrasah-50 text-madrasah-800 font-medium">Rata-rata
                             Akhir</span>
                         = rata-rata dari nilai akhir tiap mapel yang sudah lengkap (sudah termasuk bobot 70%/30%).
                     </div>
@@ -484,28 +484,28 @@
     @if ($tab === 'cetak')
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {{-- Card: Cetak Cover Depan --}}
-            <div class="bg-white rounded-2xl border border-gray-200 p-6">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-11 h-11 rounded-xl bg-amber-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-amber-700" fill="none" stroke="currentColor"
+                    <div class="w-11 h-11 rounded-lg bg-amber-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-amber-700" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                             </path>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900">Cetak Cover Depan Ijazah (Dummy)</h3>
+                        <h3 class="font-medium text-gray-900">Cetak cover depan ijazah (dummy)</h3>
                         <p class="text-sm text-gray-500">Cover bertanda "DOKUMEN DUMMY - BUKAN IJAZAH RESMI".</p>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <a href="{{ route('nilai-ijazah.print-cover', $tahunAjaran->id) }}" target="_blank"
-                        class="flex items-center justify-between px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-sm text-gray-900">
+                        class="flex items-center justify-between px-4 py-3 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-gray-900">
                         <span class="font-medium">Cetak untuk Semua Siswa</span>
                         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
                             </path>
                         </svg>
@@ -514,27 +514,27 @@
             </div>
 
             {{-- Card: Cetak Nilai --}}
-            <div class="bg-white rounded-2xl border border-gray-200 p-6">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <div class="w-11 h-11 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M9 17v-6h6v6m-3 0h.01M4 6a2 2 0 012-2h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6z">
                             </path>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900">Cetak Nilai Ijazah</h3>
+                        <h3 class="font-medium text-gray-900">Cetak nilai ijazah</h3>
                         <p class="text-sm text-gray-500">Nilai Ijazah = 70% Rata-rata Raport + 30% UM.</p>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <a href="{{ route('nilai-ijazah.print-nilai', $tahunAjaran->id) }}" target="_blank"
-                        class="flex items-center justify-between px-4 py-3 rounded-xl bg-gray-50 hover:bg-gray-100 text-sm text-gray-900">
+                        class="flex items-center justify-between px-4 py-3 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-gray-900">
                         <span class="font-medium">Cetak untuk Semua Siswa</span>
                         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                 d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
                             </path>
                         </svg>
@@ -543,19 +543,19 @@
             </div>
 
             {{-- Cetak per siswa --}}
-            <div class="bg-white rounded-2xl border border-gray-200 p-6 lg:col-span-2">
-                <h3 class="font-semibold text-gray-900 mb-3">Cetak Per Siswa</h3>
+            <div class="bg-white rounded-xl border border-gray-200 p-6 lg:col-span-2">
+                <h3 class="font-medium text-gray-900 mb-3">Cetak per siswa</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600 uppercase">No</th>
-                                <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600 uppercase">NISN</th>
-                                <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Nama
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-600">No</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-600">NISN</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-600">Nama
                                     Siswa</th>
-                                <th class="px-3 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Kelas
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-600">Kelas
                                 </th>
-                                <th class="px-3 py-2 text-right text-xs font-semibold text-gray-600 uppercase">Aksi
+                                <th class="px-3 py-2 text-right text-xs font-medium text-gray-600">Aksi
                                 </th>
                             </tr>
                         </thead>
@@ -563,7 +563,7 @@
                             @forelse ($siswas as $idx => $siswa)
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-3 py-2 text-gray-600">{{ $idx + 1 }}</td>
-                                    <td class="px-3 py-2 text-gray-600 font-mono text-xs">{{ $siswa->nisn ?: '-' }}
+                                    <td class="px-3 py-2 text-gray-600 font-mono text-xs font-mono text-[13px] tabular-nums">{{ $siswa->nisn ?: '-' }}
                                     </td>
                                     <td class="px-3 py-2 text-gray-900">{{ $siswa->nama_lengkap }}</td>
                                     <td class="px-3 py-2 text-gray-700">{{ $siswa->tingkat_rombel ?: '-' }}</td>
@@ -572,12 +572,12 @@
                                             <a href="{{ route('nilai-ijazah.print-cover', ['tahunAjaran' => $tahunAjaran->id, 'siswa' => $siswa->id]) }}"
                                                 target="_blank"
                                                 class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-medium">
-                                                Cetak Cover
+                                                Cetak cover
                                             </a>
                                             <a href="{{ route('nilai-ijazah.print-nilai', ['tahunAjaran' => $tahunAjaran->id, 'siswa' => $siswa->id]) }}"
                                                 target="_blank"
                                                 class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-medium">
-                                                Cetak Nilai
+                                                Cetak nilai
                                             </a>
                                         </div>
                                     </td>
