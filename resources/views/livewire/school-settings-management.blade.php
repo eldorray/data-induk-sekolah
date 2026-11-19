@@ -1,25 +1,25 @@
 <div class="animate-fade-up">
     {{-- Flash Messages --}}
     @if (session('success'))
-        <div class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800">
+        <div class="mb-4 p-4 rounded-lg bg-madrasah-50 border border-madrasah-200 text-madrasah-800">
             {{ session('success') }}
         </div>
     @endif
 
     <form wire:submit="save" class="space-y-6">
         {{-- Logo Aplikasi & Favicon --}}
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Logo & Favicon Aplikasi</h3>
+                <h3 class="text-lg font-medium text-gray-900">Logo & favicon aplikasi</h3>
                 <p class="text-sm text-gray-500 mt-1">Logo akan tampil di halaman login, welcome, sidebar admin, dan
                     form publik. Favicon tampil di tab browser.</p>
             </div>
             <div class="px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {{-- Logo Aplikasi --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Aplikasi</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo aplikasi</label>
                     @if ($current_app_logo)
-                        <div class="mb-3 p-3 bg-gray-50 rounded-xl border">
+                        <div class="mb-3 p-3 bg-gray-50 rounded-lg border">
                             <div class="flex items-center justify-between gap-3">
                                 <img src="{{ asset('storage/' . $current_app_logo) }}" alt="Logo Aplikasi"
                                     class="max-h-20 max-w-[160px] object-contain">
@@ -29,7 +29,7 @@
                         </div>
                     @endif
                     <input type="file" wire:model="app_logo" accept="image/*"
-                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     @error('app_logo')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -40,7 +40,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Favicon</label>
                     @if ($current_favicon)
-                        <div class="mb-3 p-3 bg-gray-50 rounded-xl border">
+                        <div class="mb-3 p-3 bg-gray-50 rounded-lg border">
                             <div class="flex items-center justify-between gap-3">
                                 <img src="{{ asset('storage/' . $current_favicon) }}" alt="Favicon"
                                     class="max-h-12 max-w-12 object-contain">
@@ -50,7 +50,7 @@
                         </div>
                     @endif
                     <input type="file" wire:model="favicon" accept=".ico,.png,.svg,.jpg,.jpeg"
-                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     @error('favicon')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -60,18 +60,18 @@
         </div>
 
         {{-- KOP Surat Section --}}
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">KOP Surat & Stempel</h3>
+                <h3 class="text-lg font-medium text-gray-900">KOP surat & stempel</h3>
                 <p class="text-sm text-gray-500 mt-1">Upload gambar KOP surat, stempel, dan tanda tangan kepala sekolah
                     untuk surat mutasi.</p>
             </div>
             <div class="px-6 py-4 space-y-4">
                 {{-- KOP Surat --}}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">KOP Surat (Header)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">KOP surat (header)</label>
                     @if ($current_kop_surat)
-                        <div class="mb-3 p-3 bg-gray-50 rounded-xl border">
+                        <div class="mb-3 p-3 bg-gray-50 rounded-lg border">
                             <div class="flex items-center justify-between">
                                 <img src="{{ asset('storage/' . $current_kop_surat) }}" alt="KOP Surat"
                                     class="max-h-24">
@@ -81,7 +81,7 @@
                         </div>
                     @endif
                     <input type="file" wire:model="kop_surat" accept="image/*"
-                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     @error('kop_surat')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
@@ -92,9 +92,9 @@
                 <div class="grid grid-cols-2 gap-4">
                     {{-- Stempel --}}
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Stempel Sekolah</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Stempel sekolah</label>
                         @if ($current_stempel)
-                            <div class="mb-3 p-3 bg-gray-50 rounded-xl border">
+                            <div class="mb-3 p-3 bg-gray-50 rounded-lg border">
                                 <div class="flex items-center justify-between">
                                     <img src="{{ asset('storage/' . $current_stempel) }}" alt="Stempel"
                                         class="max-h-20">
@@ -104,15 +104,15 @@
                             </div>
                         @endif
                         <input type="file" wire:model="stempel" accept="image/*"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                         <p class="text-xs text-gray-500 mt-1">Maks: 1MB</p>
                     </div>
 
                     {{-- TTD Kepala --}}
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanda Tangan Kepala</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanda tangan kepala</label>
                         @if ($current_ttd_kepala)
-                            <div class="mb-3 p-3 bg-gray-50 rounded-xl border">
+                            <div class="mb-3 p-3 bg-gray-50 rounded-lg border">
                                 <div class="flex items-center justify-between">
                                     <img src="{{ asset('storage/' . $current_ttd_kepala) }}" alt="TTD"
                                         class="max-h-20">
@@ -122,7 +122,7 @@
                             </div>
                         @endif
                         <input type="file" wire:model="ttd_kepala" accept="image/*"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                         <p class="text-xs text-gray-500 mt-1">Maks: 1MB</p>
                     </div>
                 </div>
@@ -130,25 +130,25 @@
         </div>
 
         {{-- Identitas Sekolah --}}
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Identitas Sekolah</h3>
+                <h3 class="text-lg font-medium text-gray-900">Identitas sekolah</h3>
             </div>
             <div class="px-6 py-4 space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Sekolah <span
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama sekolah <span
                                 class="text-red-500">*</span></label>
                         <input type="text" wire:model="nama_sekolah"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                         @error('nama_sekolah')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Yayasan</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama yayasan</label>
                         <input type="text" wire:model="nama_yayasan"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                 </div>
 
@@ -156,36 +156,48 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">NPSN</label>
                         <input type="text" wire:model="npsn"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">NSM</label>
                         <input type="text" wire:model="nsm"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Surat</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode surat</label>
                         <input type="text" wire:model="kode_surat" placeholder="contoh: MIDH"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                    </div>
+                    <div class="col-span-3">
+                        <label for="format-nomor-induk" class="block text-sm font-medium text-gray-700 mb-1">Format nomor induk siswa MI</label>
+                        <select id="format-nomor-induk" wire:model="format_nomor_induk"
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            <option value="lokal">Tanpa NSM, contoh 240001</option>
+                            <option value="nsm">Dengan NSM, contoh {{ $nsm ?: '111236710070' }}240001</option>
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Hanya mengubah tampilan dan ekspor. Nomor yang tersimpan tetap 6 digit</p>
+                        @error('format_nomor_induk')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
                     <input type="text" wire:model="alamat"
-                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">PIN Akses Data Siswa</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">PIN akses data siswa</label>
                     <input type="text" wire:model="validasi_data_siswa_pin" placeholder="minimal 4 karakter, contoh: 2468"
-                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                        class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     <p class="mt-1.5 text-xs text-gray-500">
-                        Dipakai wali kelas untuk membuka menu <span class="font-semibold">Data Siswa</span> di halaman depan.
+                        Dipakai wali kelas untuk membuka menu <span class="font-medium">Data siswa</span> di halaman depan.
                         Beri tahu PIN ini hanya ke wali kelas. Dikosongkan = fitur tertutup.
                     </p>
                     @error('validasi_data_siswa_pin')
-                        <p class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                        <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -193,61 +205,61 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Kelurahan</label>
                         <input type="text" wire:model="kelurahan"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Kecamatan</label>
                         <input type="text" wire:model="kecamatan"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Kota</label>
                         <input type="text" wire:model="kota"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Provinsi</label>
                         <input type="text" wire:model="provinsi"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Pos</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode pos</label>
                         <input type="text" wire:model="kode_pos"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
                         <input type="text" wire:model="telepon"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <input type="email" wire:model="email"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- Kepala Sekolah --}}
-        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">Kepala Sekolah</h3>
+                <h3 class="text-lg font-medium text-gray-900">Kepala sekolah</h3>
             </div>
             <div class="px-6 py-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kepala Sekolah</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama kepala sekolah</label>
                         <input type="text" wire:model="nama_kepala"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">NIP</label>
                         <input type="text" wire:model="nip_kepala"
-                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
+                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent">
                     </div>
                 </div>
             </div>
@@ -256,8 +268,8 @@
         {{-- Submit Button --}}
         <div class="flex justify-end">
             <button type="submit"
-                class="px-6 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
-                Simpan Pengaturan
+                class="px-6 py-2.5 rounded-lg bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium transition-colors">
+                Simpan pengaturan
             </button>
         </div>
     </form>

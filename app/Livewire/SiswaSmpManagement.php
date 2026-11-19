@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Exports\SiswaSmpExport;
 use App\Exports\SiswaSmpTemplateExport;
 use App\Imports\SiswaSmpImport;
+use App\Livewire\Concerns\GeneratesNomorInduk;
 use App\Models\SiswaSmp;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -14,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaSmpManagement extends Component
 {
-    use WithFileUploads, WithPagination;
+    use GeneratesNomorInduk, WithFileUploads, WithPagination;
 
     // Search and filter
     public string $search = '';
@@ -42,6 +43,8 @@ class SiswaSmpManagement extends Component
     public string $nama_lengkap = '';
 
     public string $nisn = '';
+
+    public string $nomor_induk = '';
 
     public string $nik = '';
 
@@ -76,11 +79,17 @@ class SiswaSmpManagement extends Component
 
     public array $importErrors = [];
 
+    protected function sekolah(): string
+    {
+        return 'SMP';
+    }
+
     protected function rules(): array
     {
         return [
             'nama_lengkap' => 'required|string|max:255',
             'nisn' => ['nullable', 'string', 'max:20', Rule::unique('siswa_smps', 'nisn')->ignore($this->siswaId)],
+            'nomor_induk' => ['nullable', 'digits:6', Rule::unique('siswa_smps', 'nomor_induk')->ignore($this->siswaId)],
             'nik' => ['nullable', 'string', 'max:20', Rule::unique('siswa_smps', 'nik')->ignore($this->siswaId)],
             'tempat_lahir' => 'nullable|string|max:100',
             'tanggal_lahir' => 'nullable|date',
@@ -102,6 +111,8 @@ class SiswaSmpManagement extends Component
         'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
         'nisn.unique' => 'NISN sudah terdaftar.',
         'nik.unique' => 'NIK sudah terdaftar.',
+        'nomor_induk.unique' => 'Nomor induk sudah dipakai siswa lain.',
+        'nomor_induk.digits' => 'Nomor induk harus 6 digit: 2 digit tahun masuk + 4 digit urut.',
         'jenis_kelamin.in' => 'Jenis kelamin harus L atau P.',
         'status.in' => 'Status tidak valid.',
     ];
@@ -134,6 +145,7 @@ class SiswaSmpManagement extends Component
         $this->siswaId = $siswa->id;
         $this->nama_lengkap = $siswa->nama_lengkap;
         $this->nisn = $siswa->nisn ?? '';
+        $this->nomor_induk = $siswa->nomor_induk ?? '';
         $this->nik = $siswa->nik ?? '';
         $this->tempat_lahir = $siswa->tempat_lahir ?? '';
         $this->tanggal_lahir = $siswa->tanggal_lahir?->format('Y-m-d');
@@ -212,6 +224,7 @@ class SiswaSmpManagement extends Component
         $this->siswaId = null;
         $this->nama_lengkap = '';
         $this->nisn = '';
+        $this->nomor_induk = '';
         $this->nik = '';
         $this->tempat_lahir = '';
         $this->tanggal_lahir = null;
@@ -287,6 +300,7 @@ class SiswaSmpManagement extends Component
                 $query->where(function ($q) {
                     $q->where('nama_lengkap', 'like', '%'.$this->search.'%')
                         ->orWhere('nisn', 'like', '%'.$this->search.'%')
+                        ->orWhere('nomor_induk', 'like', '%'.$this->search.'%')
                         ->orWhere('nik', 'like', '%'.$this->search.'%')
                         ->orWhere('tingkat_rombel', 'like', '%'.$this->search.'%');
                 });
@@ -296,6 +310,6 @@ class SiswaSmpManagement extends Component
 
         return view('livewire.siswa-smp-management', [
             'siswas' => $siswas,
-        ])->layout('layouts.admin', ['header' => 'Data Siswa SMP']);
+        ])->layout('layouts.admin', ['header' => 'Data siswa SMP']);
     }
 }

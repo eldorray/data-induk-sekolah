@@ -20,6 +20,8 @@ class SchoolSettingsManagement extends Component
 
     public string $nsm = '';
 
+    public string $format_nomor_induk = 'lokal';
+
     public string $alamat = '';
 
     public string $kelurahan = '';
@@ -74,6 +76,7 @@ class SchoolSettingsManagement extends Component
         $this->nama_yayasan = $settings['nama_yayasan'] ?? '';
         $this->npsn = $settings['npsn'] ?? '';
         $this->nsm = $settings['nsm'] ?? '';
+        $this->format_nomor_induk = $settings['format_nomor_induk'] ?? 'lokal';
         $this->alamat = $settings['alamat'] ?? '';
         $this->kelurahan = $settings['kelurahan'] ?? '';
         $this->kecamatan = $settings['kecamatan'] ?? '';
@@ -98,6 +101,7 @@ class SchoolSettingsManagement extends Component
     {
         $this->validate([
             'nama_sekolah' => 'required|string|max:255',
+            'format_nomor_induk' => 'required|in:lokal,nsm',
             'validasi_data_siswa_pin' => 'nullable|string|min:4|max:20',
             'kop_surat' => 'nullable|image|max:2048',
             'stempel' => 'nullable|image|max:1024',
@@ -111,6 +115,7 @@ class SchoolSettingsManagement extends Component
         SchoolSetting::set('nama_yayasan', $this->nama_yayasan);
         SchoolSetting::set('npsn', $this->npsn);
         SchoolSetting::set('nsm', $this->nsm);
+        SchoolSetting::set('format_nomor_induk', $this->format_nomor_induk);
         SchoolSetting::set('alamat', $this->alamat);
         SchoolSetting::set('kelurahan', $this->kelurahan);
         SchoolSetting::set('kecamatan', $this->kecamatan);
@@ -242,6 +247,6 @@ class SchoolSettingsManagement extends Component
     public function render()
     {
         return view('livewire.school-settings-management')
-            ->layout('layouts.admin', ['header' => 'Pengaturan Sekolah']);
+            ->layout('layouts.admin', ['header' => 'Pengaturan sekolah']);
     }
 }

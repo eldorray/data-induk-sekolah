@@ -15,6 +15,7 @@ class SiswaMi extends Model
     protected $fillable = [
         'nama_lengkap',
         'nisn',
+        'nomor_induk',
         'nik',
         'tempat_lahir',
         'tanggal_lahir',
@@ -49,6 +50,20 @@ class SiswaMi extends Model
     }
 
     /**
+     * Nomor induk untuk ditampilkan/dicetak: 6 digit lokal, atau diawali NSM bila diatur di Pengaturan.
+     */
+    public function getNomorIndukLengkapAttribute(): ?string
+    {
+        if (! $this->nomor_induk) {
+            return null;
+        }
+
+        return SchoolSetting::get('format_nomor_induk', 'lokal') === 'nsm'
+            ? SchoolSetting::get('nsm', '').$this->nomor_induk
+            : $this->nomor_induk;
+    }
+
+    /**
      * Boot method to auto-calculate umur on save
      */
     protected static function boot()
@@ -61,6 +76,11 @@ class SiswaMi extends Model
             }
 
             // Kolom enum('L','P') tidak bisa menyimpan '' (strict mode); form kirim '' bukan null
+            // Form mengirim '' bukan null; '' kedua akan melanggar unique index
+            if ($siswa->nomor_induk === '') {
+                $siswa->nomor_induk = null;
+            }
+
             if ($siswa->jenis_kelamin === '') {
                 $siswa->jenis_kelamin = null;
             }
