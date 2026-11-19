@@ -2,10 +2,9 @@
 
 namespace App\Livewire;
 
-use App\Models\GuruMi;
-use App\Models\GuruSmp;
 use App\Models\LpjInsentif;
 use App\Models\LpjInsentifPenerima;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 class LpjInsentifDetail extends Component
@@ -44,8 +43,6 @@ class LpjInsentifDetail extends Component
 
     public string $no_rekening = '';
 
-    public string $selectedGuru = '';
-
     protected function rules(): array
     {
         return [
@@ -54,7 +51,7 @@ class LpjInsentifDetail extends Component
             'nip_pegid_nuptk' => 'nullable|string|max:30',
             'pangkat' => 'nullable|string|max:50',
             'golongan' => 'nullable|string|max:10',
-            'status_pegawai' => 'required|in:PNS,PPPK,NON PNS',
+            'status_pegawai' => 'nullable|in:PNS,PPPK,NON PNS',
             'jabatan' => 'required|string|max:255',
             'tarif' => 'required|integer|min:0',
             'volume' => 'required|integer|min:0',
@@ -67,37 +64,6 @@ class LpjInsentifDetail extends Component
     public function mount(LpjInsentif $lpj): void
     {
         $this->lpj = $lpj->load('penerimas');
-    }
-
-    public function updatedSelectedGuru(string $value): void
-    {
-        if ($value === '' || ! str_contains($value, '-')) {
-            $this->selectedGuru = '';
-
-            return;
-        }
-
-        [$type, $id] = explode('-', $value, 2);
-
-        $guru = $type === 'smp' ? GuruSmp::find($id) : GuruMi::find($id);
-
-        if (! $guru) {
-            $this->selectedGuru = '';
-
-            return;
-        }
-
-        $this->nama = $guru->full_name_with_title;
-        $this->nip_pegid_nuptk = $guru->nip ?: ($guru->nuptk ?: '');
-
-        $this->status_pegawai = in_array($guru->status_pegawai, ['PNS', 'PPPK'], true)
-            ? $guru->status_pegawai
-            : 'NON PNS';
-
-        if ($this->status_pegawai !== 'PNS') {
-            $this->pangkat = '';
-            $this->golongan = '';
-        }
     }
 
     public function openCreateModal(): void
@@ -116,7 +82,7 @@ class LpjInsentifDetail extends Component
         $this->nip_pegid_nuptk = $p->nip_pegid_nuptk ?? '';
         $this->pangkat = $p->pangkat ?? '';
         $this->golongan = $p->golongan ?? '';
-        $this->status_pegawai = $p->status_pegawai;
+        $this->status_pegawai = $p->status_pegawai ?? '';
         $this->jabatan = $p->jabatan;
         $this->tarif = (string) $p->tarif;
         $this->volume = (string) $p->volume;
@@ -137,7 +103,7 @@ class LpjInsentifDetail extends Component
             'nip_pegid_nuptk' => $validated['nip_pegid_nuptk'] ?: null,
             'pangkat' => $validated['pangkat'] ?: null,
             'golongan' => $validated['golongan'] ?: null,
-            'status_pegawai' => $validated['status_pegawai'],
+            'status_pegawai' => $validated['status_pegawai'] ?: null,
             'jabatan' => $validated['jabatan'],
             'tarif' => (int) $validated['tarif'],
             'volume' => (int) $validated['volume'],
@@ -197,19 +163,13 @@ class LpjInsentifDetail extends Component
         $this->satuan = 'BLN';
         $this->pph21 = '0';
         $this->no_rekening = '';
-        $this->selectedGuru = '';
         $this->isEditing = false;
         $this->resetErrorBag();
     }
 
-    public function render()
+    public function render(): View
     {
-        $guruMi = GuruMi::active()->orderBy('full_name')->get();
-        $guruSmp = GuruSmp::active()->orderBy('full_name')->get();
-
-        return view('livewire.lpj-insentif-detail', [
-            'guruMi' => $guruMi,
-            'guruSmp' => $guruSmp,
-        ])->layout('layouts.admin', ['header' => 'Detail LPJ Insentif']);
+        return view('livewire.lpj-insentif-detail')
+            ->layout('layouts.admin', ['header' => 'Detail LPJ insentif']);
     }
 }

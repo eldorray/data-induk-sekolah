@@ -4,39 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Daftar Penerima Insentif</title>
+    <title>LPJ Insentif {{ $lpj->periode }} {{ $lpj->tahun }}</title>
     @php
+        // Ukuran dasar untuk F4 landscape; $scale < 1 hanya dipakai bila baris terlalu banyak untuk 1 halaman.
         $s = $scale ?? 1;
-        // Base kompak: pada scale 1.0 pun hampir muat 1 halaman untuk 21 baris,
-        // sehingga auto-fit tidak perlu meng-ciutkan agresif dan padding/tinggi
-        // tetap terlihat lega di hasil cetak.
-        $base = round(7.5 * $s, 2);
-        $small = round(6.5 * $s, 2);
+        $pt = fn (float $v) => round($v * $s, 2).'pt';
+        $px = fn (float $v) => round($v * $s, 1).'px';
+        $rp = fn (int $v) => number_format($v, 0, ',', '.');
+        $rows = $lpj->penerimas;
     @endphp
     <style>
         @page {
-            margin: {{ max(10, round(12 * $s)) }}px {{ max(10, round(12 * $s)) }}px;
+            margin: 10mm 10mm;
         }
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: {{ $base }}pt;
-            line-height: 1.15;
+            font-size: {{ $pt(8) }};
+            line-height: 1.2;
             color: #000;
+            margin: 0;
         }
 
         .judul {
             text-align: center;
             font-weight: bold;
-            margin-bottom: {{ max(2, round(8 * $s)) }}px;
-            font-size: {{ round(8.5 * $s, 2) }}pt;
+            font-size: {{ $pt(9.5) }};
+            margin-bottom: {{ $px(8) }};
         }
 
         .judul p {
             margin: 0;
         }
 
-        table.tabel {
+        table {
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
@@ -44,224 +45,157 @@
 
         table.tabel th,
         table.tabel td {
-            border: 1px solid #000;
-            padding: {{ round(1.5 * $s, 1) }}px {{ round(2.5 * $s, 1) }}px;
+            border: 0.75px solid #000;
+            padding: {{ $px(1.5) }} {{ $px(2.5) }};
             vertical-align: middle;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            overflow: hidden;
         }
 
         table.tabel th {
             text-align: center;
-            font-weight: bold;
-            background: #fff;
-            line-height: 1.15;
-            font-size: {{ round(7 * $s, 2) }}pt;
+            font-weight: normal;
+            font-size: {{ $pt(7.5) }};
         }
 
-        td.num {
+        table.tabel tbody td {
+            height: {{ $px(19) }};
+        }
+
+        .c {
+            text-align: center;
+        }
+
+        .r {
             text-align: right;
+        }
+
+        .l {
+            text-align: left;
+        }
+
+        .nw {
             white-space: nowrap;
         }
 
-        td.center {
-            text-align: center;
+        .id {
+            white-space: nowrap;
+            font-size: {{ $pt(7.5) }};
         }
 
         tfoot td {
             font-weight: bold;
-            text-align: center;
-            font-size: {{ round(9.5 * $s, 2) }}pt;
-            background: #d8d8d8;
-            border-top: 2px solid #000 !important;
-            line-height: {{ round(28 * $s) }}px;
         }
 
-        tfoot td.num {
-            font-size: {{ round(9.5 * $s, 2) }}pt;
-            line-height: {{ round(28 * $s) }}px;
+        table.ttd {
+            margin-top: {{ $px(10) }};
         }
 
-        /* NPWP, NIP, rekening — monospace rapat agar muat 1 baris */
-        td.id-num {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: {{ $small }}pt;
-            letter-spacing: -0.3px;
-            word-break: keep-all;
+        table.ttd td {
+            vertical-align: top;
             white-space: nowrap;
-            overflow: hidden;
-        }
-
-        /* Kolom TANDA TANGAN — padding dan tinggi lebih lega */
-        td.ttd-cell {
-            font-weight: bold;
-            font-size: {{ round(10.5 * $s, 2) }}pt;
-            height: {{ round(26 * $s) }}px;
-            padding-left: {{ round(28 * $s, 1) }}px;
-            padding-right: {{ round(8 * $s, 1) }}px;
-            padding-top: {{ round(5 * $s, 1) }}px;
-            padding-bottom: {{ round(5 * $s, 1) }}px;
-            text-align: left;
-        }
-
-        td.ttd-cell.top {
-            vertical-align: top;
-        }
-
-        td.ttd-cell.bottom {
-            vertical-align: bottom;
-        }
-
-        /* Blok tanda tangan pejabat */
-        .ttd-table {
-            width: 100%;
-            margin-top: {{ max(6, round(12 * $s)) }}px;
-            border-collapse: collapse;
-        }
-
-        .ttd-table td {
-            vertical-align: top;
-            width: 50%;
-            padding: 0 {{ round(8 * $s) }}px;
-            font-size: {{ round(9 * $s, 2) }}pt;
-        }
-
-        .ttd-table td.left {
-            text-align: left;
-        }
-
-        .ttd-table td.right {
-            text-align: left;
-            padding-left: 55%;
-        }
-
-        .ttd-line {
-            margin: 0;
             padding: 0;
         }
 
         .ttd-space {
-            height: {{ round(40 * $s) }}px;
-        }
-
-        .ttd-nama {
-            font-weight: bold;
-            text-decoration: underline;
-            margin: 0;
-            padding: 0;
+            height: {{ $px(42) }};
         }
     </style>
 </head>
 
 <body>
     <div class="judul">
-        <p>DAFTAR PENERIMA INSENTIF PENDIDIK DAN TENAGA KEPENDIDIKAN PNS, PPPK DAN NON PNS</p>
         <p>{{ strtoupper($settings['nama_sekolah'] ?? 'MI DAARUL HIKMAH') }}</p>
         <p>KECAMATAN {{ strtoupper(trim($settings['kecamatan'] ?? '') ?: 'NEGLASARI') }}</p>
         <p>BULAN {{ strtoupper($lpj->periode) }} {{ $lpj->tahun }}</p>
     </div>
 
+    {{-- Lebar kolom (%) di <th> (dompdf mengabaikan <col>), disusun agar total 100% dan NPWP/NIP 16–18 digit muat 1 baris di F4 landscape. --}}
     <table class="tabel">
-        <colgroup>
-            <col style="width:3%">
-            <col style="width:10%">
-            <col style="width:12%">
-            <col style="width:9%">
-            <col style="width:5%">
-            <col style="width:3%">
-            <col style="width:3%">
-            <col style="width:3%">
-            <col style="width:3%">
-            <col style="width:9%">
-            <col style="width:6%">
-            <col style="width:4%">
-            <col style="width:4%">
-            <col style="width:6%">
-            <col style="width:5%">
-            <col style="width:6%">
-            <col style="width:8%">
-            <col style="width:9%">
-        </colgroup>
         <thead>
             <tr>
-                <th rowspan="2">NO.</th>
-                <th rowspan="2">NPWP</th>
-                <th rowspan="2">NAMA<br>PEGAWAI</th>
-                <th rowspan="2">NIP/PegId/<br>NUPTK</th>
-                <th rowspan="2">PANGKAT</th>
-                <th rowspan="2">GOL.</th>
-                <th colspan="3">STATUS PEGAWAI</th>
-                <th rowspan="2">JABATAN</th>
-                <th rowspan="2">TARIF</th>
-                <th rowspan="2">VOLUME</th>
-                <th rowspan="2">SATUAN</th>
-                <th rowspan="2">JUMLAH<br>UANG</th>
-                <th rowspan="2">PPH21</th>
-                <th rowspan="2">JUMLAH<br>DITERIMA<br>(TRANSFER)</th>
-                <th rowspan="2">NO.<br>REKENING</th>
-                <th rowspan="2">TANDA<br>TANGAN</th>
+                <th rowspan="2" style="width:2.5%">NO.</th>
+                <th rowspan="2" style="width:8.5%">NPWP</th>
+                <th rowspan="2" style="width:11.5%">NAMA PEGAWAI</th>
+                <th rowspan="2" style="width:9%">NIP/PegId/NUPTK</th>
+                <th rowspan="2" style="width:5.3%">PANGKAT</th>
+                <th rowspan="2" style="width:3%">GOL.</th>
+                <th colspan="3" style="width:9%">STATUS PEGAWAI</th>
+                <th rowspan="2" style="width:7.5%">JABATAN</th>
+                <th rowspan="2" style="width:5.5%">TARIF</th>
+                <th rowspan="2" style="width:4.2%">VOLUME</th>
+                <th rowspan="2" style="width:4%">SATUAN</th>
+                <th rowspan="2" style="width:6.3%">JUMLAH UANG</th>
+                <th rowspan="2" style="width:4.5%">PPH21</th>
+                <th rowspan="2" style="width:6.2%">JUMLAH<br>DITERIMA<br>(TRANSFER)</th>
+                <th rowspan="2" style="width:7%">NO.REKENING</th>
+                <th rowspan="2" style="width:6%">TANDA TANGAN</th>
             </tr>
             <tr>
-                <th>PNS</th>
-                <th>PPPK</th>
-                <th>NON PNS</th>
+                <th style="width:3%">PNS</th>
+                <th style="width:3%">PPPK</th>
+                <th style="width:3%">NON<br>PNS</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($lpj->penerimas as $p)
+            @forelse ($rows as $p)
                 <tr>
-                    <td class="center">{{ $loop->iteration }}</td>
-                    <td class="id-num">{{ $p->npwp ?? '' }}</td>
+                    <td class="c">{{ $loop->iteration }}</td>
+                    <td class="id">{{ $p->npwp }}</td>
                     <td>{{ $p->nama }}</td>
-                    <td class="id-num">{{ $p->nip_pegid_nuptk ?? '' }}</td>
-                    <td>{{ $p->pangkat ?? '' }}</td>
-                    <td class="center">{{ $p->golongan ?? '' }}</td>
-                    <td class="center">{{ $p->status_pegawai === 'PNS' ? '1' : '' }}</td>
-                    <td class="center">{{ $p->status_pegawai === 'PPPK' ? '1' : '' }}</td>
-                    <td class="center">{{ $p->status_pegawai === 'NON PNS' ? '1' : '' }}</td>
+                    <td class="id">{{ $p->nip_pegid_nuptk }}</td>
+                    <td>{{ $p->pangkat }}</td>
+                    <td>{{ $p->golongan }}</td>
+                    <td class="c">{{ $p->status_pegawai === 'PNS' ? '1' : '' }}</td>
+                    <td class="c">{{ $p->status_pegawai === 'PPPK' ? '1' : '' }}</td>
+                    <td class="c">{{ $p->status_pegawai === 'NON PNS' ? '1' : '' }}</td>
                     <td>{{ $p->jabatan }}</td>
-                    <td class="num">{{ number_format($p->tarif, 0, ',', '.') }}</td>
-                    <td class="center">{{ $p->volume }}</td>
-                    <td class="center">{{ $p->satuan }}</td>
-                    <td class="num">{{ number_format($p->jumlah_uang, 0, ',', '.') }}</td>
-                    <td class="num">{{ $p->pph21 > 0 ? number_format($p->pph21, 0, ',', '.') : '' }}</td>
-                    <td class="num">{{ number_format($p->jumlah_diterima, 0, ',', '.') }}</td>
-                    <td class="id-num">{{ $p->no_rekening ?? '' }}</td>
-                    <td class="ttd-cell {{ $loop->even ? 'bottom' : 'top' }}">{{ $loop->iteration }}</td>
+                    <td class="r nw">{{ $rp($p->tarif) }}</td>
+                    <td class="c">{{ $p->volume }}</td>
+                    <td>{{ $p->satuan }}</td>
+                    <td class="r nw">{{ $rp($p->jumlah_uang) }}</td>
+                    <td class="r nw">{{ $p->pph21 > 0 ? $rp($p->pph21) : '' }}</td>
+                    <td class="r nw">{{ $rp($p->jumlah_diterima) }}</td>
+                    <td class="id">{{ $p->no_rekening }}</td>
+                    {{-- Zig-zag: nomor ganjil di kanan, genap di kiri --}}
+                    <td class="{{ $loop->odd ? 'r' : 'l' }}">{{ $loop->iteration }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="18" class="center">Belum ada data penerima.</td>
+                    <td colspan="18" class="c">Belum ada data penerima.</td>
                 </tr>
             @endforelse
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="10" style="text-align:center;">JUMLAH</td>
-                <td class="num">{{ number_format($lpj->penerimas->sum('tarif'), 0, ',', '.') }}</td>
-                <td class="num">{{ $lpj->penerimas->sum('volume') }}</td>
                 <td></td>
-                <td class="num">{{ number_format($lpj->penerimas->sum(fn ($p) => $p->jumlah_uang), 0, ',', '.') }}</td>
-                <td class="num">{{ $lpj->total_pph21 > 0 ? number_format($lpj->total_pph21, 0, ',', '.') : '' }}</td>
-                <td class="num">{{ number_format($lpj->penerimas->sum(fn ($p) => $p->jumlah_diterima), 0, ',', '.') }}</td>
+                <td></td>
+                <td>JUMLAH</td>
+                <td colspan="7"></td>
+                <td class="r nw">{{ $rp((int) $rows->sum('tarif')) }}</td>
+                <td colspan="2"></td>
+                <td class="r nw">{{ $rp((int) $rows->sum(fn ($p) => $p->jumlah_uang)) }}</td>
+                <td></td>
+                <td class="r nw">{{ $rp((int) $rows->sum(fn ($p) => $p->jumlah_diterima)) }}</td>
                 <td colspan="2"></td>
             </tr>
         </tfoot>
     </table>
 
-    <table class="ttd-table">
+    {{-- Kiri sejajar kolom NAMA PEGAWAI (offset 11%), kanan sejajar kolom JUMLAH DITERIMA (offset 80.8%). --}}
+    <table class="ttd">
         <tr>
-            <td class="left">
-                <p class="ttd-line">MENGETAHUI/MENYETUJUI :</p>
-                <p class="ttd-line">{{ $lpj->jabatan_kepala }}</p>
+            <td style="width:11%"></td>
+            <td style="width:69.8%">
+                MENGETAHUI/MENYETUJUI :<br>
+                {{ strtoupper($lpj->jabatan_kepala) }}
                 <div class="ttd-space"></div>
-                <p class="ttd-nama">{{ $lpj->nama_kepala }}</p>
+                {{ $lpj->nama_kepala }}
             </td>
-            <td class="right">
-                <p class="ttd-line">{{ ucwords(strtolower($lpj->kota)) }}, {{ $lpj->bulan_ttd }} {{ $lpj->tahun }}</p>
-                <p class="ttd-line">{{ $lpj->jabatan_bendahara }}</p>
+            <td style="width:19.2%">
+                {{ strtoupper($lpj->kota) }}, &nbsp;&nbsp; {{ $lpj->bulan_ttd }} {{ $lpj->tahun }}<br>
+                {{ strtoupper($lpj->jabatan_bendahara) }}
                 <div class="ttd-space"></div>
-                <p class="ttd-nama">{{ $lpj->nama_bendahara }}</p>
+                {{ $lpj->nama_bendahara }}
             </td>
         </tr>
     </table>

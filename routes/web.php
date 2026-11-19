@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Controllers\AbsensiInsentifController;
 use App\Http\Controllers\KuitansiController;
 use App\Http\Controllers\LpjBosController;
+use App\Http\Controllers\LpjInsentifController;
 use App\Http\Controllers\MutasiSiswaController;
 use App\Http\Controllers\NilaiIjazahController;
 use App\Http\Controllers\SkGuruMiController;
-use App\Http\Controllers\AbsensiInsentifController;
-use App\Http\Controllers\LpjInsentifController;
 use App\Http\Controllers\SuratKeteranganAktifController;
 use App\Http\Controllers\SuratPernyataanInsentifController;
 use App\Http\Controllers\SuratPernyataanRombelController;
@@ -18,6 +18,7 @@ use App\Livewire\AbsensiInsentif;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\ResetPassword;
+use App\Livewire\CocokkanEmisSiswa;
 use App\Livewire\GuruMiManagement;
 use App\Livewire\GuruSmpManagement;
 use App\Livewire\KuitansiBosManagement;
@@ -286,6 +287,11 @@ Route::get('users', UserManagement::class)
 Route::get('tracer-alumni-management', TracerAlumniManagement::class)
     ->middleware(['auth', 'role:admin'])
     ->name('tracer-alumni.index');
+
+// Cocokkan data siswa dengan file unduhan EMIS (admin only)
+Route::get('cocokkan-emis', CocokkanEmisSiswa::class)
+    ->middleware(['auth', 'role:admin'])
+    ->name('cocokkan-emis.index');
 
 // Validasi Data Siswa dari wali kelas (admin only)
 Route::get('validasi-data-siswa', ValidasiDataSiswaManagement::class)

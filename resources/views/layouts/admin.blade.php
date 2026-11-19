@@ -65,6 +65,7 @@
                     ['label' => 'Mapel SMP', 'route' => 'mapel-smp.index', 'match' => ['mapel-smp.*']],
                 ]],
                 ['label' => 'Nilai ijazah kelas 6', 'route' => 'nilai-ijazah.index', 'match' => ['nilai-ijazah.*'], 'icon' => 'cap', 'admin' => false],
+                ['label' => 'Cocokkan dengan EMIS', 'route' => 'cocokkan-emis.index', 'match' => ['cocokkan-emis.*'], 'icon' => 'check', 'admin' => true],
                 ['label' => 'Validasi data siswa', 'route' => 'validasi-data-siswa.index', 'match' => ['validasi-data-siswa.index'], 'icon' => 'check', 'admin' => true],
             ],
         ],
