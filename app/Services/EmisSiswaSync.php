@@ -57,7 +57,7 @@ class EmisSiswaSync
     /**
      * @param  class-string<Model>  $modelClass
      * @param  list<array<string, string>>  $emisRows
-     * @return array{sama: int, beda: list<array{id: int, nama: string, perubahan: array<string, array{induk: string, emis: string}>}>, baru: list<array<string, string>>, tidak_di_emis: list<array{id: int, nama: string, tingkat_rombel: string}>}
+     * @return array{sama: int, beda: list<array{id: int, nama: string, perubahan: array<string, array{induk: string, emis: string}>}>, baru: list<array<string, string>>, tidak_di_emis: list<array{id: int, nama: string, tingkat_rombel: string}>, bentrok: list<array{nama: string, kolom: string, nilai: string, dipakai_oleh: string}>}
      */
     public function compare(string $modelClass, array $emisRows): array
     {
@@ -93,7 +93,60 @@ class EmisSiswaSync
             }
         }
 
+        $hasil['bentrok'] = $this->bentrok($local, $hasil);
+
         return $hasil;
+    }
+
+    /**
+     * Simulasikan apply() pada kolom unik (urutan sama: semua update, lalu semua tambah)
+     * supaya NISN/NIK yang bentrok ketahuan sebelum database menolaknya.
+     *
+     * @param  Collection<int, Model>  $local
+     * @param  array{beda: list<array{id: int, nama: string, perubahan: array<string, array{induk: string, emis: string}>}>, baru: list<array<string, string>>}  $hasil
+     * @return list<array{nama: string, kolom: string, nilai: string, dipakai_oleh: string}>
+     */
+    private function bentrok(Collection $local, array $hasil): array
+    {
+        $pemilik = []; // "kolom:nilai" => [kunci pemilik, nama]
+        foreach ($local as $s) {
+            foreach (['nisn', 'nik'] as $kolom) {
+                $nilai = $this->normalize($kolom, $s->{$kolom});
+                if ($nilai !== '') {
+                    $pemilik["$kolom:$nilai"] = [$s->id, (string) $s->nama_lengkap];
+                }
+            }
+        }
+
+        $bentrok = [];
+        $klaim = function (int|string $kunci, string $nama, string $kolom, string $nilai, string $lama = '') use (&$pemilik, &$bentrok): void {
+            if ($nilai === '') {
+                return;
+            }
+            [$kunciPemilik, $namaPemilik] = $pemilik["$kolom:$nilai"] ?? [$kunci, ''];
+            if ($kunciPemilik !== $kunci) {
+                $bentrok[] = ['nama' => $nama, 'kolom' => $kolom, 'nilai' => $nilai, 'dipakai_oleh' => $namaPemilik];
+
+                return;
+            }
+            unset($pemilik["$kolom:$lama"]);
+            $pemilik["$kolom:$nilai"] = [$kunci, $nama];
+        };
+
+        foreach ($hasil['beda'] as $b) {
+            foreach (['nisn', 'nik'] as $kolom) {
+                if (isset($b['perubahan'][$kolom])) {
+                    $klaim($b['id'], $b['nama'], $kolom, $b['perubahan'][$kolom]['emis'], $b['perubahan'][$kolom]['induk']);
+                }
+            }
+        }
+        foreach ($hasil['baru'] as $i => $row) {
+            foreach (['nisn', 'nik'] as $kolom) {
+                $klaim("baru-$i", $row['nama_lengkap'], $kolom, $row[$kolom] ?? '');
+            }
+        }
+
+        return $bentrok;
     }
 
     /**

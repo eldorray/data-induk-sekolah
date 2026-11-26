@@ -79,6 +79,58 @@ class CocokkanEmisSiswaTest extends TestCase
         $this->assertSame([], $component->get('hasil')['beda']);
     }
 
+    public function test_nisn_nik_bentrok_ditampilkan_dan_terapkan_ditolak(): void
+    {
+        $budi = SiswaMi::create(['nama_lengkap' => 'Budi', 'nisn' => '0011111111', 'nik' => '3603000000000001',
+            'tingkat_rombel' => 'Kelas 4 - KELAS 4A', 'status' => 'Aktif']);
+        SiswaMi::create(['nama_lengkap' => 'Budi Dobel', 'nik' => '3603000000000009',
+            'tingkat_rombel' => 'Kelas 4 - KELAS 4A', 'status' => 'Aktif']);
+
+        $file = $this->emisFile([
+            'Kelas 4 - KELAS 4A' => [
+                // cocok via NISN, tapi NIK EMIS sudah dipakai "Budi Dobel"
+                ['Budi', '0011111111', "'3603000000000009", 'Kelas 4 - KELAS 4A', 'Aktif', 'Laki-laki', ''],
+                ['FAJAR', '0044444444', '', 'Kelas 4 - KELAS 4A', 'Aktif', 'Laki-laki', ''],
+            ],
+            'Tidak Aktif' => [
+                ['FAJAR GANDA', '0044444444', '', 'Kelas 4', 'Tidak Aktif', '', ''], // NISN ganda di file EMIS
+            ],
+        ]);
+
+        $component = Livewire::test(CocokkanEmisSiswa::class)
+            ->set('file', $file)
+            ->call('bandingkan')
+            ->assertSee('Budi Dobel')
+            ->assertDontSee('Terapkan dari EMIS');
+
+        $this->assertSame([
+            ['nama' => 'Budi', 'kolom' => 'nik', 'nilai' => '3603000000000009', 'dipakai_oleh' => 'Budi Dobel'],
+            ['nama' => 'FAJAR GANDA', 'kolom' => 'nisn', 'nilai' => '0044444444', 'dipakai_oleh' => 'FAJAR'],
+        ], $component->get('hasil')['bentrok']);
+
+        $component->call('terapkan');
+
+        $this->assertSame('3603000000000001', $budi->fresh()->nik);
+        $this->assertSame(2, SiswaMi::count());
+    }
+
+    public function test_nik_yang_dilepas_siswa_lain_bukan_bentrok(): void
+    {
+        $a = SiswaMi::create(['nama_lengkap' => 'A', 'nisn' => '0011111111', 'nik' => '3603000000000001', 'status' => 'Aktif']);
+        $b = SiswaMi::create(['nama_lengkap' => 'B', 'nisn' => '0022222222', 'nik' => '3603000000000002', 'status' => 'Aktif']);
+
+        $file = $this->emisFile(['Kelas 4 - KELAS 4A' => [
+            ['A', '0011111111', "'3603000000000003", 'Kelas 4 - KELAS 4A', 'Aktif', '', ''], // melepas NIK ...001
+            ['B', '0022222222', "'3603000000000001", 'Kelas 4 - KELAS 4A', 'Aktif', '', ''], // lalu B memakainya
+        ]]);
+
+        $component = Livewire::test(CocokkanEmisSiswa::class)->set('file', $file)->call('bandingkan');
+        $this->assertSame([], $component->get('hasil')['bentrok']);
+
+        $component->call('terapkan');
+        $this->assertSame(['3603000000000003', '3603000000000001'], [$a->fresh()->nik, $b->fresh()->nik]);
+    }
+
     /** @param array<string, list<array{0:string,1:string,2:string,3:string,4:string,5:string,6:string}>> $sheets */
     private function emisFile(array $sheets): UploadedFile
     {

@@ -52,7 +52,21 @@
             @endforeach
         </div>
 
-        @if ($hasil['beda'] || $hasil['baru'])
+        @if ($hasil['bentrok'])
+            <div class="bg-white rounded-xl border border-red-200 overflow-hidden">
+                <h3 class="px-5 py-3 text-sm font-medium text-red-800 bg-red-50 border-b border-red-200">NISN/NIK bentrok ({{ count($hasil['bentrok']) }})</h3>
+                <p class="px-5 pt-3 text-xs text-gray-500">Belum bisa diterapkan. Nilai di bawah sudah dipakai siswa lain: hapus data ganda atau perbaiki NISN/NIK yang salah (di menu Siswa atau di EMIS), lalu bandingkan lagi.</p>
+                <ul class="divide-y divide-gray-100 text-sm">
+                    @foreach ($hasil['bentrok'] as $b)
+                        <li class="px-5 py-2">
+                            <span class="font-medium text-gray-900">{{ $b['nama'] }}</span>
+                            <span class="text-gray-500">· {{ strtoupper($b['kolom']) }} {{ $b['nilai'] }} sudah dipakai</span>
+                            <span class="font-medium text-gray-900">{{ $b['dipakai_oleh'] }}</span>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @elseif ($hasil['beda'] || $hasil['baru'])
             <div class="bg-white rounded-xl border border-gray-200 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <p class="text-sm text-gray-700">
                     Terapkan akan <b>memperbarui {{ count($hasil['beda']) }}</b> siswa dan <b>menambah {{ count($hasil['baru']) }}</b> siswa di data induk {{ strtoupper($jenjang) }}.

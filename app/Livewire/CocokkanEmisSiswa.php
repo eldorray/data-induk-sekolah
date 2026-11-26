@@ -40,13 +40,19 @@ class CocokkanEmisSiswa extends Component
 
     public function terapkan(): void
     {
-        $sync = new EmisSiswaSync;
+        $hasil = $this->hitung();
+        if ($hasil['bentrok'] !== []) {
+            $this->hasil = $hasil;
+            session()->flash('error', 'Belum bisa diterapkan: selesaikan dulu NISN/NIK yang bentrok di bawah.');
+
+            return;
+        }
 
         try {
-            $n = $sync->apply(self::MODEL[$this->jenjang], $this->hitung());
+            $n = (new EmisSiswaSync)->apply(self::MODEL[$this->jenjang], $hasil);
         } catch (QueryException $e) {
             report($e);
-            session()->flash('error', 'Gagal menerapkan: ada NISN/NIK dari EMIS yang sudah dipakai siswa lain di data induk. Cek data ganda dulu.');
+            session()->flash('error', 'Gagal menerapkan karena error database; tidak ada data yang diubah. Detailnya tercatat di log aplikasi.');
 
             return;
         }
