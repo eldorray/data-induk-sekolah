@@ -52,6 +52,13 @@
             @endforeach
         </div>
 
+        @if ($hasil['ganda'])
+            <p class="text-xs text-gray-500">
+                {{ count($hasil['ganda']) }} siswa muncul lebih dari sekali di file EMIS dan digabung otomatis (baris Aktif yang dipakai):
+                {{ implode(', ', $hasil['ganda']) }}.
+            </p>
+        @endif
+
         @if ($hasil['bentrok'])
             <div class="bg-white rounded-xl border border-red-200 overflow-hidden">
                 <h3 class="px-5 py-3 text-sm font-medium text-red-800 bg-red-50 border-b border-red-200">NISN/NIK bentrok ({{ count($hasil['bentrok']) }})</h3>

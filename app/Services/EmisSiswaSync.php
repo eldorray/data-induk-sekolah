@@ -57,15 +57,17 @@ class EmisSiswaSync
     /**
      * @param  class-string<Model>  $modelClass
      * @param  list<array<string, string>>  $emisRows
-     * @return array{sama: int, beda: list<array{id: int, nama: string, perubahan: array<string, array{induk: string, emis: string}>}>, baru: list<array<string, string>>, tidak_di_emis: list<array{id: int, nama: string, tingkat_rombel: string}>, bentrok: list<array{nama: string, kolom: string, nilai: string, dipakai_oleh: string}>}
+     * @return array{sama: int, beda: list<array{id: int, nama: string, perubahan: array<string, array{induk: string, emis: string}>}>, baru: list<array<string, string>>, tidak_di_emis: list<array{id: int, nama: string, tingkat_rombel: string}>, bentrok: list<array{nama: string, kolom: string, nilai: string, dipakai_oleh: string}>, ganda: list<string>}
      */
     public function compare(string $modelClass, array $emisRows): array
     {
+        [$emisRows, $ganda] = $this->gabungGanda($emisRows);
+
         $local = $modelClass::all();
         $byNisn = $this->index($local, 'nisn');
         $byNik = $this->index($local, 'nik');
 
-        $hasil = ['sama' => 0, 'beda' => [], 'baru' => [], 'tidak_di_emis' => []];
+        $hasil = ['sama' => 0, 'beda' => [], 'baru' => [], 'tidak_di_emis' => [], 'ganda' => $ganda];
         $cocok = [];
 
         foreach ($emisRows as $row) {
@@ -96,6 +98,54 @@ class EmisSiswaSync
         $hasil['bentrok'] = $this->bentrok($local, $hasil);
 
         return $hasil;
+    }
+
+    /**
+     * Siswa yang sama muncul lebih dari sekali di file EMIS (mis. di sheet rombel dan "Tidak Aktif"):
+     * gabung jadi satu baris. Baris Aktif menang; sel kosongnya diisi dari baris satunya.
+     * Baris yang NISN/NIK-nya saling bertentangan TIDAK digabung (bisa jadi dua anak berbeda) — biar jadi bentrok.
+     *
+     * @param  list<array<string, string>>  $rows
+     * @return array{0: list<array<string, string>>, 1: list<string>}
+     */
+    private function gabungGanda(array $rows): array
+    {
+        $out = [];
+        $posisi = []; // "kolom:nilai" => index di $out
+        $ganda = [];
+        $isi = fn (array $r): array => array_filter($r, fn (string $v): bool => $v !== '');
+
+        foreach ($rows as $row) {
+            $kunci = [];
+            foreach (['nisn', 'nik'] as $kolom) {
+                if (($row[$kolom] ?? '') !== '') {
+                    $kunci[] = "$kolom:{$row[$kolom]}";
+                }
+            }
+
+            $i = null;
+            foreach ($kunci as $k) {
+                $i ??= $posisi[$k] ?? null;
+            }
+            $bertentangan = fn (string $kolom): bool => ($out[$i][$kolom] ?? '') !== '' && ($row[$kolom] ?? '') !== '' && $out[$i][$kolom] !== $row[$kolom];
+
+            if ($i === null || $bertentangan('nisn') || $bertentangan('nik')) {
+                $i = count($out);
+                $out[] = $row;
+            } else {
+                $barisBaruMenang = ($row['status'] ?? '') === 'Aktif' && ($out[$i]['status'] ?? '') !== 'Aktif';
+                $out[$i] = $barisBaruMenang
+                    ? array_merge($isi($out[$i]), $isi($row))
+                    : array_merge($isi($row), $isi($out[$i]));
+                $ganda[] = $out[$i]['nama_lengkap'];
+            }
+
+            foreach ($kunci as $k) {
+                $posisi[$k] ??= $i;
+            }
+        }
+
+        return [$out, array_values(array_unique($ganda))];
     }
 
     /**

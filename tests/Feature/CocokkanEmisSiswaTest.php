@@ -90,10 +90,9 @@ class CocokkanEmisSiswaTest extends TestCase
             'Kelas 4 - KELAS 4A' => [
                 // cocok via NISN, tapi NIK EMIS sudah dipakai "Budi Dobel"
                 ['Budi', '0011111111', "'3603000000000009", 'Kelas 4 - KELAS 4A', 'Aktif', 'Laki-laki', ''],
-                ['FAJAR', '0044444444', '', 'Kelas 4 - KELAS 4A', 'Aktif', 'Laki-laki', ''],
-            ],
-            'Tidak Aktif' => [
-                ['FAJAR GANDA', '0044444444', '', 'Kelas 4', 'Tidak Aktif', '', ''], // NISN ganda di file EMIS
+                // dua siswa berbeda (NISN beda) dengan NIK sama di EMIS: tidak bisa diputuskan sistem
+                ['FAJAR', '0044444444', "'3603000000000004", 'Kelas 4 - KELAS 4A', 'Aktif', 'Laki-laki', ''],
+                ['GILANG', '0055555555', "'3603000000000004", 'Kelas 4 - KELAS 4A', 'Aktif', 'Laki-laki', ''],
             ],
         ]);
 
@@ -105,13 +104,39 @@ class CocokkanEmisSiswaTest extends TestCase
 
         $this->assertSame([
             ['nama' => 'Budi', 'kolom' => 'nik', 'nilai' => '3603000000000009', 'dipakai_oleh' => 'Budi Dobel'],
-            ['nama' => 'FAJAR GANDA', 'kolom' => 'nisn', 'nilai' => '0044444444', 'dipakai_oleh' => 'FAJAR'],
+            ['nama' => 'GILANG', 'kolom' => 'nik', 'nilai' => '3603000000000004', 'dipakai_oleh' => 'FAJAR'],
         ], $component->get('hasil')['bentrok']);
 
         $component->call('terapkan');
 
         $this->assertSame('3603000000000001', $budi->fresh()->nik);
         $this->assertSame(2, SiswaMi::count());
+    }
+
+    public function test_siswa_ganda_di_file_emis_digabung_otomatis(): void
+    {
+        $file = $this->emisFile([
+            'Tidak Aktif' => [
+                ['RAFKA', '3198819956', "'3671030402190003", 'Kelas 1', 'Tidak Aktif', '', 'SITI'],
+            ],
+            'Kelas 1 - KELAS 1A' => [
+                ['RAFKA', '3198819956', "'3671030402190003", 'Kelas 1 - KELAS 1A', 'Aktif', 'Laki-laki', ''],
+            ],
+        ]);
+
+        $component = Livewire::test(CocokkanEmisSiswa::class)->set('file', $file)->call('bandingkan');
+
+        $hasil = $component->get('hasil');
+        $this->assertSame([], $hasil['bentrok']);
+        $this->assertSame(['RAFKA'], $hasil['ganda']);
+        $this->assertCount(1, $hasil['baru']);
+
+        $component->call('terapkan');
+
+        // baris Aktif menang; sel kosongnya (nama ibu) diisi dari baris satunya
+        $rafka = SiswaMi::sole();
+        $this->assertSame(['Aktif', 'Kelas 1 - KELAS 1A', 'L', 'SITI'],
+            [$rafka->status, $rafka->tingkat_rombel, $rafka->jenis_kelamin, $rafka->nama_ibu_kandung]);
     }
 
     public function test_nik_yang_dilepas_siswa_lain_bukan_bentrok(): void
